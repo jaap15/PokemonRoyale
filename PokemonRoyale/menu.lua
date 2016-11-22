@@ -4,6 +4,7 @@
 --
 -- Authors: Daniel Burris, Jairo Arreola, John Mullen, and Zachary Johnson
 -----------------------------------------------------------------------------------------
+local Pokemon = require ("Pokemon");
 
 local composer = require("composer")
 
@@ -45,6 +46,10 @@ end
 -- Scene event functions
 -- -----------------------------------------------------------------------------------
 
+
+local pokemon = Pokemon:new( {HP=150} );
+
+
 -- create()
 --      input: none
 --      output: none
@@ -55,6 +60,15 @@ function scene:create( event )
 
     local sceneGroup = self.view
     -- Code here runs when the scene is first created but has not yet appeared on screen
+
+    local pokemon1 = pokemon:new({xPos=100, yPos=100});
+    pokemon1:create()
+    pokemon1:setSelectionView()
+
+    local pokemon2 = pokemon:new({xPos=200, yPos=200});
+    pokemon2:create()
+    pokemon2:setBattleView()
+    -- pokemon2:setSelectionView()
 
     -- Game Title / Image 
 
