@@ -89,6 +89,25 @@ function select6(event)
     end
 end
 
+-- Item Menu Functions
+function item1(event)
+    if ( "ended" == event.phase ) then
+        print("item 1")
+    end
+end
+
+function item2(event)
+    if ( "ended" == event.phase ) then
+        print("item 2")
+    end
+end
+
+function item3(event)
+    if ( "ended" == event.phase ) then
+        print("item 3")
+    end
+end
+
 function exitButtonEvent(event)
     if ("ended" == event.phase) then
         composer.gotoScene("menu")
@@ -415,10 +434,47 @@ function openItemsMenu (event)
 
 
         itemList = {}
-        itemList[0] = display.newText("Item 1", 420, 750, native.SystemFont, 40)
-        itemList[0]:setFillColor(0,0,0)
-        itemList[1] = display.newText("Item 2", 420, 800, native.SystemFont, 40)
-        itemList[1]:setFillColor(0,0,0)
+        itemList[0] = widget.newButton({    
+            id = "item1",
+            width = 350,
+            height = 40,
+            label = "Item 1",    
+            labelColor = { default={ 1, 1, 0 }, over={ 0, 1, 1, 0.5 } },
+            fontSize = 30,
+            defaultFile = "images/menuScene/menuBtn.png",
+            overFile  = "images/menuScene/menuBtnOnClick.png",
+            onEvent = item1 
+        } )        
+        itemList[0].x = 515
+        itemList[0].y = 750 
+        
+        itemList[1] = widget.newButton({    
+            id = "item2",
+            width = 350,
+            height = 40,
+            label = "Item 2",    
+            labelColor = { default={ 1, 1, 0 }, over={ 0, 1, 1, 0.5 } },
+            fontSize = 30,
+            defaultFile = "images/menuScene/menuBtn.png",
+            overFile  = "images/menuScene/menuBtnOnClick.png",
+            onEvent = item2 
+        } )        
+        itemList[1].x = 515
+        itemList[1].y = 800 
+
+        itemList[2] = widget.newButton({    
+            id = "item3",
+            width = 350,
+            height = 40,
+            label = "Item 3",    
+            labelColor = { default={ 1, 1, 0 }, over={ 0, 1, 1, 0.5 } },
+            fontSize = 30,
+            defaultFile = "images/menuScene/menuBtn.png",
+            overFile  = "images/menuScene/menuBtnOnClick.png",
+            onEvent = item3 
+        } )        
+        itemList[2].x = 515
+        itemList[2].y = 850         
 
         cancelBtn = widget.newButton({    
                 id = "cancelBtn",
@@ -437,8 +493,9 @@ function openItemsMenu (event)
         end   
 
         sceneGroup:insert( itemsMenuBG )
-        sceneGroup:insert( itemList[0] )
-        sceneGroup:insert( itemList[1] )        
+        for cnt = 0, #itemList do
+            sceneGroup:insert( itemList[cnt] )
+        end
         sceneGroup:insert( cancelBtn ) 
     end
 end
