@@ -37,7 +37,7 @@ end
 --      This function just switches from the menu scene to the help scene
 local function helpButtonEvent(event)
     if ("ended" == event.phase) then
-        composer.gotoScene("help")
+        composer.gotoScene("fight")
     end
 end
 

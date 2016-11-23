@@ -25,12 +25,6 @@ local function returnButtonEvent(event)
     end
 end
 
-local function nextButtonEvent(event)
-    if ("ended" == event.phase) then
-        composer.gotoScene("help2")
-    end
-end
-
 -- -----------------------------------------------------------------------------------
 -- Scene event functions
 -- -----------------------------------------------------------------------------------
@@ -47,7 +41,7 @@ function scene:create( event )
     -- Code here runs when the scene is first created but has not yet appeared on screen
 
     -- Displaying game instructions
-    local instructionText1 = display.newText("Welcome to Pokemon Royale!\n\nPress Next to learn more\nabout the rules of engagement!", display.contentCenterX, display.contentCenterY-150, "center")
+    local instructionText1 = display.newText("To be determined!", display.contentCenterX, display.contentCenterY-150)
 
     -- Game Background
 
@@ -64,27 +58,13 @@ function scene:create( event )
         onEvent = returnButtonEvent 
     } )
 
-    local nextButton = widget.newButton({    
-        id = "nextButton",
-        label = "Next",    
-        width = 100,
-        height = 20,
-        fontSize = 10,
-        defaultFile = "images/button.png",
-        onEvent = nextButtonEvent 
-    } )
-
     -- Positioning all objects on the scene
     returnButton.x = display.contentCenterX
     returnButton.y = display.contentCenterY+(display.contentCenterY/1.5)
 
-    nextButton.x = display.contentCenterX
-    nextButton.y = display.contentCenterY+200
-
     -- Adding all objects to the scene group
     sceneGroup:insert(instructionText1)
     sceneGroup:insert(returnButton)
-    sceneGroup:insert(nextButton)
 end
 
 
