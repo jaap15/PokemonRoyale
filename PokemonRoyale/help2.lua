@@ -1,17 +1,12 @@
 -----------------------------------------------------------------------------------------
 --
--- menu.lua
+-- help2.lua
 --
 -- Authors: Daniel Burris, Jairo Arreola, John Mullen, and Zachary Johnson
 -----------------------------------------------------------------------------------------
 
 local composer = require("composer")
-
--- Scene Creation / Manipulation
 local scene = composer.newScene()
-
--- Widget Creation / Manipulation
--- Used for buttons, sliders, radio buttons
 local widget = require("widget")
 
 -- -----------------------------------------------------------------------------------
@@ -19,36 +14,26 @@ local widget = require("widget")
 -- the scene is removed entirely (not recycled) via "composer.removeScene()"
 -- -----------------------------------------------------------------------------------
 
--- startButtonEvent()
+-- returnButtonEvent()
 --      input: none
 --      output: none
 --      
---      This function just switches from the menu scene to the game scene
-local function startButtonEvent(event)
-	if ("ended" == event.phase) then
-		composer.gotoScene("game")
-	end
+--      This function just switches from the help scene to the menu scene
+local function returnButtonEvent(event)
+    if ("ended" == event.phase) then
+        composer.gotoScene("menu")
+    end
 end
 
--- helpButtonEvent()
---      input: none
---      output: none
---      
---      This function just switches from the menu scene to the help scene
-local function helpButtonEvent(event)
+local function backButtonEvent(event)
     if ("ended" == event.phase) then
         composer.gotoScene("help")
     end
 end
 
--- gameButtonEvent()
---      input: none
---      output: none
---      
---      This function just switches from the menu scene to the help scene
-local function gameButtonEvent(event)
+local function nextButtonEvent(event)
     if ("ended" == event.phase) then
-        composer.gotoScene("fight")
+        composer.gotoScene("help3")
     end
 end
 
@@ -67,56 +52,59 @@ function scene:create( event )
     local sceneGroup = self.view
     -- Code here runs when the scene is first created but has not yet appeared on screen
 
-    -- Game Title / Image 
+    -- Displaying game instructions
+    local instructionText1 = display.newText("First, you must assemble your team of\nPokemon. You will pick one at a time from\na random selection of 3, until you have a\nfull team of 6.", display.contentCenterX, display.contentCenterY-150, "center")
 
     -- Game Background
 
-    -- Creating the start button, sends us from the menu scene to the game scene
-    local startButton = widget.newButton({    
-            id = "startButton",
-            label = "Start",    
-            width = 300,
-            height = 60,
-            fontSize = 30,
-            defaultFile = "images/button.png",
-            onEvent = startButtonEvent 
-        } )    
+    -- Display X image over the voltorb
 
-    -- Creating the help button, sends us from the menu scene to the help scene
-    local helpButton = widget.newButton({    
-            id = "helpButton",
-            label = "Help",    
-            width = 300,
-            height = 60,
-            fontSize = 30,
-            defaultFile = "images/button.png",
-            onEvent = helpButtonEvent 
-        } )  
+    -- Creating a button widget, this button returns us to the menu
+    local returnButton = widget.newButton({    
+        id = "returnButton",
+        label = "Return",    
+        width = 300,
+        height = 60,
+        fontSize = 30,
+        defaultFile = "images/button.png",
+        onEvent = returnButtonEvent 
+    } )
 
-    -- Creating the help button, sends us from the menu scene to the help scene
-    local gameButton = widget.newButton({    
-            id = "gameButton",
-            label = "Game",    
-            width = 300,
-            height = 60,
-            fontSize = 30,
-            defaultFile = "images/button.png",
-            onEvent = gameButtonEvent 
-        } )      
+    local backButton = widget.newButton({    
+        id = "backButton",
+        label = "Back",    
+        width = 300,
+        height = 60,
+        fontSize = 30,
+        defaultFile = "images/button.png",
+        onEvent = backButtonEvent 
+    } )
 
-    -- Positioning all objects on the screen
-    startButton.x = display.contentCenterX
-    startButton.y = display.contentCenterY+(display.contentCenterY/1.9)
-    helpButton.x = display.contentCenterX
-    helpButton.y = display.contentCenterY+(display.contentCenterY/1.5)
-    gameButton.x = display.contentCenterX
-    gameButton.y = display.contentCenterY+(display.contentCenterY/1.2)    
+    local nextButton = widget.newButton({    
+        id = "nextButton",
+        label = "Next",    
+        width = 300,
+        height = 60,
+        fontSize = 30,
+        defaultFile = "images/button.png",
+        onEvent = nextButtonEvent 
+    } )
 
-    -- Adding all objects to the scene group, this will bind these object to the scene
-    -- and they will be removed / replaced when switching to and from scenes
-    sceneGroup:insert( startButton )
-    sceneGroup:insert( helpButton )
-    sceneGroup:insert( gameButton )
+    -- Positioning all objects on the scene
+    returnButton.x = display.contentCenterX
+    returnButton.y = display.contentCenterY+(display.contentCenterY/1.5)
+
+    backButton.x = display.contentCenterX
+    backButton.y = display.contentCenterY+300
+
+    nextButton.x = display.contentCenterX
+    nextButton.y = display.contentCenterY+200
+
+    -- Adding all objects to the scene group
+    sceneGroup:insert(instructionText1)
+    sceneGroup:insert(returnButton)
+    sceneGroup:insert(backButton)
+    sceneGroup:insert(nextButton)
 end
 
 
@@ -124,7 +112,7 @@ end
 --      input: none
 --      output: none
 --
---      This function destroys the game scenes when its swapped to the menu scene
+--      This function does nothing for us, but is still part of Corona SDK scene creation requirements
 function scene:show( event )
 
     local sceneGroup = self.view
@@ -132,7 +120,6 @@ function scene:show( event )
 
     if ( phase == "will" ) then
         -- Code here runs when the scene is still off screen (but is about to come on screen)
-        composer.removeScene("game")
 
     elseif ( phase == "did" ) then
         -- Code here runs when the scene is entirely on screen

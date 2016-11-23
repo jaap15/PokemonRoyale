@@ -20,6 +20,13 @@ local cancelBtn
 local fightMenuBtn = {}
 local mainMenuBtn = {}
 
+local color = 
+{
+    highlight = {1,0,1},   
+    border = {1,0,1},
+    shadow = {1,0,0}  
+}
+
 -- Local Sounds
 local menuClick = audio.loadStream("sounds/menuButtonClick.mp3")
 
@@ -96,6 +103,7 @@ function returnToMainMenu()
 end
 
 function openItemsMenu ()
+    audio.play(menuClick, {loops = 0})
     itemsMenu = display.newImage("images/itemsMenu2.png")
     itemsMenu.width = display.pixelWidth
     itemsMenu.height = display.pixelHeight/2
@@ -125,18 +133,24 @@ function openMainMenu ()
     mainMenuBtn[0].height = 270
     mainMenuBtn[0].x = 240
     mainMenuBtn[0].y = 828
+    fightText = display.newEmbossedText( "Fight", 240, 828, native.systemFont, 40 )
+    fightText:setFillColor( 0,0,0 )
 
     mainMenuBtn[1] = display.newImage("images/BagButton.png")
     mainMenuBtn[1].width = 220
     mainMenuBtn[1].height = 270   
     mainMenuBtn[1].x = 475
-    mainMenuBtn[1].y = 828    
+    mainMenuBtn[1].y = 828
+    PokemonText = display.newEmbossedText( "Pkmn", 475, 828, native.systemFont, 40 )
+    PokemonText:setFillColor( 0,0,0 )    
     
     mainMenuBtn[2] = display.newImage("images/PokemonButton.png")
     mainMenuBtn[2].width = 220
     mainMenuBtn[2].height = 270 
     mainMenuBtn[2].x = 240
     mainMenuBtn[2].y = 1105    
+    ItemsText = display.newEmbossedText( "Items", 240, 1105, native.systemFont, 40 )
+    ItemsText:setFillColor( 0,0,0 )        
 
     mainMenuBtn[3] = display.newImage("images/RunButton.png")
     mainMenuBtn[3].width = 220
