@@ -1,6 +1,6 @@
 -----------------------------------------------------------------------------------------
 --
--- help.lua
+-- help2.lua
 --
 -- Authors: Daniel Burris, Jairo Arreola, John Mullen, and Zachary Johnson
 -----------------------------------------------------------------------------------------
@@ -25,9 +25,15 @@ local function returnButtonEvent(event)
     end
 end
 
+local function backButtonEvent(event)
+    if ("ended" == event.phase) then
+        composer.gotoScene("help")
+    end
+end
+
 local function nextButtonEvent(event)
     if ("ended" == event.phase) then
-        composer.gotoScene("help2")
+        composer.gotoScene("help3")
     end
 end
 
@@ -47,7 +53,7 @@ function scene:create( event )
     -- Code here runs when the scene is first created but has not yet appeared on screen
 
     -- Displaying game instructions
-    local instructionText1 = display.newText("Welcome to Pokemon Royale!\n\nPress Next to learn more\nabout the rules of engagement!", display.contentCenterX, display.contentCenterY-150, "center")
+    local instructionText1 = display.newText("First, you must assemble your team of\nPokemon. You will pick one at a time from\na random selection of 3, until you have a\nfull team of 6.", display.contentCenterX, display.contentCenterY-150, "center")
 
     -- Game Background
 
@@ -64,6 +70,16 @@ function scene:create( event )
         onEvent = returnButtonEvent 
     } )
 
+    local backButton = widget.newButton({    
+        id = "backButton",
+        label = "Back",    
+        width = 100,
+        height = 20,
+        fontSize = 10,
+        defaultFile = "images/button.png",
+        onEvent = backButtonEvent 
+    } )
+
     local nextButton = widget.newButton({    
         id = "nextButton",
         label = "Next",    
@@ -78,12 +94,16 @@ function scene:create( event )
     returnButton.x = display.contentCenterX
     returnButton.y = display.contentCenterY+(display.contentCenterY/1.5)
 
-    nextButton.x = display.contentCenterX
+    backButton.x = display.contentCenterX-60
+    backButton.y = display.contentCenterY+200
+
+    nextButton.x = display.contentCenterX+60
     nextButton.y = display.contentCenterY+200
 
     -- Adding all objects to the scene group
     sceneGroup:insert(instructionText1)
     sceneGroup:insert(returnButton)
+    sceneGroup:insert(backButton)
     sceneGroup:insert(nextButton)
 end
 
