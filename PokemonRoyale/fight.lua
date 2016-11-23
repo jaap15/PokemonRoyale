@@ -58,73 +58,32 @@ function drawBackground()
 
 end
 
-function openPokemonMenu()
-    audio.play(menuClick, {loops = 0})
-    partyScreen = display.newImage("images/PartyScreen2.png")
-    partyScreen.width = display.pixelWidth
-    partyScreen.height = display.pixelHeight/2 
-    partyScreen.x = display.pixelWidth - (display.pixelWidth/2)
-    partyScreen.y = display.pixelHeight - (display.pixelHeight/4)    
-
-    cancelBtn = display.newImage("images/cancelBtn.png")
-    cancelBtn.width = 150
-    cancelBtn.height = 75
-    cancelBtn.x = 638
-    cancelBtn.y = 1226    
-
-    cancelBtn:addEventListener("tap", returnToMainMenu)
-
-    menu.isVisible = false
-    for cnt = 0, 3 do
-        mainMenuBtn[cnt].isVisible = false
-    end
-end
-
-function returnToMainMenu()
-    audio.play(menuClick, {loops = 0})
-    if (fightMenuBG) then
-        fightMenuBG.isVisible = false
-        for cnt = 0, 3 do
-            fightMenuBtn[cnt].isVisible = false
+function returnToMainMenu(event)
+    if ( "ended" == event.phase ) then
+        audio.play(menuClick, {loops = 0})
+        if (fightMenuBG) then
+            fightMenuBG.isVisible = false
+            for cnt = 0, 3 do
+                fightMenuBtn[cnt].isVisible = false
+            end
+            cancelBtn.isVisible = false
         end
-        cancelBtn.isVisible = false
+
+        if (partyScreen) then
+            partyScreen.isVisible = false
+            cancelBtn.isVisible = false
+        end
+
+        if (itemsMenu) then
+            itemsMenu.isVisible = false
+            cancelBtn.isVisible = false
+        end
+
+        menu.isVisible = true
+        for cnt = 0, 3 do
+            mainMenuBtn[cnt].isVisible = true
+        end
     end
-
-    if (partyScreen) then
-        partyScreen.isVisible = false
-        cancelBtn.isVisible = false
-    end
-
-    if (itemsMenu) then
-        itemsMenu.isVisible = false
-        cancelBtn.isVisible = false
-    end
-
-    menu.isVisible = true
-    for cnt = 0, 3 do
-        mainMenuBtn[cnt].isVisible = true
-    end
-end
-
-function openItemsMenu ()
-    audio.play(menuClick, {loops = 0})
-    itemsMenu = display.newImage("images/itemsMenu2.png")
-    itemsMenu.width = display.pixelWidth
-    itemsMenu.height = display.pixelHeight/2
-    itemsMenu.x = display.pixelWidth - (display.pixelWidth/2)
-    itemsMenu.y = display.pixelHeight - (display.pixelHeight/4)    
-
-    cancelBtn = display.newImage("images/cancelBtn.png")
-    cancelBtn.width = 150
-    cancelBtn.height = 75
-    cancelBtn.x = 638
-    cancelBtn.y = 1226    
-
-    cancelBtn:addEventListener("tap", returnToMainMenu)
-    menu.isVisible = false
-    for cnt = 0, 3 do
-        mainMenuBtn[cnt].isVisible = false
-    end    
 end
 
 function openMainMenu ()
@@ -133,48 +92,64 @@ function openMainMenu ()
     menu.height = display.pixelHeight/2
 
     mainMenuBtn[0] = widget.newButton({    
-            id = "testButton",
+            id = "fightBtn",
             label = "FIGHT",    
             labelColor = { default={ 0, 0, 0 }, over={ 0, 1, 1, 0.5 } },
             width = 220,
             height = 270,
             fontSize = 40,
             defaultFile = "images/FightButton.png",
-            overFile  = "images/buttonClickedFight.png",
+            overFile  = "images/FightButtonOnClick.png",
             onEvent = openFightMenu 
         } )
     mainMenuBtn[0].x = 240
     mainMenuBtn[0].y = 828
 
-    mainMenuBtn[1] = display.newImage("images/BagButton.png")
-    mainMenuBtn[1].width = 220
-    mainMenuBtn[1].height = 270   
+    mainMenuBtn[1] = widget.newButton({    
+            id = "PkmnBtn",
+            label = "PKMN",    
+            labelColor = { default={ 0, 0, 0 }, over={ 0, 1, 1, 0.5 } },
+            width = 220,
+            height = 270,
+            fontSize = 40,
+            defaultFile = "images/BagButton.png",
+            overFile  = "images/BagButtonOnClick.png",
+            onEvent = openPokemonMenu 
+        } )
     mainMenuBtn[1].x = 475
     mainMenuBtn[1].y = 828
-    PokemonText = display.newEmbossedText( "Pkmn", 475, 828, native.systemFont, 40 )
-    PokemonText:setFillColor( 0,0,0 )    
-    
-    mainMenuBtn[2] = display.newImage("images/PokemonButton.png")
-    mainMenuBtn[2].width = 220
-    mainMenuBtn[2].height = 270 
-    mainMenuBtn[2].x = 240
-    mainMenuBtn[2].y = 1105    
-    ItemsText = display.newEmbossedText( "Items", 240, 1105, native.systemFont, 40 )
-    ItemsText:setFillColor( 0,0,0 )        
 
-    mainMenuBtn[3] = display.newImage("images/RunButton.png")
-    mainMenuBtn[3].width = 220
-    mainMenuBtn[3].height = 270 
+    mainMenuBtn[2] = widget.newButton({    
+            id = "itemsBtn",
+            label = "Items",    
+            labelColor = { default={ 0, 0, 0 }, over={ 0, 1, 1, 0.5 } },
+            width = 220,
+            height = 270,
+            fontSize = 40,
+            defaultFile = "images/PokemonButton.png",
+            overFile  = "images/PokemonButtonOnClick.png",
+            onEvent = openItemsMenu 
+        } )
+    mainMenuBtn[2].x = 240
+    mainMenuBtn[2].y = 1105
+
+
+    mainMenuBtn[3] = widget.newButton({    
+            id = "quitBtn",
+            label = "Quit",    
+            labelColor = { default={ 0, 0, 0 }, over={ 0, 1, 1, 0.5 } },
+            width = 220,
+            height = 270,
+            fontSize = 40,
+            defaultFile = "images/RunButton.png",
+            overFile  = "images/RunButtonOnClick.png",
+            onEvent = openRunMenu 
+        } )
     mainMenuBtn[3].x = 475
-    mainMenuBtn[3].y = 1105  
+    mainMenuBtn[3].y = 1105    
 
     menu.x = display.pixelWidth - (display.pixelWidth/2)
-    menu.y = display.pixelHeight - (display.pixelHeight/4)    
-
-    --mainMenuBtn[0]:addEventListener("tap", openFightMenu)
-    mainMenuBtn[1]:addEventListener("tap", openPokemonMenu)
-    mainMenuBtn[2]:addEventListener("tap", openItemsMenu)
-    --mainMenuBtn[3]:addEventListener("tap", openFightMenu)
+    menu.y = display.pixelHeight - (display.pixelHeight/4) 
 end
 
 function openFightMenu (event)
@@ -211,13 +186,16 @@ function openFightMenu (event)
         fightMenuBtn[3].x = 536
         fightMenuBtn[3].y = 1074        
 
-        cancelBtn = display.newImage("images/cancelBtn.png")
-        cancelBtn.width = 150
-        cancelBtn.height = 75
+        cancelBtn = widget.newButton({    
+                id = "cancelBtn",
+                width = 150,
+                height = 75,
+                defaultFile = "images/cancelBtn.png",
+                overFile  = "images/cancelBtnOnClick.png",
+                onEvent = returnToMainMenu 
+            } )
         cancelBtn.x = 638
         cancelBtn.y = 1226    
-
-        cancelBtn:addEventListener("tap", returnToMainMenu)
 
         fightMenuBtn[0]:addEventListener("tap", attack1);
         fightMenuBtn[1]:addEventListener("tap", attack2);
@@ -228,6 +206,81 @@ function openFightMenu (event)
         for cnt = 0, 3 do
             mainMenuBtn[cnt].isVisible = false
         end
+    end
+end
+
+function openPokemonMenu(event)
+    if ( "ended" == event.phase ) then
+        audio.play(menuClick, {loops = 0})
+        partyScreen = display.newImage("images/PartyScreen2.png")
+        partyScreen.width = display.pixelWidth
+        partyScreen.height = display.pixelHeight/2 
+        partyScreen.x = display.pixelWidth - (display.pixelWidth/2)
+        partyScreen.y = display.pixelHeight - (display.pixelHeight/4)    
+
+        cancelBtn = widget.newButton({    
+                id = "cancelBtn",
+                width = 150,
+                height = 75,
+                defaultFile = "images/cancelBtn.png",
+                overFile  = "images/cancelBtnOnClick.png",
+                onEvent = returnToMainMenu 
+            } )
+        cancelBtn.x = 638
+        cancelBtn.y = 1226  
+
+        menu.isVisible = false
+        for cnt = 0, 3 do
+            mainMenuBtn[cnt].isVisible = false
+        end
+    end
+end
+
+function openItemsMenu (event)
+    if ( "ended" == event.phase ) then
+        audio.play(menuClick, {loops = 0})
+        itemsMenu = display.newImage("images/itemsMenu2.png")
+        itemsMenu.width = display.pixelWidth
+        itemsMenu.height = display.pixelHeight/2
+        itemsMenu.x = display.pixelWidth - (display.pixelWidth/2)
+        itemsMenu.y = display.pixelHeight - (display.pixelHeight/4)    
+
+        cancelBtn = widget.newButton({    
+                id = "cancelBtn",
+                width = 150,
+                height = 75,
+                defaultFile = "images/cancelBtn.png",
+                overFile  = "images/cancelBtnOnClick.png",
+                onEvent = returnToMainMenu 
+            } )
+        cancelBtn.x = 638
+        cancelBtn.y = 1226  
+
+        menu.isVisible = false
+        for cnt = 0, 3 do
+            mainMenuBtn[cnt].isVisible = false
+        end    
+    end
+end
+
+function openRunMenu (event)
+    if ( "ended" == event.phase ) then
+        audio.play(menuClick, {loops = 0})
+        cancelBtn = widget.newButton({    
+                id = "cancelBtn",
+                width = 150,
+                height = 75,
+                defaultFile = "images/cancelBtn.png",
+                overFile  = "images/cancelBtnOnClick.png",
+                onEvent = returnToMainMenu 
+            } )
+        cancelBtn.x = 638
+        cancelBtn.y = 1226  
+        
+        menu.isVisible = false
+        for cnt = 0, 3 do
+            mainMenuBtn[cnt].isVisible = false
+        end    
     end
 end
 -- -----------------------------------------------------------------------------------
