@@ -16,15 +16,15 @@ local widget = require("widget")
 
 -- Dummy table to test selection
 pokemonTable = {
-    {image="images/p1.png", thumb="images/t1.png"},
-    {image="images/p2.png", thumb="images/t2.png"},
-    {image="images/p3.png", thumb="images/t3.png"},
-    {image="images/p4.png", thumb="images/t4.png"},
-    {image="images/p5.png", thumb="images/t5.png"},
-    {image="images/p6.png", thumb="images/t6.png"},
-    {image="images/p7.png", thumb="images/t7.png"},
-    {image="images/p8.png", thumb="images/t8.png"},
-    {image="images/p9.png", thumb="images/t9.png"}
+    {image="images/gameScene/p1.png", thumb="images/gameScene/t1.png"},
+    {image="images/gameScene/p2.png", thumb="images/gameScene/t2.png"},
+    {image="images/gameScene/p3.png", thumb="images/gameScene/t3.png"},
+    {image="images/gameScene/p4.png", thumb="images/gameScene/t4.png"},
+    {image="images/gameScene/p5.png", thumb="images/gameScene/t5.png"},
+    {image="images/gameScene/p6.png", thumb="images/gameScene/t6.png"},
+    {image="images/gameScene/p7.png", thumb="images/gameScene/t7.png"},
+    {image="images/gameScene/p8.png", thumb="images/gameScene/t8.png"},
+    {image="images/gameScene/p9.png", thumb="images/gameScene/t9.png"}
 };
 teamIndex = 1
 thumbX = 173;

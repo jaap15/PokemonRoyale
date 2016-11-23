@@ -55,13 +55,11 @@ local function gameButtonEvent(event)
 end
 
 local function animationIntro()
-    print("TEST")
-
     local function rightSlash()
-        local sheetName = require("images.animations.slash")
+        local sheetName = require("images.menuScene.animations.slash")
         local spriteSheetData = sheetName:getSheet()
         --Creating the image sheet
-        local slashSheet = graphics.newImageSheet( "images/animations/slash.png", spriteSheetData)
+        local slashSheet = graphics.newImageSheet( "images/menuScene/animations/slash.png", spriteSheetData)
         --Getting the sequence data from the sprite sheet file
         local sequenceData = sheetName:getSequence()
 
@@ -74,10 +72,10 @@ local function animationIntro()
     end
 
     local function leftSlash()
-        local sheetName = require("images.animations.slash")
+        local sheetName = require("images.menuScene.animations.slash")
         local spriteSheetData = sheetName:getSheet()
         --Creating the image sheet
-        local slashSheet = graphics.newImageSheet( "images/animations/slash.png", spriteSheetData)
+        local slashSheet = graphics.newImageSheet( "images/menuScene/animations/slash.png", spriteSheetData)
         --Getting the sequence data from the sprite sheet file
         local sequenceData = sheetName:getSequence()
 
@@ -92,7 +90,7 @@ local function animationIntro()
 
     local function menuTitle()
         -- Game Background
-        menuBG = display.newImage("images/menuTitle2.png")
+        menuBG = display.newImage("images/menuScene/menuTitle.png")
         menuBG:scale(2,2)
         menuBG.x = display.contentCenterX
         menuBG.y = 400
@@ -131,8 +129,8 @@ function scene:create( event )
             width = 300,
             height = 60,
             fontSize = 30,
-            defaultFile = "images/button2.png",
-            overFile  = "images/button2over.png",
+            defaultFile = "images/menuScene/menuBtn.png",
+            overFile  = "images/menuScene/menuBtnOnClick.png",
             onEvent = startButtonEvent 
         } )    
 
@@ -144,8 +142,8 @@ function scene:create( event )
             width = 300,
             height = 60,
             fontSize = 30,
-            defaultFile = "images/button2.png",
-            overFile  = "images/button2over.png",
+            defaultFile = "images/menuScene/menuBtn.png",
+            overFile  = "images/menuScene/menuBtnOnClick.png",
             onEvent = helpButtonEvent 
         } )  
 
@@ -157,8 +155,8 @@ function scene:create( event )
             width = 300,
             height = 60,
             fontSize = 30,
-            defaultFile = "images/button2.png",
-            overFile  = "images/button2over.png",
+            defaultFile = "images/menuScene/menuBtn.png",
+            overFile  = "images/menuScene/menuBtnOnClick.png",
             onEvent = gameButtonEvent 
         } )      
 

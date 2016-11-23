@@ -42,7 +42,7 @@ function attack4()
 end
 
 function drawBackground()
-    platformBG = display.newImage("images/GrassBG.png")
+    platformBG = display.newImage("images/fightScene/GrassBG.png")
     platformBG.width = display.pixelWidth
     platformBG.height = display.pixelHeight/2
     platformBG.x = display.pixelWidth - (display.pixelWidth/2)
@@ -66,18 +66,20 @@ function returnToMainMenu(event)
             for cnt = 0, 3 do
                 fightMenuBtn[cnt].isVisible = false
             end
-            cancelBtn.isVisible = false
         end
 
         if (partyScreen) then
             partyScreen.isVisible = false
-            cancelBtn.isVisible = false
         end
 
         if (itemsMenu) then
             itemsMenu.isVisible = false
-            cancelBtn.isVisible = false
+            for cnt = 0, #itemList do
+                itemList[cnt].isVisible = false
+            end
         end
+
+        cancelBtn.isVisible = false
 
         menu.isVisible = true
         for cnt = 0, 3 do
@@ -87,7 +89,7 @@ function returnToMainMenu(event)
 end
 
 function openMainMenu ()
-    menu = display.newImage("images/MenuFull.png")
+    menu = display.newImage("images/fightScene/menu/main/mainMenuBG.png")
     menu.width = display.pixelWidth
     menu.height = display.pixelHeight/2
 
@@ -98,8 +100,8 @@ function openMainMenu ()
             width = 220,
             height = 270,
             fontSize = 40,
-            defaultFile = "images/FightButton.png",
-            overFile  = "images/FightButtonOnClick.png",
+            defaultFile = "images/fightScene/menu/main/FightButton.png",
+            overFile  = "images/fightScene/menu/main/FightButtonOnClick.png",
             onEvent = openFightMenu 
         } )
     mainMenuBtn[0].x = 240
@@ -112,8 +114,8 @@ function openMainMenu ()
             width = 220,
             height = 270,
             fontSize = 40,
-            defaultFile = "images/BagButton.png",
-            overFile  = "images/BagButtonOnClick.png",
+            defaultFile = "images/fightScene/menu/main/BagButton.png",
+            overFile  = "images/fightScene/menu/main/BagButtonOnClick.png",
             onEvent = openPokemonMenu 
         } )
     mainMenuBtn[1].x = 475
@@ -126,8 +128,8 @@ function openMainMenu ()
             width = 220,
             height = 270,
             fontSize = 40,
-            defaultFile = "images/PokemonButton.png",
-            overFile  = "images/PokemonButtonOnClick.png",
+            defaultFile = "images/fightScene/menu/main/PokemonButton.png",
+            overFile  = "images/fightScene/menu/main/PokemonButtonOnClick.png",
             onEvent = openItemsMenu 
         } )
     mainMenuBtn[2].x = 240
@@ -141,8 +143,8 @@ function openMainMenu ()
             width = 220,
             height = 270,
             fontSize = 40,
-            defaultFile = "images/RunButton.png",
-            overFile  = "images/RunButtonOnClick.png",
+            defaultFile = "images/fightScene/menu/main/RunButton.png",
+            overFile  = "images/fightScene/menu/main/RunButtonOnClick.png",
             onEvent = openRunMenu 
         } )
     mainMenuBtn[3].x = 475
@@ -156,31 +158,31 @@ function openFightMenu (event)
 
     if ( "ended" == event.phase ) then
         audio.play(menuClick, {loops = 0})
-        fightMenuBG = display.newImage("images/fightMenu2.png")
+        fightMenuBG = display.newImage("images/fightScene/menu/fight/fightMenuBG.png")
         fightMenuBG.width = display.pixelWidth
         fightMenuBG.height = display.pixelHeight/2
         fightMenuBG.x = display.pixelWidth - (display.pixelWidth/2)
         fightMenuBG.y = display.pixelHeight - (display.pixelHeight/4) 
 
-        fightMenuBtn[0] = display.newImage("images/fightMenu.png")
+        fightMenuBtn[0] = display.newImage("images/fightScene/menu/fight/fightMenuBtn.png")
         fightMenuBtn[0].width = 333
         fightMenuBtn[0].height = 206 
         fightMenuBtn[0].x = 184
         fightMenuBtn[0].y = 842
         
-        fightMenuBtn[1] = display.newImage("images/fightMenu.png")
+        fightMenuBtn[1] = display.newImage("images/fightScene/menu/fight/fightMenuBtn.png")
         fightMenuBtn[1].width = 333
         fightMenuBtn[1].height = 206   
         fightMenuBtn[1].x = 536
         fightMenuBtn[1].y = 842
         
-        fightMenuBtn[2] = display.newImage("images/fightMenu.png")
+        fightMenuBtn[2] = display.newImage("images/fightScene/menu/fight/fightMenuBtn.png")
         fightMenuBtn[2].width = 333
         fightMenuBtn[2].height = 206 
         fightMenuBtn[2].x = 184
         fightMenuBtn[2].y = 1074    
 
-        fightMenuBtn[3] = display.newImage("images/fightMenu.png")
+        fightMenuBtn[3] = display.newImage("images/fightScene/menu/fight/fightMenuBtn.png")
         fightMenuBtn[3].width = 333
         fightMenuBtn[3].height = 206 
         fightMenuBtn[3].x = 536
@@ -190,8 +192,8 @@ function openFightMenu (event)
                 id = "cancelBtn",
                 width = 150,
                 height = 75,
-                defaultFile = "images/cancelBtn.png",
-                overFile  = "images/cancelBtnOnClick.png",
+                defaultFile = "images/fightScene/menu/cancelBtn.png",
+                overFile  = "images/fightScene/menu/cancelBtnOnClick.png",
                 onEvent = returnToMainMenu 
             } )
         cancelBtn.x = 638
@@ -212,7 +214,7 @@ end
 function openPokemonMenu(event)
     if ( "ended" == event.phase ) then
         audio.play(menuClick, {loops = 0})
-        partyScreen = display.newImage("images/PartyScreen2.png")
+        partyScreen = display.newImage("images/fightScene/menu/pkmn/pkmnMenuBG.png")
         partyScreen.width = display.pixelWidth
         partyScreen.height = display.pixelHeight/2 
         partyScreen.x = display.pixelWidth - (display.pixelWidth/2)
@@ -222,8 +224,8 @@ function openPokemonMenu(event)
                 id = "cancelBtn",
                 width = 150,
                 height = 75,
-                defaultFile = "images/cancelBtn.png",
-                overFile  = "images/cancelBtnOnClick.png",
+                defaultFile = "images/fightScene/menu/cancelBtn.png",
+                overFile  = "images/fightScene/menu/cancelBtnOnClick.png",
                 onEvent = returnToMainMenu 
             } )
         cancelBtn.x = 638
@@ -239,18 +241,25 @@ end
 function openItemsMenu (event)
     if ( "ended" == event.phase ) then
         audio.play(menuClick, {loops = 0})
-        itemsMenu = display.newImage("images/itemsMenu2.png")
+        itemsMenu = display.newImage("images/fightScene/menu/item/itemMenuBG.png")
         itemsMenu.width = display.pixelWidth
         itemsMenu.height = display.pixelHeight/2
         itemsMenu.x = display.pixelWidth - (display.pixelWidth/2)
         itemsMenu.y = display.pixelHeight - (display.pixelHeight/4)    
 
+
+        itemList = {}
+        itemList[0] = display.newText("Item 1", 420, 750, native.SystemFont, 40)
+        itemList[0]:setFillColor(0,0,0)
+        itemList[1] = display.newText("Item 2", 420, 800, native.SystemFont, 40)
+        itemList[1]:setFillColor(0,0,0)
+
         cancelBtn = widget.newButton({    
                 id = "cancelBtn",
                 width = 150,
                 height = 75,
-                defaultFile = "images/cancelBtn.png",
-                overFile  = "images/cancelBtnOnClick.png",
+                defaultFile = "images/fightScene/menu/cancelBtn.png",
+                overFile  = "images/fightScene/menu/cancelBtnOnClick.png",
                 onEvent = returnToMainMenu 
             } )
         cancelBtn.x = 638
@@ -270,13 +279,13 @@ function openRunMenu (event)
                 id = "cancelBtn",
                 width = 150,
                 height = 75,
-                defaultFile = "images/cancelBtn.png",
-                overFile  = "images/cancelBtnOnClick.png",
+                defaultFile = "images/fightScene/menu/cancelBtn.png",
+                overFile  = "images/fightScene/menu/cancelBtnOnClick.png",
                 onEvent = returnToMainMenu 
             } )
         cancelBtn.x = 638
         cancelBtn.y = 1226  
-        
+
         menu.isVisible = false
         for cnt = 0, 3 do
             mainMenuBtn[cnt].isVisible = false
