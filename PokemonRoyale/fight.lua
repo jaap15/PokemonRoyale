@@ -132,13 +132,19 @@ function openMainMenu ()
     menu.width = display.pixelWidth
     menu.height = display.pixelHeight/2
 
-    mainMenuBtn[0] = display.newImage("images/FightButton.png")
-    mainMenuBtn[0].width = 220
-    mainMenuBtn[0].height = 270
+    mainMenuBtn[0] = widget.newButton({    
+            id = "testButton",
+            label = "FIGHT",    
+            labelColor = { default={ 0, 0, 0 }, over={ 0, 1, 1, 0.5 } },
+            width = 220,
+            height = 270,
+            fontSize = 40,
+            defaultFile = "images/FightButton.png",
+            overFile  = "images/buttonClickedFight.png",
+            onEvent = openFightMenu 
+        } )
     mainMenuBtn[0].x = 240
     mainMenuBtn[0].y = 828
-    fightText = display.newEmbossedText( "Fight", 240, 828, native.systemFont, 40 )
-    fightText:setFillColor( 0,0,0 )
 
     mainMenuBtn[1] = display.newImage("images/BagButton.png")
     mainMenuBtn[1].width = 220
@@ -164,56 +170,64 @@ function openMainMenu ()
 
     menu.x = display.pixelWidth - (display.pixelWidth/2)
     menu.y = display.pixelHeight - (display.pixelHeight/4)    
+
+    --mainMenuBtn[0]:addEventListener("tap", openFightMenu)
+    mainMenuBtn[1]:addEventListener("tap", openPokemonMenu)
+    mainMenuBtn[2]:addEventListener("tap", openItemsMenu)
+    --mainMenuBtn[3]:addEventListener("tap", openFightMenu)
 end
 
-function openFightMenu ()
-    audio.play(menuClick, {loops = 0})
-    fightMenuBG = display.newImage("images/fightMenu2.png")
-    fightMenuBG.width = display.pixelWidth
-    fightMenuBG.height = display.pixelHeight/2
-    fightMenuBG.x = display.pixelWidth - (display.pixelWidth/2)
-    fightMenuBG.y = display.pixelHeight - (display.pixelHeight/4) 
+function openFightMenu (event)
 
-    fightMenuBtn[0] = display.newImage("images/fightMenu.png")
-    fightMenuBtn[0].width = 333
-    fightMenuBtn[0].height = 206 
-    fightMenuBtn[0].x = 184
-    fightMenuBtn[0].y = 842
-    
-    fightMenuBtn[1] = display.newImage("images/fightMenu.png")
-    fightMenuBtn[1].width = 333
-    fightMenuBtn[1].height = 206   
-    fightMenuBtn[1].x = 536
-    fightMenuBtn[1].y = 842
-    
-    fightMenuBtn[2] = display.newImage("images/fightMenu.png")
-    fightMenuBtn[2].width = 333
-    fightMenuBtn[2].height = 206 
-    fightMenuBtn[2].x = 184
-    fightMenuBtn[2].y = 1074    
+    if ( "ended" == event.phase ) then
+        audio.play(menuClick, {loops = 0})
+        fightMenuBG = display.newImage("images/fightMenu2.png")
+        fightMenuBG.width = display.pixelWidth
+        fightMenuBG.height = display.pixelHeight/2
+        fightMenuBG.x = display.pixelWidth - (display.pixelWidth/2)
+        fightMenuBG.y = display.pixelHeight - (display.pixelHeight/4) 
 
-    fightMenuBtn[3] = display.newImage("images/fightMenu.png")
-    fightMenuBtn[3].width = 333
-    fightMenuBtn[3].height = 206 
-    fightMenuBtn[3].x = 536
-    fightMenuBtn[3].y = 1074        
+        fightMenuBtn[0] = display.newImage("images/fightMenu.png")
+        fightMenuBtn[0].width = 333
+        fightMenuBtn[0].height = 206 
+        fightMenuBtn[0].x = 184
+        fightMenuBtn[0].y = 842
+        
+        fightMenuBtn[1] = display.newImage("images/fightMenu.png")
+        fightMenuBtn[1].width = 333
+        fightMenuBtn[1].height = 206   
+        fightMenuBtn[1].x = 536
+        fightMenuBtn[1].y = 842
+        
+        fightMenuBtn[2] = display.newImage("images/fightMenu.png")
+        fightMenuBtn[2].width = 333
+        fightMenuBtn[2].height = 206 
+        fightMenuBtn[2].x = 184
+        fightMenuBtn[2].y = 1074    
 
-    cancelBtn = display.newImage("images/cancelBtn.png")
-    cancelBtn.width = 150
-    cancelBtn.height = 75
-    cancelBtn.x = 638
-    cancelBtn.y = 1226    
+        fightMenuBtn[3] = display.newImage("images/fightMenu.png")
+        fightMenuBtn[3].width = 333
+        fightMenuBtn[3].height = 206 
+        fightMenuBtn[3].x = 536
+        fightMenuBtn[3].y = 1074        
 
-    cancelBtn:addEventListener("tap", returnToMainMenu)
+        cancelBtn = display.newImage("images/cancelBtn.png")
+        cancelBtn.width = 150
+        cancelBtn.height = 75
+        cancelBtn.x = 638
+        cancelBtn.y = 1226    
 
-    fightMenuBtn[0]:addEventListener("tap", attack1);
-    fightMenuBtn[1]:addEventListener("tap", attack2);
-    fightMenuBtn[2]:addEventListener("tap", attack3);
-    fightMenuBtn[3]:addEventListener("tap", attack4);
+        cancelBtn:addEventListener("tap", returnToMainMenu)
 
-    menu.isVisible = false
-    for cnt = 0, 3 do
-        mainMenuBtn[cnt].isVisible = false
+        fightMenuBtn[0]:addEventListener("tap", attack1);
+        fightMenuBtn[1]:addEventListener("tap", attack2);
+        fightMenuBtn[2]:addEventListener("tap", attack3);
+        fightMenuBtn[3]:addEventListener("tap", attack4);
+
+        menu.isVisible = false
+        for cnt = 0, 3 do
+            mainMenuBtn[cnt].isVisible = false
+        end
     end
 end
 -- -----------------------------------------------------------------------------------
@@ -231,11 +245,6 @@ function scene:create( event )
 
     openMainMenu()
     drawBackground()
-
-    mainMenuBtn[0]:addEventListener("tap", openFightMenu)
-    mainMenuBtn[1]:addEventListener("tap", openPokemonMenu)
-    mainMenuBtn[2]:addEventListener("tap", openItemsMenu)
-    --mainMenuBtn[3]:addEventListener("tap", openFightMenu)
 end
 
 -- show()

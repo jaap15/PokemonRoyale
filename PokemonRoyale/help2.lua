@@ -53,7 +53,7 @@ function scene:create( event )
     -- Code here runs when the scene is first created but has not yet appeared on screen
 
     -- Displaying game instructions
-    local instructionText1 = display.newText("First, you must assemble your team of\nPokemon. You will pick one at a time from\na random selection of 3, until you have a\nfull team of 6.", display.contentCenterX, display.contentCenterY-150, "center")
+    local instructionText1 = display.newText("First, you must assemble your team of\nPokemon. You will pick one at a time from\na random selection of 3, until you have a\nfull team of 6.", display.contentCenterX, display.contentCenterY-150)
 
     -- Game Background
 

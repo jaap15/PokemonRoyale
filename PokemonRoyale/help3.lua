@@ -53,7 +53,7 @@ function scene:create( event )
     -- Code here runs when the scene is first created but has not yet appeared on screen
 
     -- Displaying game instructions
-    local instructionText1 = display.newText("Then, it's to battle! You will\nhave a limited supply of items\nto heal your team. See\nhow long you can survive\nagainst an endless wave of\nopponents!", display.contentCenterX, display.contentCenterY-150, "center")
+    local instructionText1 = display.newText("Then, it's to battle! You will\nhave a limited supply of items\nto heal your team. See\nhow long you can survive\nagainst an endless wave of\nopponents!", display.contentCenterX, display.contentCenterY-150)
 
     -- Game Background
 

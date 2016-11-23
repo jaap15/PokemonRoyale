@@ -19,6 +19,8 @@ local widget = require("widget")
 -- the scene is removed entirely (not recycled) via "composer.removeScene()"
 -- -----------------------------------------------------------------------------------
 
+local sceneGroup
+
 -- startButtonEvent()
 --      input: none
 --      output: none
@@ -52,6 +54,58 @@ local function gameButtonEvent(event)
     end
 end
 
+local function animationIntro()
+    print("TEST")
+
+    local function rightSlash()
+        local sheetName = require("images.animations.slash")
+        local spriteSheetData = sheetName:getSheet()
+        --Creating the image sheet
+        local slashSheet = graphics.newImageSheet( "images/animations/slash.png", spriteSheetData)
+        --Getting the sequence data from the sprite sheet file
+        local sequenceData = sheetName:getSequence()
+
+        animation = display.newSprite( slashSheet, sequenceData)
+        animation.x = display.contentCenterX-200
+        animation.y = 400
+        animation:scale(2,2)
+        animation:play()
+        sceneGroup:insert( animation )
+    end
+
+    local function leftSlash()
+        local sheetName = require("images.animations.slash")
+        local spriteSheetData = sheetName:getSheet()
+        --Creating the image sheet
+        local slashSheet = graphics.newImageSheet( "images/animations/slash.png", spriteSheetData)
+        --Getting the sequence data from the sprite sheet file
+        local sequenceData = sheetName:getSequence()
+
+        animation = display.newSprite( slashSheet, sequenceData)
+        animation.x = display.contentCenterX+200
+        animation.y = 400
+        animation.xScale = -1
+        animation:scale(2,2)
+        animation:play()
+        sceneGroup:insert( animation )
+    end
+
+    local function menuTitle()
+        -- Game Background
+        menuBG = display.newImage("images/menuTitle2.png")
+        menuBG:scale(2,2)
+        menuBG.x = display.contentCenterX
+        menuBG.y = 400
+        sceneGroup:insert( menuBG )
+    end
+
+    timer.performWithDelay(500, rightSlash)
+    timer.performWithDelay(500, leftSlash)
+    timer.performWithDelay(1350, menuTitle)
+
+
+end
+
 -- -----------------------------------------------------------------------------------
 -- Scene event functions
 -- -----------------------------------------------------------------------------------
@@ -64,16 +118,10 @@ end
 --      them to the scene group.
 function scene:create( event )
 
-    local sceneGroup = self.view
+    sceneGroup = self.view
     -- Code here runs when the scene is first created but has not yet appeared on screen
 
     -- Game Title / Image 
-
-    -- Game Background
-    menuBG = display.newImage("images/menuTitle2.png")
-    menuBG:scale(2,2)
-    menuBG.x = display.contentCenterX
-    menuBG.y = 400
 
     -- Creating the start button, sends us from the menu scene to the game scene
     local startButton = widget.newButton({    
@@ -114,6 +162,8 @@ function scene:create( event )
             onEvent = gameButtonEvent 
         } )      
 
+    animationIntro()
+
     -- Positioning all objects on the screen
     startButton.x = display.contentCenterX
     startButton.y = display.contentCenterY+(display.contentCenterY/1.9)
@@ -124,7 +174,6 @@ function scene:create( event )
 
     -- Adding all objects to the scene group, this will bind these object to the scene
     -- and they will be removed / replaced when switching to and from scenes
-    sceneGroup:insert( menuBG )
     sceneGroup:insert( startButton )
     sceneGroup:insert( helpButton )
     sceneGroup:insert( gameButton )

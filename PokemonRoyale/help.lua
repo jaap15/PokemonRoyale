@@ -47,7 +47,7 @@ function scene:create( event )
     -- Code here runs when the scene is first created but has not yet appeared on screen
 
     -- Displaying game instructions
-    local instructionText1 = display.newText("Welcome to Pokemon Royale!\n\nPress Next to learn more\nabout the rules of engagement!", display.contentCenterX, display.contentCenterY-150, "center")
+    local instructionText1 = display.newText("Welcome to Pokemon Royale!\n\nPress Next to learn more\nabout the rules of engagement!", display.contentCenterX, display.contentCenterY-150)
 
     -- Game Background
 
