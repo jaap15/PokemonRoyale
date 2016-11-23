@@ -48,12 +48,12 @@ function drawBackground()
     platformBG.x = display.pixelWidth - (display.pixelWidth/2)
     platformBG.y = display.pixelHeight - (display.pixelHeight/1.33) 
 
-    local pokemon1 = pokemon:new({xPos=542, yPos=380})
-    pokemon1:create()
+    local pokemon1 = pokemon:new({xPos=542, yPos=340})
+    pokemon1:create(3)
     pokemon1:setSelectionView()
 
-    local pokemon2 = pokemon:new({xPos=190, yPos=530})
-    pokemon2:create()
+    local pokemon2 = pokemon:new({xPos=190, yPos=560})
+    pokemon2:create(6)
     pokemon2:setBattleView()
 
 end
