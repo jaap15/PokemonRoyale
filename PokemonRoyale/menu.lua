@@ -70,37 +70,47 @@ function scene:create( event )
     -- Game Title / Image 
 
     -- Game Background
+    menuBG = display.newImage("images/menuTitle2.png")
+    menuBG:scale(2,2)
+    menuBG.x = display.contentCenterX
+    menuBG.y = 400
 
     -- Creating the start button, sends us from the menu scene to the game scene
     local startButton = widget.newButton({    
             id = "startButton",
             label = "Start",    
+            labelColor = { default={ 1, 1, 0 }, over={ 0, 1, 1, 0.5 } },
             width = 300,
             height = 60,
             fontSize = 30,
-            defaultFile = "images/button.png",
+            defaultFile = "images/button2.png",
+            overFile  = "images/button2over.png",
             onEvent = startButtonEvent 
         } )    
 
     -- Creating the help button, sends us from the menu scene to the help scene
     local helpButton = widget.newButton({    
             id = "helpButton",
-            label = "Help",    
+            label = "Help",
+            labelColor = { default={ 1, 1, 0 }, over={ 0, 0, 0, 0.5 } },
             width = 300,
             height = 60,
             fontSize = 30,
-            defaultFile = "images/button.png",
+            defaultFile = "images/button2.png",
+            overFile  = "images/button2over.png",
             onEvent = helpButtonEvent 
         } )  
 
     -- Creating the help button, sends us from the menu scene to the help scene
     local gameButton = widget.newButton({    
             id = "gameButton",
-            label = "Game",    
+            label = "Game",  
+            labelColor = { default={ 1, 1, 0 }, over={ 0, 0, 0, 0.5 } },
             width = 300,
             height = 60,
             fontSize = 30,
-            defaultFile = "images/button.png",
+            defaultFile = "images/button2.png",
+            overFile  = "images/button2over.png",
             onEvent = gameButtonEvent 
         } )      
 
@@ -114,6 +124,7 @@ function scene:create( event )
 
     -- Adding all objects to the scene group, this will bind these object to the scene
     -- and they will be removed / replaced when switching to and from scenes
+    sceneGroup:insert( menuBG )
     sceneGroup:insert( startButton )
     sceneGroup:insert( helpButton )
     sceneGroup:insert( gameButton )

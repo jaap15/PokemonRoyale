@@ -8,6 +8,7 @@
 local composer = require("composer")
 local scene = composer.newScene()
 local widget = require("widget")
+local Pokemon = require ("Pokemon");
 
 -- -----------------------------------------------------------------------------------
 -- Code outside of the scene event functions below will only be executed ONCE unless
@@ -19,13 +20,7 @@ local platformBG
 local cancelBtn
 local fightMenuBtn = {}
 local mainMenuBtn = {}
-
-local color = 
-{
-    highlight = {1,0,1},   
-    border = {1,0,1},
-    shadow = {1,0,0}  
-}
+local pokemon = Pokemon:new( {HP=150} );
 
 -- Local Sounds
 local menuClick = audio.loadStream("sounds/menuButtonClick.mp3")
@@ -52,6 +47,15 @@ function drawBackground()
     platformBG.height = display.pixelHeight/2
     platformBG.x = display.pixelWidth - (display.pixelWidth/2)
     platformBG.y = display.pixelHeight - (display.pixelHeight/1.33) 
+
+    local pokemon1 = pokemon:new({xPos=542, yPos=380})
+    pokemon1:create()
+    pokemon1:setSelectionView()
+
+    local pokemon2 = pokemon:new({xPos=190, yPos=530})
+    pokemon2:create()
+    pokemon2:setBattleView()
+
 end
 
 function openPokemonMenu()
