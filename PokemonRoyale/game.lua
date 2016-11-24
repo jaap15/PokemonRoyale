@@ -36,6 +36,7 @@ function removeObjectList(objectList, pokemonObjects)
             if(objectList[i] ~= nil) then
 		        objectList[i].pokemon.healthBar:removeSelf();
                 objectList[i].pokemon.damageBar:removeSelf();
+                objectList[i].pokemon.selectViewTN:removeSelf();
                 objectList[i].pokemon.battleView:removeSelf();
                 objectList[i].pokemon.selectView:removeSelf();
                 objectList[i].pokemon:removeSelf();
