@@ -32,40 +32,6 @@ local enemyTeam = {}
 local enemyBar;
 local playerBar;
 
--- local characterGroup = display.newGroup( )
--- characterGroup.x = display.pixelWidth - 98
--- characterGroup.y = display.pixelHeight/2 - 30
-
--- local maxHealth = 100;
--- local currentHealth = 100
-
--- local healthBar = display.newRect(0,-45,maxHealth, 10)
--- healthBar:setFillColor(000/255,255/255,0/255)
--- healthBar.strokeWidth = 1
--- healthBar:setStrokeColor(255,255,255, .5)
--- characterGroup:insert(healthBar)
-
--- local damageBar = display.newRect(0,-45,0,10)
--- damageBar:setFillColor(255/255, 0/255, 0/255)
--- characterGroup:insert(damageBar)
-
--- local function updateDamageBar()
---     damageBar.x = currentHealth/2
---     damageBar.width = maxHealth - currentHealth
--- end
-
--- local function damageCharacter(damageTaken)
---     currentHealth = currentHealth - damageTaken
---     updateDamageBar()
--- end
-
--- local function moveRight()
---     if(currentHealth > 0) then
---         damageCharacter(25)
---     end
---     -- transition.to( characterGroup, { time=1500, x=(characterGroup.x+100), onComplete = moveLeft} )
--- end
-
 local function updatePokemonName()
     playerBar.name.text = yourTeam[currentPokemon].pokemon.tag
     enemyBar.name.text = enemyTeam[eCurrentPokemon].pokemon.tag
