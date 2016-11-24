@@ -8,48 +8,59 @@
 local composer = require("composer")
 local scene = composer.newScene()
 local widget = require("widget")
+local Pokemon = require ("Pokemon");
+require("sqlController");
 
 -- -----------------------------------------------------------------------------------
 -- Code outside of the scene event functions below will only be executed ONCE unless
 -- the scene is removed entirely (not recycled) via "composer.removeScene()"
 -- ----------------------------------------------------------------------------------
-
--- Dummy table to test selection
-pokemonTable = {
-    {image="images/gameScene/p1.png", thumb="images/gameScene/t1.png"},
-    {image="images/gameScene/p2.png", thumb="images/gameScene/t2.png"},
-    {image="images/gameScene/p3.png", thumb="images/gameScene/t3.png"},
-    {image="images/gameScene/p4.png", thumb="images/gameScene/t4.png"},
-    {image="images/gameScene/p5.png", thumb="images/gameScene/t5.png"},
-    {image="images/gameScene/p6.png", thumb="images/gameScene/t6.png"},
-    {image="images/gameScene/p7.png", thumb="images/gameScene/t7.png"},
-    {image="images/gameScene/p8.png", thumb="images/gameScene/t8.png"},
-    {image="images/gameScene/p9.png", thumb="images/gameScene/t9.png"}
-};
+local totalPokemons = 9
+local pokemon = Pokemon:new( {HP=150} );
 teamIndex = 1
 thumbX = 173;
 thumbY = 900;
 yourTeam = {}
+local thumbList = {}
+local select1;
+local select2;
+local select3;
+local pokeInfo1;
+local pokeInfo2;
+local pokeInfo3;
+
+
+local function removeThumbs()
+    for i = 1, #thumbList do
+        if(thumbList[i] ~= nil) then
+            thumbList[i]:removeSelf();
+            thumbList[i] = nil;
+        end
+    end
+end
 
 local function selectionListener(event)
     if (event.target == select1) then
-        thumb = display.newImage(pokemonTable[random1].thumb, thumbX, thumbY);
-        thumb:scale(3,3)
-        yourTeam[teamIndex] = {image=pokemonTable[random1].image, thumb=pokemonTable[random1].thumb};
+        thumbList[teamIndex] = display.newImage(pokeInfo1.imagesLocation.."/select.png", thumbX, thumbY);
+        thumbList[teamIndex]:scale(1.5,1.5)
+        yourTeam[teamIndex] = pokemon:new({xPos=125, yPos=280});
+        yourTeam[teamIndex]:create(pokeInfo1.Pid)
     elseif (event.target == select2) then
-        thumb = display.newImage(pokemonTable[random2].thumb, thumbX, thumbY);
-        thumb:scale(3,3)
-        yourTeam[teamIndex] = {image=pokemonTable[random2].image, thumb=pokemonTable[random2].thumb};
+        thumbList[teamIndex] = display.newImage(pokeInfo2.imagesLocation.."/select.png", thumbX, thumbY);
+        thumbList[teamIndex]:scale(1.5,1.5)
+        yourTeam[teamIndex] = pokemon:new({xPos=360, yPos=280});
+        yourTeam[teamIndex]:create(pokeInfo2.Pid)
     elseif (event.target == select3) then
-        thumb = display.newImage(pokemonTable[random3].thumb, thumbX, thumbY);
-        thumb:scale(3,3)
-        yourTeam[teamIndex] = {image=pokemonTable[random3].image, thumb=pokemonTable[random3].thumb};
+        thumbList[teamIndex] = display.newImage(pokeInfo3.imagesLocation.."/select.png", thumbX, thumbY);
+        thumbList[teamIndex]:scale(1.5,1.5)
+        yourTeam[teamIndex] = pokemon:new({xPos=590, yPos=280});
+        yourTeam[teamIndex]:create(pokeInfo3.Pid)
     end
     if (thumbX < 519) then
         thumbX = thumbX + 173;
     else
         thumbX = 173;
-        thumbY = 1000;
+        thumbY = 1050;
     end
     teamIndex = teamIndex + 1;
     if (teamIndex < 7) then
@@ -64,12 +75,14 @@ local function selectionListener(event)
         teamSelect();
     elseif (teamIndex == 7) then
         selectText:removeSelf();
+        teamText:removeSelf();
         select1:removeEventListener("tap", selectionListener);
         select2:removeEventListener("tap", selectionListener);
         select3:removeEventListener("tap", selectionListener);
         select1:removeSelf();
         select2:removeSelf();
         select3:removeSelf();
+        removeThumbs();
         composer.gotoScene("fight")
     end
 end
@@ -77,12 +90,17 @@ end
 function teamSelect()
     selectText = display.newText("Select a Pokemon", display.contentCenterX, 100, native.systemFont, 78, "center");
     teamText = display.newText("Your Team", display.contentCenterX, 800, native.systemFont, 78, "center");
-    random1 = math.random(1, #pokemonTable);
-    random2 = math.random(1, #pokemonTable);
-    random3 = math.random(1, #pokemonTable);
-    select1 = display.newImage(pokemonTable[random1].image, 173, 280);
-    select2 = display.newImage(pokemonTable[random2].image, 346, 280);
-    select3 = display.newImage(pokemonTable[random3].image, 519, 280);
+    local random1 = math.random(1, totalPokemons);
+    local random2 = math.random(1, totalPokemons);
+    local random3 = math.random(1, totalPokemons);
+
+    pokeInfo1 = getPokemonTableInfo(random1)
+    pokeInfo2 = getPokemonTableInfo(random2)
+    pokeInfo3 = getPokemonTableInfo(random3)
+
+    select1 = display.newImage(pokeInfo1.imagesLocation.."/select.png", 125, 280);
+    select2 = display.newImage(pokeInfo2.imagesLocation.."/select.png", 360, 280);
+    select3 = display.newImage(pokeInfo3.imagesLocation.."/select.png", 590, 280);
     select1:scale(2,2)
     select2:scale(2,2)
     select3:scale(2,2)
