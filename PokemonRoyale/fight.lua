@@ -29,7 +29,47 @@ local currentPokemon = 1;
 local eCurrentPokemon = 1;
 local fSize = 50; --font size
 local enemyTeam = {}
+local enemyBar;
+local playerBar;
 
+-- local characterGroup = display.newGroup( )
+-- characterGroup.x = display.pixelWidth - 98
+-- characterGroup.y = display.pixelHeight/2 - 30
+
+-- local maxHealth = 100;
+-- local currentHealth = 100
+
+-- local healthBar = display.newRect(0,-45,maxHealth, 10)
+-- healthBar:setFillColor(000/255,255/255,0/255)
+-- healthBar.strokeWidth = 1
+-- healthBar:setStrokeColor(255,255,255, .5)
+-- characterGroup:insert(healthBar)
+
+-- local damageBar = display.newRect(0,-45,0,10)
+-- damageBar:setFillColor(255/255, 0/255, 0/255)
+-- characterGroup:insert(damageBar)
+
+-- local function updateDamageBar()
+--     damageBar.x = currentHealth/2
+--     damageBar.width = maxHealth - currentHealth
+-- end
+
+-- local function damageCharacter(damageTaken)
+--     currentHealth = currentHealth - damageTaken
+--     updateDamageBar()
+-- end
+
+-- local function moveRight()
+--     if(currentHealth > 0) then
+--         damageCharacter(25)
+--     end
+--     -- transition.to( characterGroup, { time=1500, x=(characterGroup.x+100), onComplete = moveLeft} )
+-- end
+
+local function updatePokemonName()
+    playerBar.name.text = yourTeam[currentPokemon].pokemon.tag
+    enemyBar.name.text = enemyTeam[eCurrentPokemon].pokemon.tag
+end
 -- Local Sounds
 local menuClick = audio.loadStream("sounds/menuButtonClick.mp3")
 
@@ -37,29 +77,30 @@ local menuClick = audio.loadStream("sounds/menuButtonClick.mp3")
 function attack1(event)
     if ( "ended" == event.phase ) then
         print("Player attacked with "..yourTeam[currentPokemon].pokemon.attack1)
-        enemyTeam[eCurrentPokemon]:takeDamage(yourTeam[currentPokemon].pokemon.attack1Damage)
-        yourTeam[currentPokemon]:takeDamage(25)
+        -- enemyTeam[eCurrentPokemon]:damageCharacter(yourTeam[currentPokemon].pokemon.attack1Damage)
+        --Keep this to try and decrease the player's pokemon's health will uncomment the above line when ready
+        yourTeam[currentPokemon]:damageCharacter(enemyTeam[eCurrentPokemon].pokemon.attack1Damage)
     end
 end
 
 function attack2(event)
     if ( "ended" == event.phase ) then
         print("Player attacked with "..yourTeam[currentPokemon].pokemon.attack2)
-        enemyTeam[eCurrentPokemon]:takeDamage(yourTeam[currentPokemon].pokemon.attack2Damage)
+        enemyTeam[eCurrentPokemon]:damageCharacter(yourTeam[currentPokemon].pokemon.attack2Damage)
     end
 end
 
 function attack3(event)
     if ( "ended" == event.phase ) then
         print("Player attacked with "..yourTeam[currentPokemon].pokemon.attack3)
-        enemyTeam[eCurrentPokemon]:takeDamage(yourTeam[currentPokemon].pokemon.attack3Damage)
+        enemyTeam[eCurrentPokemon]:damageCharacter(yourTeam[currentPokemon].pokemon.attack3Damage)
     end
 end
 
 function attack4(event)
     if ( "ended" == event.phase ) then
         print("Player attacked with "..yourTeam[currentPokemon].pokemon.attack4)
-        enemyTeam[eCurrentPokemon]:takeDamage(yourTeam[currentPokemon].pokemon.attack4Damage)
+        enemyTeam[eCurrentPokemon]:damageCharacter(yourTeam[currentPokemon].pokemon.attack4Damage)
     end
 end
 
@@ -68,9 +109,9 @@ function select1(event)
     if ( "ended" == event.phase ) then
         yourTeam[currentPokemon]:HidePokemon()
         currentPokemon = 1;
+        updatePokemonName()
         yourTeam[currentPokemon]:setBattleView()
         yourTeam[currentPokemon]:setPos(190,530)
-        yourTeam[currentPokemon]:drawHealthBar()
     end
 end
 
@@ -78,9 +119,9 @@ function select2(event)
     if ( "ended" == event.phase ) then
         yourTeam[currentPokemon]:HidePokemon()
         currentPokemon = 2;
+        updatePokemonName()
         yourTeam[currentPokemon]:setBattleView()
         yourTeam[currentPokemon]:setPos(190,530)
-        yourTeam[currentPokemon]:drawHealthBar()
     end
 end
 
@@ -88,9 +129,9 @@ function select3(event)
     if ( "ended" == event.phase ) then
         yourTeam[currentPokemon]:HidePokemon()
         currentPokemon = 3;
+        updatePokemonName()
         yourTeam[currentPokemon]:setBattleView()
         yourTeam[currentPokemon]:setPos(190,530)
-        yourTeam[currentPokemon]:drawHealthBar()
     end
 end
 
@@ -98,9 +139,9 @@ function select4(event)
     if ( "ended" == event.phase ) then
         yourTeam[currentPokemon]:HidePokemon()
         currentPokemon = 4;
+        updatePokemonName()
         yourTeam[currentPokemon]:setBattleView()
         yourTeam[currentPokemon]:setPos(190,530)
-        yourTeam[currentPokemon]:drawHealthBar()
     end
 end
 
@@ -108,9 +149,9 @@ function select5(event)
     if ( "ended" == event.phase ) then
         yourTeam[currentPokemon]:HidePokemon()
         currentPokemon = 5;
+        updatePokemonName()
         yourTeam[currentPokemon]:setBattleView()
         yourTeam[currentPokemon]:setPos(190,530)
-        yourTeam[currentPokemon]:drawHealthBar()
     end
 end
 
@@ -118,9 +159,9 @@ function select6(event)
     if ( "ended" == event.phase ) then
         yourTeam[currentPokemon]:HidePokemon()
         currentPokemon = 6;
+        updatePokemonName()
         yourTeam[currentPokemon]:setBattleView()
         yourTeam[currentPokemon]:setPos(190,530)
-        yourTeam[currentPokemon]:drawHealthBar()
     end
 end
 
@@ -151,17 +192,6 @@ function exitButtonEvent(event)
     end
 end
 
-function yourHealthBar()
-
-end
-
-function enemyHealthBar()
-    enemyTeam[eCurrentPokemon].pokemon.healthBar.x = 190
-    enemyTeam[eCurrentPokemon].pokemon.healthBar.y = 320
-    enemyTeam[eCurrentPokemon].pokemon.damageBar.x = 190
-    enemyTeam[eCurrentPokemon].pokemon.damageBar.y = 320
-end
-
 function drawBackground()
     platformBG = display.newImage("images/fightScene/GrassBG.png")
     platformBG.width = display.pixelWidth
@@ -169,39 +199,55 @@ function drawBackground()
     platformBG.x = display.pixelWidth - (display.pixelWidth/2)
     platformBG.y = display.pixelHeight - (display.pixelHeight/1.33) 
 
-    enemyInfoBox = display.newImage("images/fightScene/enemyInfoBox.png")
-    enemyInfoBox.width = 300
-    enemyInfoBox.height = 100
-    enemyInfoBox.x = 200
-    enemyInfoBox.y = 300
-
-    playerInfoBox = display.newImage("images/fightScene/playerInfoBox.png")
-    playerInfoBox.width = 300
-    playerInfoBox.height = 100        
-    playerInfoBox.x = 525
-    playerInfoBox.y = 525
-
     local pokemonsAvailable = getIdListOfPokemons()
 
     for i = 1, 6, 1 do
         print("Creating enemy: " .. i)
         local random = math.random(1, #pokemonsAvailable);
         local pokeInfo = getPokemonTableInfo(random)
-        enemyTeam[i] = pokemon:new({xPos=542, yPos=350});
+        enemyTeam[i] = pokemon:new({xPos=542, yPos=380});
         enemyTeam[i]:create(pokeInfo.Pid)
+        enemyTeam[eCurrentPokemon]:setHealthBarPos(160,167)
     end
 
-    enemyTeam[eCurrentPokemon]:setSelectionView();
+    enemyTeam[eCurrentPokemon]:setEnemySelectionView()
 
     yourTeam[currentPokemon]:setBattleView()
     yourTeam[currentPokemon]:setPos(190,530)
 
-    yourTeam[currentPokemon]:drawHealthBar()
-    enemyHealthBar()
+
+    enemyBar = display.newImage("images/fightScene/statusBar/enemyHealthbar.png")
+    enemyBar.width = 148
+    enemyBar.height = 125
+    enemyBar:scale(3,3)
+    enemyBar.x = 170
+    enemyBar.y = 100
+
+    enemyBar.name = display.newText(enemyTeam[eCurrentPokemon].pokemon.tag, 0, 0, native.systemFont, 28)
+    enemyBar.name:setFillColor( 1, 0, 0 )
+    enemyBar.name.x = 85
+    enemyBar.name.y = 85
+
+
+    playerBar = display.newImage("images/fightScene/statusBar/playerHealthbar.png")
+    playerBar.width = 148
+    playerBar.height = 125
+    playerBar:scale(2.9,2.7)
+    playerBar.x = display.pixelWidth - 185
+    playerBar.y = display.pixelHeight/2 - 85
+
+    playerBar.name = display.newText(yourTeam[currentPokemon].pokemon.tag, 0, 0, native.systemFont, 28)
+    playerBar.name:setFillColor( 1, 0, 0 )
+    playerBar.name.x = display.pixelWidth - 190
+    playerBar.name.y = display.pixelHeight/2 - 105
+
+
 
     sceneGroup:insert( platformBG )
-    sceneGroup:insert( enemyInfoBox )
-    sceneGroup:insert( playerInfoBox )
+    sceneGroup:insert( enemyBar )
+    sceneGroup:insert( enemyBar.name )
+    sceneGroup:insert( playerBar )
+    sceneGroup:insert( playerBar.name )
 end
 
 function returnToMainMenu(event)
