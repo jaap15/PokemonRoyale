@@ -37,24 +37,29 @@ local menuClick = audio.loadStream("sounds/menuButtonClick.mp3")
 function attack1(event)
     if ( "ended" == event.phase ) then
         print("Player attacked with "..yourTeam[currentPokemon].pokemon.attack1)
+        enemyTeam[eCurrentPokemon]:takeDamage(yourTeam[currentPokemon].pokemon.attack1Damage)
+        yourTeam[currentPokemon]:takeDamage(25)
     end
 end
 
 function attack2(event)
     if ( "ended" == event.phase ) then
         print("Player attacked with "..yourTeam[currentPokemon].pokemon.attack2)
+        enemyTeam[eCurrentPokemon]:takeDamage(yourTeam[currentPokemon].pokemon.attack2Damage)
     end
 end
 
 function attack3(event)
     if ( "ended" == event.phase ) then
         print("Player attacked with "..yourTeam[currentPokemon].pokemon.attack3)
+        enemyTeam[eCurrentPokemon]:takeDamage(yourTeam[currentPokemon].pokemon.attack3Damage)
     end
 end
 
 function attack4(event)
     if ( "ended" == event.phase ) then
         print("Player attacked with "..yourTeam[currentPokemon].pokemon.attack4)
+        enemyTeam[eCurrentPokemon]:takeDamage(yourTeam[currentPokemon].pokemon.attack4Damage)
     end
 end
 
@@ -65,6 +70,7 @@ function select1(event)
         currentPokemon = 1;
         yourTeam[currentPokemon]:setBattleView()
         yourTeam[currentPokemon]:setPos(190,530)
+        yourTeam[currentPokemon]:drawHealthBar()
     end
 end
 
@@ -74,6 +80,7 @@ function select2(event)
         currentPokemon = 2;
         yourTeam[currentPokemon]:setBattleView()
         yourTeam[currentPokemon]:setPos(190,530)
+        yourTeam[currentPokemon]:drawHealthBar()
     end
 end
 
@@ -83,6 +90,7 @@ function select3(event)
         currentPokemon = 3;
         yourTeam[currentPokemon]:setBattleView()
         yourTeam[currentPokemon]:setPos(190,530)
+        yourTeam[currentPokemon]:drawHealthBar()
     end
 end
 
@@ -92,6 +100,7 @@ function select4(event)
         currentPokemon = 4;
         yourTeam[currentPokemon]:setBattleView()
         yourTeam[currentPokemon]:setPos(190,530)
+        yourTeam[currentPokemon]:drawHealthBar()
     end
 end
 
@@ -101,6 +110,7 @@ function select5(event)
         currentPokemon = 5;
         yourTeam[currentPokemon]:setBattleView()
         yourTeam[currentPokemon]:setPos(190,530)
+        yourTeam[currentPokemon]:drawHealthBar()
     end
 end
 
@@ -110,6 +120,7 @@ function select6(event)
         currentPokemon = 6;
         yourTeam[currentPokemon]:setBattleView()
         yourTeam[currentPokemon]:setPos(190,530)
+        yourTeam[currentPokemon]:drawHealthBar()
     end
 end
 
@@ -140,6 +151,17 @@ function exitButtonEvent(event)
     end
 end
 
+function yourHealthBar()
+
+end
+
+function enemyHealthBar()
+    enemyTeam[eCurrentPokemon].pokemon.healthBar.x = 190
+    enemyTeam[eCurrentPokemon].pokemon.healthBar.y = 320
+    enemyTeam[eCurrentPokemon].pokemon.damageBar.x = 190
+    enemyTeam[eCurrentPokemon].pokemon.damageBar.y = 320
+end
+
 function drawBackground()
     platformBG = display.newImage("images/fightScene/GrassBG.png")
     platformBG.width = display.pixelWidth
@@ -147,23 +169,39 @@ function drawBackground()
     platformBG.x = display.pixelWidth - (display.pixelWidth/2)
     platformBG.y = display.pixelHeight - (display.pixelHeight/1.33) 
 
+    enemyInfoBox = display.newImage("images/fightScene/enemyInfoBox.png")
+    enemyInfoBox.width = 300
+    enemyInfoBox.height = 100
+    enemyInfoBox.x = 200
+    enemyInfoBox.y = 300
+
+    playerInfoBox = display.newImage("images/fightScene/playerInfoBox.png")
+    playerInfoBox.width = 300
+    playerInfoBox.height = 100        
+    playerInfoBox.x = 525
+    playerInfoBox.y = 525
+
     local pokemonsAvailable = getIdListOfPokemons()
 
     for i = 1, 6, 1 do
         print("Creating enemy: " .. i)
         local random = math.random(1, #pokemonsAvailable);
         local pokeInfo = getPokemonTableInfo(random)
-        enemyTeam[i] = pokemon:new({xPos=542, yPos=380});
+        enemyTeam[i] = pokemon:new({xPos=542, yPos=350});
         enemyTeam[i]:create(pokeInfo.Pid)
     end
 
     enemyTeam[eCurrentPokemon]:setSelectionView();
 
-
     yourTeam[currentPokemon]:setBattleView()
     yourTeam[currentPokemon]:setPos(190,530)
 
+    yourTeam[currentPokemon]:drawHealthBar()
+    enemyHealthBar()
+
     sceneGroup:insert( platformBG )
+    sceneGroup:insert( enemyInfoBox )
+    sceneGroup:insert( playerInfoBox )
 end
 
 function returnToMainMenu(event)
