@@ -58,36 +58,60 @@ end
 function select1(event)
     if ( "ended" == event.phase ) then
         print("select pokemon 1")
+        yourTeam[currentPokemon]:HidePokemon()
+        currentPokemon = 1;
+        yourTeam[currentPokemon]:setBattleView()
+        yourTeam[currentPokemon]:setPos(190,530)
     end
 end
 
 function select2(event)
     if ( "ended" == event.phase ) then
         print("select pokemon 2")
+        yourTeam[currentPokemon]:HidePokemon()
+        currentPokemon = 2;
+        yourTeam[currentPokemon]:setBattleView()
+        yourTeam[currentPokemon]:setPos(190,530)
     end
 end
 
 function select3(event)
     if ( "ended" == event.phase ) then
         print("select pokemon 3")
+        yourTeam[currentPokemon]:HidePokemon()
+        currentPokemon = 3;
+        yourTeam[currentPokemon]:setBattleView()
+        yourTeam[currentPokemon]:setPos(190,530)
     end
 end
 
 function select4(event)
     if ( "ended" == event.phase ) then
         print("select pokemon 4")
+        yourTeam[currentPokemon]:HidePokemon()
+        currentPokemon = 4;
+        yourTeam[currentPokemon]:setBattleView()
+        yourTeam[currentPokemon]:setPos(190,530)
     end
 end
 
 function select5(event)
     if ( "ended" == event.phase ) then
         print("select pokemon 5")
+        yourTeam[currentPokemon]:HidePokemon()
+        currentPokemon = 5;
+        yourTeam[currentPokemon]:setBattleView()
+        yourTeam[currentPokemon]:setPos(190,530)
     end
 end
 
 function select6(event)
     if ( "ended" == event.phase ) then
         print("select pokemon 6")
+        yourTeam[currentPokemon]:HidePokemon()
+        currentPokemon = 6;
+        yourTeam[currentPokemon]:setBattleView()
+        yourTeam[currentPokemon]:setPos(190,530)
     end
 end
 

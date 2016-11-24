@@ -53,6 +53,12 @@ function Pokemon:setBattleView()
   self.pokemon.battleView.isVisible = true;
 end
 
+function Pokemon:HidePokemon()
+  self.pokemon.isVisible = false;
+  self.pokemon.selectView.isVisible = false;
+  self.pokemon.battleView.isVisible = false;
+end
+
 function Pokemon:setPos(xP,yP)
 
   self.xPos = xP;
