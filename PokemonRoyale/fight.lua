@@ -31,6 +31,7 @@ local currentPokemon = 1;
 local eCurrentPokemon = 1;
 local fSize = 50; --font size
 local enemyTeam = {}
+local trainer = composer.getVariable("trainer")
 
 -- Local Sounds
 local menuClick = audio.loadStream("sounds/menuButtonClick.mp3")
@@ -38,85 +39,85 @@ local menuClick = audio.loadStream("sounds/menuButtonClick.mp3")
 -- Fight Menu Functions
 function attack1(event)
     if ( "ended" == event.phase ) then
-        print("Player attacked with "..yourTeam[currentPokemon].pokemon.attack1)
-        enemyTeam[eCurrentPokemon]:takeDamage(yourTeam[currentPokemon].pokemon.attack1Damage)
-        yourTeam[currentPokemon]:takeDamage(25)
+        print("Player attacked with "..trainer.Pokemans[currentPokemon].pokemon.attack1)
+        enemyTeam[eCurrentPokemon]:takeDamage(trainer.Pokemans[currentPokemon].pokemon.attack1Damage)
+        trainer.Pokemans[currentPokemon]:takeDamage(25)
     end
 end
 
 function attack2(event)
     if ( "ended" == event.phase ) then
-        print("Player attacked with "..yourTeam[currentPokemon].pokemon.attack2)
-        enemyTeam[eCurrentPokemon]:takeDamage(yourTeam[currentPokemon].pokemon.attack2Damage)
+        print("Player attacked with "..trainer.Pokemans[currentPokemon].pokemon.attack2)
+        enemyTeam[eCurrentPokemon]:takeDamage(trainer.Pokemans[currentPokemon].pokemon.attack2Damage)
     end
 end
 
 function attack3(event)
     if ( "ended" == event.phase ) then
-        print("Player attacked with "..yourTeam[currentPokemon].pokemon.attack3)
-        enemyTeam[eCurrentPokemon]:takeDamage(yourTeam[currentPokemon].pokemon.attack3Damage)
+        print("Player attacked with "..trainer.Pokemans[currentPokemon].pokemon.attack3)
+        enemyTeam[eCurrentPokemon]:takeDamage(trainer.Pokemans[currentPokemon].pokemon.attack3Damage)
     end
 end
 
 function attack4(event)
     if ( "ended" == event.phase ) then
-        print("Player attacked with "..yourTeam[currentPokemon].pokemon.attack4)
-        enemyTeam[eCurrentPokemon]:takeDamage(yourTeam[currentPokemon].pokemon.attack4Damage)
+        print("Player attacked with "..trainer.Pokemans[currentPokemon].pokemon.attack4)
+        enemyTeam[eCurrentPokemon]:takeDamage(trainer.Pokemans[currentPokemon].pokemon.attack4Damage)
     end
 end
 
 -- Pokemon Menu Functions
 function select1(event)
     if ( "ended" == event.phase ) then
-        yourTeam[currentPokemon]:HidePokemon()
+        trainer.Pokemans[currentPokemon]:HidePokemon()
         currentPokemon = 1;
-        yourTeam[currentPokemon]:setBattleView()
-        yourTeam[currentPokemon]:setPos(190,530)
+        trainer.Pokemans[currentPokemon]:setBattleView()
+        trainer.Pokemans[currentPokemon]:setPos(190,530)
     end
 end
 
 function select2(event)
     if ( "ended" == event.phase ) then
-        yourTeam[currentPokemon]:HidePokemon()
+        trainer.Pokemans[currentPokemon]:HidePokemon()
         currentPokemon = 2;
-        yourTeam[currentPokemon]:setBattleView()
-        yourTeam[currentPokemon]:setPos(190,530) 
+        trainer.Pokemans[currentPokemon]:setBattleView()
+        trainer.Pokemans[currentPokemon]:setPos(190,530)
    end
 end
 
 function select3(event)
     if ( "ended" == event.phase ) then
-        yourTeam[currentPokemon]:HidePokemon()
+        trainer.Pokemans[currentPokemon]:HidePokemon()
         currentPokemon = 3;
-        yourTeam[currentPokemon]:setBattleView()
-        yourTeam[currentPokemon]:setPos(190,530)
+        trainer.Pokemans[currentPokemon]:setBattleView()
+        trainer.Pokemans[currentPokemon]:setPos(190,530)
     end
 end
 
 function select4(event)
     if ( "ended" == event.phase ) then
-        yourTeam[currentPokemon]:HidePokemon()
+        trainer.Pokemans[currentPokemon]:HidePokemon()
         currentPokemon = 4;
-        yourTeam[currentPokemon]:setBattleView()
-        yourTeam[currentPokemon]:setPos(190,530)
+        trainer.Pokemans[currentPokemon]:setBattleView()
+        trainer.Pokemans[currentPokemon]:setPos(190,530)
     end
 end
 
 function select5(event)
     if ( "ended" == event.phase ) then
-        yourTeam[currentPokemon]:HidePokemon()
+        trainer.Pokemans[currentPokemon]:HidePokemon()
         currentPokemon = 5;
-        yourTeam[currentPokemon]:setBattleView()
-        yourTeam[currentPokemon]:setPos(190,530)
+        trainer.Pokemans[currentPokemon]:setBattleView()
+        trainer.Pokemans[currentPokemon]:setPos(190,530)
     end
 end
 
 function select6(event)
     if ( "ended" == event.phase ) then
-        yourTeam[currentPokemon]:HidePokemon()
+        trainer.Pokemans[currentPokemon]:HidePokemon()
         currentPokemon = 6;
-        yourTeam[currentPokemon]:setBattleView()
-        yourTeam[currentPokemon]:setPos(190,530)
+        trainer.Pokemans[currentPokemon]:setBattleView()
+        trainer.Pokemans[currentPokemon]:setPos(190,530)
     end
 end
 
@@ -141,7 +142,7 @@ end
 
 function exitButtonEvent(event)
     if ("ended" == event.phase) then
-        removeObjectList(yourTeam, true);
+        removeObjectList(trainer.Pokemans, true);
         removeObjectList(enemyTeam, true);
         composer.gotoScene("menu")
     end
@@ -176,15 +177,15 @@ function drawBackground()
         enemyTeam[i]:create(pokeInfo.Pid)
     end
 
-    for i = 1, #yourTeam do
-        yourTeam[i]:drawHealthBar("player")
+    for i = 1, #trainer.Pokemans do
+        trainer.Pokemans[i]:drawHealthBar("player")
         enemyTeam[i]:drawHealthBar("enemy")
     end
 
     enemyTeam[eCurrentPokemon]:setSelectionView();
 
-    yourTeam[currentPokemon]:setBattleView()
-    yourTeam[currentPokemon]:setPos(190,530)
+    trainer.Pokemans[currentPokemon]:setBattleView()
+    trainer.Pokemans[currentPokemon]:setPos(190,530)
 
     sceneGroup:insert( platformBG )
     sceneGroup:insert( enemyInfoBox )
@@ -206,7 +207,7 @@ function returnToMainMenu(event)
             for cnt = 0, #pkmnMenuBtn do
                 pkmnMenuBtn[cnt].isVisible = false
             end 
-            for cnt = 1, #yourTeam do       
+            for cnt = 1, #trainer.Pokemans do       
                 pokemonThumbNails[cnt].isVisible = false 
                 pokemonNames[cnt].isVisible = false
             end
@@ -312,7 +313,7 @@ function openFightMenu (event)
 
         fightMenuBtn[0] = widget.newButton({    
             id = "attack1Btn",
-            label = yourTeam[currentPokemon].pokemon.attack1,
+            label = trainer.Pokemans[currentPokemon].pokemon.attack1,
             fontSize = fSize,
             width = 333,
             height = 206,
@@ -325,7 +326,7 @@ function openFightMenu (event)
 
         fightMenuBtn[1] = widget.newButton({    
             id = "attack2Btn",
-            label = yourTeam[currentPokemon].pokemon.attack2,
+            label = trainer.Pokemans[currentPokemon].pokemon.attack2,
             fontSize = fSize,
             width = 333,
             height = 206,
@@ -338,7 +339,7 @@ function openFightMenu (event)
 
         fightMenuBtn[2] = widget.newButton({    
             id = "attack3Btn",
-            label = yourTeam[currentPokemon].pokemon.attack3,
+            label = trainer.Pokemans[currentPokemon].pokemon.attack3,
             fontSize = fSize,
             width = 333,
             height = 206,
@@ -351,7 +352,7 @@ function openFightMenu (event)
 
         fightMenuBtn[3] = widget.newButton({    
             id = "attack4Btn",
-            label = yourTeam[currentPokemon].pokemon.attack4,
+            label = trainer.Pokemans[currentPokemon].pokemon.attack4,
             fontSize = fSize,
             width = 333,
             height = 206,
@@ -471,8 +472,8 @@ function openPokemonMenu(event)
         -- Drawing pokemon thumbnails
         local y1Offset = 0
         local y2Offset = 0
-        for cnt = 1, #yourTeam do
-            pokemonThumbNails[cnt] = yourTeam[cnt]:returnSelectImage()
+        for cnt = 1, #trainer.Pokemans do
+            pokemonThumbNails[cnt] = trainer.Pokemans[cnt]:returnSelectImage()
             pokemonThumbNails[cnt].isVisible = true
             if (cnt % 2 == 0) then
                 pokemonThumbNails[cnt].x = 470
@@ -489,8 +490,8 @@ function openPokemonMenu(event)
         -- Drawing pokemon names
         local y1Offset = 0
         local y2Offset = 0
-        for cnt = 1, #yourTeam do
-            pokemonNames[cnt] = display.newText(yourTeam[cnt].pokemon.tag, 0, 0, native.systemFont, 30)
+        for cnt = 1, #trainer.Pokemans do
+            pokemonNames[cnt] = display.newText(trainer.Pokemans[cnt].pokemon.tag, 0, 0, native.systemFont, 30)
             if (cnt % 2 == 0) then
                 pokemonNames[cnt].x = 600
                 pokemonNames[cnt].y = 725+y1Offset
