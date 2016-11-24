@@ -147,19 +147,6 @@ function scene:create( event )
             onEvent = helpButtonEvent 
         } )  
 
-    -- Creating the help button, sends us from the menu scene to the help scene
-    local gameButton = widget.newButton({    
-            id = "gameButton",
-            label = "Game",  
-            labelColor = { default={ 1, 1, 0 }, over={ 0, 0, 0, 0.5 } },
-            width = 300,
-            height = 60,
-            fontSize = 30,
-            defaultFile = "images/menuScene/menuBtn.png",
-            overFile  = "images/menuScene/menuBtnOnClick.png",
-            onEvent = gameButtonEvent 
-        } )      
-
     animationIntro()
 
     -- Positioning all objects on the screen
@@ -167,14 +154,11 @@ function scene:create( event )
     startButton.y = display.contentCenterY+(display.contentCenterY/1.9)
     helpButton.x = display.contentCenterX
     helpButton.y = display.contentCenterY+(display.contentCenterY/1.5)
-    gameButton.x = display.contentCenterX
-    gameButton.y = display.contentCenterY+(display.contentCenterY/1.2)    
 
     -- Adding all objects to the scene group, this will bind these object to the scene
     -- and they will be removed / replaced when switching to and from scenes
     sceneGroup:insert( startButton )
     sceneGroup:insert( helpButton )
-    sceneGroup:insert( gameButton )
 end
 
 

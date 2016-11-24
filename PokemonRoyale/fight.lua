@@ -21,6 +21,8 @@ local cancelBtn
 local mainMenuBtn = {}
 local fightMenuBtn = {}
 local pkmnMenuBtn = {}
+local pkmnHB = {}
+local pkmnDB = {}
 local pokemonThumbNails = {}
 local pokemonNames = {}
 local pokemon = Pokemon:new( {HP=150} )
@@ -183,7 +185,7 @@ function drawBackground()
 
     yourTeam[currentPokemon]:setBattleView()
     yourTeam[currentPokemon]:setPos(190,530)
-    
+
     sceneGroup:insert( platformBG )
     sceneGroup:insert( enemyInfoBox )
     sceneGroup:insert( playerInfoBox )
