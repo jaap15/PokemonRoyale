@@ -94,6 +94,12 @@ local function selectionListener(event)
         removeObjectList(thumbList, false);
         composer.gotoScene("fight")
     end
+    
+    local pokemon1 = yourTeam[1].pokemon.selectView
+    pokemon1.x = display.contentCenterX
+    pokemon1.y = display.contentCenterX
+    pokemon1.width = 500
+    pokemon1.height = 500
 end
 
 function teamSelect()

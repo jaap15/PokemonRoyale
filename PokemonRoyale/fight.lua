@@ -21,6 +21,8 @@ local cancelBtn
 local mainMenuBtn = {}
 local fightMenuBtn = {}
 local pkmnMenuBtn = {}
+local pokemonThumbNails = {}
+local pokemonNames = {}
 local pokemon = Pokemon:new( {HP=150} )
 local sceneGroup
 local currentPokemon = 1;
@@ -59,7 +61,6 @@ end
 -- Pokemon Menu Functions
 function select1(event)
     if ( "ended" == event.phase ) then
-        print("select pokemon 1")
         yourTeam[currentPokemon]:HidePokemon()
         currentPokemon = 1;
         yourTeam[currentPokemon]:setBattleView()
@@ -69,7 +70,6 @@ end
 
 function select2(event)
     if ( "ended" == event.phase ) then
-        print("select pokemon 2")
         yourTeam[currentPokemon]:HidePokemon()
         currentPokemon = 2;
         yourTeam[currentPokemon]:setBattleView()
@@ -79,7 +79,6 @@ end
 
 function select3(event)
     if ( "ended" == event.phase ) then
-        print("select pokemon 3")
         yourTeam[currentPokemon]:HidePokemon()
         currentPokemon = 3;
         yourTeam[currentPokemon]:setBattleView()
@@ -89,7 +88,6 @@ end
 
 function select4(event)
     if ( "ended" == event.phase ) then
-        print("select pokemon 4")
         yourTeam[currentPokemon]:HidePokemon()
         currentPokemon = 4;
         yourTeam[currentPokemon]:setBattleView()
@@ -99,7 +97,6 @@ end
 
 function select5(event)
     if ( "ended" == event.phase ) then
-        print("select pokemon 5")
         yourTeam[currentPokemon]:HidePokemon()
         currentPokemon = 5;
         yourTeam[currentPokemon]:setBattleView()
@@ -109,7 +106,6 @@ end
 
 function select6(event)
     if ( "ended" == event.phase ) then
-        print("select pokemon 6")
         yourTeam[currentPokemon]:HidePokemon()
         currentPokemon = 6;
         yourTeam[currentPokemon]:setBattleView()
@@ -184,6 +180,10 @@ function returnToMainMenu(event)
             pkmnMenuBG.isVisible = false
             for cnt = 0, #pkmnMenuBtn do
                 pkmnMenuBtn[cnt].isVisible = false
+            end 
+            for cnt = 1, #yourTeam do       
+                pokemonThumbNails[cnt].isVisible = false 
+                pokemonNames[cnt].isVisible = false
             end
         end
 
@@ -376,6 +376,7 @@ function openPokemonMenu(event)
         pkmnMenuBG.x = display.pixelWidth - (display.pixelWidth/2)
         pkmnMenuBG.y = display.pixelHeight - (display.pixelHeight/4)    
 
+
         pkmnMenuBtn[0] = widget.newButton({    
             id = "select1Btn",
             width = 355,
@@ -407,7 +408,7 @@ function openPokemonMenu(event)
             onEvent = select3 
         } )        
         pkmnMenuBtn[2].x = 180
-        pkmnMenuBtn[2].y = 887 
+        pkmnMenuBtn[2].y = 887     
 
         pkmnMenuBtn[3] = widget.newButton({    
             id = "select4Btn",
@@ -429,7 +430,7 @@ function openPokemonMenu(event)
             onEvent = select5 
         } )        
         pkmnMenuBtn[4].x = 180
-        pkmnMenuBtn[4].y = 1047 
+        pkmnMenuBtn[4].y = 1047   
 
         pkmnMenuBtn[5] = widget.newButton({    
             id = "select6Btn",
@@ -440,8 +441,43 @@ function openPokemonMenu(event)
             onEvent = select6 
         } )        
         pkmnMenuBtn[5].x = 540
-        pkmnMenuBtn[5].y = 1074 
+        pkmnMenuBtn[5].y = 1074        
 
+        -- Drawing pokemon thumbnails
+        local y1Offset = 0
+        local y2Offset = 0
+        for cnt = 1, #yourTeam do
+            pokemonThumbNails[cnt] = yourTeam[cnt]:returnSelectImage()
+            pokemonThumbNails[cnt].isVisible = true
+            if (cnt % 2 == 0) then
+                pokemonThumbNails[cnt].x = 470
+                pokemonThumbNails[cnt].y = 725+y1Offset
+                y1Offset = y1Offset+160
+            else                
+                pokemonThumbNails[cnt].x = 100
+                pokemonThumbNails[cnt].y = 685+y2Offset
+                y2Offset = y2Offset + 170
+            end
+            --sceneGroup:insert(pokemonThumbNails[cnt])
+        end
+
+        -- Drawing pokemon names
+        local y1Offset = 0
+        local y2Offset = 0
+        for cnt = 1, #yourTeam do
+            pokemonNames[cnt] = display.newText(yourTeam[cnt].pokemon.tag, 0, 0, native.systemFont, 30)
+            if (cnt % 2 == 0) then
+                pokemonNames[cnt].x = 600
+                pokemonNames[cnt].y = 725+y1Offset
+                y1Offset = y1Offset+160
+            else                
+                pokemonNames[cnt].x = 200
+                pokemonNames[cnt].y = 685+y2Offset
+                y2Offset = y2Offset + 170
+            end
+            --sceneGroup:insert(pokemonNames[cnt])
+        end        
+        
         cancelBtn = widget.newButton({    
                 id = "cancelBtn",
                 width = 150,
@@ -459,12 +495,9 @@ function openPokemonMenu(event)
         end
 
         sceneGroup:insert( pkmnMenuBG )
-        sceneGroup:insert( pkmnMenuBtn[0] )
-        sceneGroup:insert( pkmnMenuBtn[1] )
-        sceneGroup:insert( pkmnMenuBtn[2] )
-        sceneGroup:insert( pkmnMenuBtn[3] )        
-        sceneGroup:insert( pkmnMenuBtn[4] ) 
-        sceneGroup:insert( pkmnMenuBtn[5] ) 
+        for cnt = 0, #pkmnMenuBtn do
+            sceneGroup:insert(pkmnMenuBtn[cnt])
+        end 
         sceneGroup:insert( cancelBtn )
     end
 end

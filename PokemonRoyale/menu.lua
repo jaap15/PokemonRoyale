@@ -99,7 +99,7 @@ local function animationIntro()
 
     timer.performWithDelay(500, rightSlash)
     timer.performWithDelay(500, leftSlash)
-    timer.performWithDelay(1350, menuTitle)
+    timer.performWithDelay(1250, menuTitle)
 
 
 end
