@@ -23,6 +23,8 @@ local fightMenuBtn = {}
 local pkmnMenuBtn = {}
 local pokemon = Pokemon:new( {HP=150} )
 local sceneGroup
+local currentPokemon = 1;
+local fSize = 50; --font size
 
 -- Local Sounds
 local menuClick = audio.loadStream("sounds/menuButtonClick.mp3")
@@ -30,25 +32,25 @@ local menuClick = audio.loadStream("sounds/menuButtonClick.mp3")
 -- Fight Menu Functions
 function attack1(event)
     if ( "ended" == event.phase ) then
-        print("attack 1")
+        print("Player attacked with "..yourTeam[currentPokemon].pokemon.attack1)
     end
 end
 
 function attack2(event)
     if ( "ended" == event.phase ) then
-        print("attack 2")
+        print("Player attacked with "..yourTeam[currentPokemon].pokemon.attack2)
     end
 end
 
 function attack3(event)
     if ( "ended" == event.phase ) then
-        print("attack 3")
+        print("Player attacked with "..yourTeam[currentPokemon].pokemon.attack3)
     end
 end
 
 function attack4(event)
     if ( "ended" == event.phase ) then
-        print("attack 4")
+        print("Player attacked with "..yourTeam[currentPokemon].pokemon.attack4)
     end
 end
 
@@ -125,9 +127,8 @@ function drawBackground()
     pokemon1:create(3)
     pokemon1:setSelectionView()
 
-    local pokemon2 = pokemon:new({xPos=190, yPos=530})
-    pokemon2:create(6)
-    pokemon2:setBattleView()
+    yourTeam[currentPokemon]:setBattleView()
+    yourTeam[currentPokemon]:setPos(190,530)
 
     sceneGroup:insert( platformBG )
 end
@@ -249,6 +250,8 @@ function openFightMenu (event)
 
         fightMenuBtn[0] = widget.newButton({    
             id = "attack1Btn",
+            label = yourTeam[currentPokemon].pokemon.attack1,
+            fontSize = fSize,
             width = 333,
             height = 206,
             defaultFile = "images/fightScene/menu/fight/fightMenuBtn.png",
@@ -260,6 +263,8 @@ function openFightMenu (event)
 
         fightMenuBtn[1] = widget.newButton({    
             id = "attack2Btn",
+            label = yourTeam[currentPokemon].pokemon.attack2,
+            fontSize = fSize,
             width = 333,
             height = 206,
             defaultFile = "images/fightScene/menu/fight/fightMenuBtn.png",
@@ -271,6 +276,8 @@ function openFightMenu (event)
 
         fightMenuBtn[2] = widget.newButton({    
             id = "attack3Btn",
+            label = yourTeam[currentPokemon].pokemon.attack3,
+            fontSize = fSize,
             width = 333,
             height = 206,
             defaultFile = "images/fightScene/menu/fight/fightMenuBtn.png",
@@ -282,6 +289,8 @@ function openFightMenu (event)
 
         fightMenuBtn[3] = widget.newButton({    
             id = "attack4Btn",
+            label = yourTeam[currentPokemon].pokemon.attack4,
+            fontSize = fSize,
             width = 333,
             height = 206,
             defaultFile = "images/fightScene/menu/fight/fightMenuBtn.png",

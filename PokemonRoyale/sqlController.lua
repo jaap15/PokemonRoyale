@@ -47,3 +47,19 @@ function getIdListOfPokemons()
 	print(table.getn(PidList))
 	return PidList;
 end
+
+function getPokemonAttackInfo(pID)
+	local pokemonInfo;
+
+
+	sql = "SELECT * FROM attacks WHERE Pid == " .. pID
+
+	for row in db:nrows(sql) do
+		pokemonInfo = row;
+		print(row.Pid.. ", "..row.attack1..", "..row.attack2..", "..row.attack3..", "..row.attack4)
+		print(row.attack1Damage..", "..row.attack2Damage..", "..row.attack3Damage..", "..row.attack4Damage)
+	end
+
+	return pokemonInfo;
+
+end
