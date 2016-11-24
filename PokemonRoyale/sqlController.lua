@@ -19,16 +19,16 @@ function getPokemonTableInfo(chosePokemon)
 	if tonumber(chosePokemon) then
 		--Number passed as parameter
 		sql = "SELECT * FROM pokemons WHERE Pid == " .. chosePokemon
-		print("The passed parameter number: "..chosePokemon)
+		-- print("The passed parameter number: "..chosePokemon)
 	else
 		--Name passed as parameter
 		sql = 'SELECT * FROM pokemons WHERE name == "' .. chosePokemon .. '"'
-		print("The passed parameter string: "..chosePokemon)
+		-- print("The passed parameter string: "..chosePokemon)
 	end
 
 	for row in db:nrows(sql) do
 		pokemonInfo = row;
-		print(row.id.. ", "..row.Pid..", "..row.name..", "..row.imagesLocation)
+		-- print(row.id.. ", "..row.Pid..", "..row.name..", "..row.imagesLocation)
 	end
 
 	return pokemonInfo;
@@ -41,10 +41,8 @@ function getIdListOfPokemons()
 	sql = "SELECT Pid FROM pokemons"
 	for row in db:nrows(sql) do
 		table.insert(PidList, row.Pid)
-		-- PidList[count] = row.Pid;
-		-- count = count + 1
 	end
-	print(table.getn(PidList))
+	-- print(table.getn(PidList))
 	return PidList;
 end
 
@@ -56,8 +54,8 @@ function getPokemonAttackInfo(pID)
 
 	for row in db:nrows(sql) do
 		pokemonInfo = row;
-		print(row.Pid.. ", "..row.attack1..", "..row.attack2..", "..row.attack3..", "..row.attack4)
-		print(row.attack1Damage..", "..row.attack2Damage..", "..row.attack3Damage..", "..row.attack4Damage)
+		-- print(row.Pid.. ", "..row.attack1..", "..row.attack2..", "..row.attack3..", "..row.attack4)
+		-- print(row.attack1Damage..", "..row.attack2Damage..", "..row.attack3Damage..", "..row.attack4Damage)
 	end
 
 	return pokemonInfo;

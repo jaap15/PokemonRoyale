@@ -24,7 +24,9 @@ local pkmnMenuBtn = {}
 local pokemon = Pokemon:new( {HP=150} )
 local sceneGroup
 local currentPokemon = 1;
+local eCurrentPokemon = 1;
 local fSize = 50; --font size
+local enemyTeam = {}
 
 -- Local Sounds
 local menuClick = audio.loadStream("sounds/menuButtonClick.mp3")
@@ -136,6 +138,8 @@ end
 
 function exitButtonEvent(event)
     if ("ended" == event.phase) then
+        removeObjectList(yourTeam, true);
+        removeObjectList(enemyTeam, true);
         composer.gotoScene("menu")
     end
 end
@@ -147,9 +151,18 @@ function drawBackground()
     platformBG.x = display.pixelWidth - (display.pixelWidth/2)
     platformBG.y = display.pixelHeight - (display.pixelHeight/1.33) 
 
-    local pokemon1 = pokemon:new({xPos=542, yPos=380})
-    pokemon1:create(3)
-    pokemon1:setSelectionView()
+    local pokemonsAvailable = getIdListOfPokemons()
+
+    for i = 1, 6, 1 do
+        print("Creating enemy: " .. i)
+        local random = math.random(1, #pokemonsAvailable);
+        local pokeInfo = getPokemonTableInfo(random)
+        enemyTeam[i] = pokemon:new({xPos=542, yPos=380});
+        enemyTeam[i]:create(pokeInfo.Pid)
+    end
+
+    enemyTeam[eCurrentPokemon]:setSelectionView();
+
 
     yourTeam[currentPokemon]:setBattleView()
     yourTeam[currentPokemon]:setPos(190,530)

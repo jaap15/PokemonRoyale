@@ -30,11 +30,20 @@ local pokeInfo2;
 local pokeInfo3;
 
 
-local function removeThumbs()
-    for i = 1, #thumbList do
-        if(thumbList[i] ~= nil) then
-            thumbList[i]:removeSelf();
-            thumbList[i] = nil;
+function removeObjectList(objectList, pokemonObjects)
+    for i = 1, #objectList do
+        if(pokemonObjects) then
+            if(objectList[i] ~= nil) then
+                objectList[i].pokemon.battleView:removeSelf();
+                objectList[i].pokemon.selectView:removeSelf();
+                objectList[i].pokemon:removeSelf();
+                objectList[i] = nil;
+            end
+        else
+            if(objectList[i] ~= nil) then
+                objectList[i]:removeSelf();
+                objectList[i] = nil;
+            end
         end
     end
 end
@@ -82,7 +91,7 @@ local function selectionListener(event)
         select1:removeSelf();
         select2:removeSelf();
         select3:removeSelf();
-        removeThumbs();
+        removeObjectList(thumbList, false);
         composer.gotoScene("fight")
     end
 end
