@@ -15,7 +15,7 @@ require("sqlController");
 -- Code outside of the scene event functions below will only be executed ONCE unless
 -- the scene is removed entirely (not recycled) via "composer.removeScene()"
 -- ----------------------------------------------------------------------------------
-local totalPokemons = 9
+local pokemonsAvailable = getIdListOfPokemons()
 local pokemon = Pokemon:new( {HP=150} );
 teamIndex = 1
 thumbX = 173;
@@ -90,9 +90,10 @@ end
 function teamSelect()
     selectText = display.newText("Select a Pokemon", display.contentCenterX, 100, native.systemFont, 78, "center");
     teamText = display.newText("Your Team", display.contentCenterX, 800, native.systemFont, 78, "center");
-    local random1 = math.random(1, totalPokemons);
-    local random2 = math.random(1, totalPokemons);
-    local random3 = math.random(1, totalPokemons);
+    
+    local random1 = math.random(1, #pokemonsAvailable);
+    local random2 = math.random(1, #pokemonsAvailable);
+    local random3 = math.random(1, #pokemonsAvailable);
 
     pokeInfo1 = getPokemonTableInfo(random1)
     pokeInfo2 = getPokemonTableInfo(random2)

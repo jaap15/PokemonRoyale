@@ -34,3 +34,16 @@ function getPokemonTableInfo(chosePokemon)
 	return pokemonInfo;
 
 end
+
+function getIdListOfPokemons()
+	local PidList = {}
+	local count = 1;
+	sql = "SELECT Pid FROM pokemons"
+	for row in db:nrows(sql) do
+		table.insert(PidList, row.Pid)
+		-- PidList[count] = row.Pid;
+		-- count = count + 1
+	end
+	print(table.getn(PidList))
+	return PidList;
+end
