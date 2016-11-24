@@ -73,11 +73,15 @@ end
 function Pokemon:setSelectionView()
   self.pokemon.battleView.isVisible = false;
   self.pokemon.selectView.isVisible = true;
+  self.pokemon.healthBar.isVisible = true --daniel added code 
+  self.pokemon.damageBar.isVisible = true --daniel added code 
 end
 
 function Pokemon:setBattleView()
   self.pokemon.selectView.isVisible = false;
   self.pokemon.battleView.isVisible = true;
+  self.pokemon.healthBar.isVisible = true --daniel added code 
+  self.pokemon.damageBar.isVisible = true --daniel added code 
 end
 
 function Pokemon:HidePokemon()
@@ -102,11 +106,23 @@ function Pokemon:takeDamage(damageTaken)
   self:updateDamageBar()
 end
 
-function Pokemon:drawHealthBar()
+--daniel added code 
+function Pokemon:drawHealthBar(index)
+  if (index == "player") then
     self.pokemon.healthBar.x = 535
     self.pokemon.healthBar.y = 545
     self.pokemon.damageBar.x = 535
     self.pokemon.damageBar.y = 545
+    self.pokemon.healthBar.isVisible = false
+    self.pokemon.damageBar.isVisible = false
+  elseif (index == "enemy") then
+    self.pokemon.healthBar.x = 190
+    self.pokemon.healthBar.y = 320
+    self.pokemon.damageBar.x = 190
+    self.pokemon.damageBar.y = 320
+    self.pokemon.healthBar.isVisible = false
+    self.pokemon.damageBar.isVisible = false
+  end
 end
 
 --daniel added code, draws the pokemon health bar

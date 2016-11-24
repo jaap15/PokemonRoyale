@@ -70,7 +70,6 @@ function select1(event)
         currentPokemon = 1;
         yourTeam[currentPokemon]:setBattleView()
         yourTeam[currentPokemon]:setPos(190,530)
-        yourTeam[currentPokemon]:drawHealthBar()
     end
 end
 
@@ -79,9 +78,8 @@ function select2(event)
         yourTeam[currentPokemon]:HidePokemon()
         currentPokemon = 2;
         yourTeam[currentPokemon]:setBattleView()
-        yourTeam[currentPokemon]:setPos(190,530)
-        yourTeam[currentPokemon]:drawHealthBar()
-    end
+        yourTeam[currentPokemon]:setPos(190,530) 
+   end
 end
 
 function select3(event)
@@ -90,7 +88,6 @@ function select3(event)
         currentPokemon = 3;
         yourTeam[currentPokemon]:setBattleView()
         yourTeam[currentPokemon]:setPos(190,530)
-        yourTeam[currentPokemon]:drawHealthBar()
     end
 end
 
@@ -100,7 +97,6 @@ function select4(event)
         currentPokemon = 4;
         yourTeam[currentPokemon]:setBattleView()
         yourTeam[currentPokemon]:setPos(190,530)
-        yourTeam[currentPokemon]:drawHealthBar()
     end
 end
 
@@ -110,7 +106,6 @@ function select5(event)
         currentPokemon = 5;
         yourTeam[currentPokemon]:setBattleView()
         yourTeam[currentPokemon]:setPos(190,530)
-        yourTeam[currentPokemon]:drawHealthBar()
     end
 end
 
@@ -120,7 +115,6 @@ function select6(event)
         currentPokemon = 6;
         yourTeam[currentPokemon]:setBattleView()
         yourTeam[currentPokemon]:setPos(190,530)
-        yourTeam[currentPokemon]:drawHealthBar()
     end
 end
 
@@ -149,17 +143,6 @@ function exitButtonEvent(event)
         removeObjectList(enemyTeam, true);
         composer.gotoScene("menu")
     end
-end
-
-function yourHealthBar()
-
-end
-
-function enemyHealthBar()
-    enemyTeam[eCurrentPokemon].pokemon.healthBar.x = 190
-    enemyTeam[eCurrentPokemon].pokemon.healthBar.y = 320
-    enemyTeam[eCurrentPokemon].pokemon.damageBar.x = 190
-    enemyTeam[eCurrentPokemon].pokemon.damageBar.y = 320
 end
 
 function drawBackground()
@@ -191,14 +174,16 @@ function drawBackground()
         enemyTeam[i]:create(pokeInfo.Pid)
     end
 
+    for i = 1, #yourTeam do
+        yourTeam[i]:drawHealthBar("player")
+        enemyTeam[i]:drawHealthBar("enemy")
+    end
+
     enemyTeam[eCurrentPokemon]:setSelectionView();
 
     yourTeam[currentPokemon]:setBattleView()
     yourTeam[currentPokemon]:setPos(190,530)
-
-    yourTeam[currentPokemon]:drawHealthBar()
-    enemyHealthBar()
-
+    
     sceneGroup:insert( platformBG )
     sceneGroup:insert( enemyInfoBox )
     sceneGroup:insert( playerInfoBox )
@@ -686,6 +671,7 @@ function scene:hide( event )
 
     if ( phase == "will" ) then
         -- Code here runs when the scene is on screen (but is about to go off screen)
+        composer.removeScene("fight")
 
     elseif ( phase == "did" ) then
         -- Code here runs immediately after the scene goes entirely off screen
