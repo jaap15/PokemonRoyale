@@ -9,6 +9,7 @@ local composer = require("composer")
 local scene = composer.newScene()
 local widget = require("widget")
 local Pokemon = require ("Pokemon");
+local trainer = require("Trainer")
 require("sqlController");
 
 -- -----------------------------------------------------------------------------------
@@ -20,7 +21,6 @@ local pokemon = Pokemon:new( {HP=150} );
 teamIndex = 1
 thumbX = 173;
 thumbY = 900;
-yourTeam = {}
 local thumbList = {}
 local select1;
 local select2;
@@ -51,22 +51,56 @@ function removeObjectList(objectList, pokemonObjects)
     end
 end
 
+function print_r ( t )  
+    local print_r_cache={}
+    local function sub_print_r(t,indent)
+        if (print_r_cache[tostring(t)]) then
+            print(indent.."*"..tostring(t))
+        else
+            print_r_cache[tostring(t)]=true
+            if (type(t)=="table") then
+                for pos,val in pairs(t) do
+                    if (type(val)=="table") then
+                        print(indent.."["..pos.."] => "..tostring(t).." {")
+                        sub_print_r(val,indent..string.rep(" ",string.len(pos)+8))
+                        print(indent..string.rep(" ",string.len(pos)+6).."}")
+                    elseif (type(val)=="string") then
+                        print(indent.."["..pos..'] => "'..val..'"')
+                    else
+                        print(indent.."["..pos.."] => "..tostring(val))
+                    end
+                end
+            else
+                print(indent..tostring(t))
+            end
+        end
+    end
+    if (type(t)=="table") then
+        print(tostring(t).." {")
+        sub_print_r(t,"  ")
+        print("}")
+    else
+        sub_print_r(t,"  ")
+    end
+    print()
+end
+
 local function selectionListener(event)
     if (event.target == select1) then
         thumbList[teamIndex] = display.newImage(pokeInfo1.imagesLocation.."/select.png", thumbX, thumbY);
         thumbList[teamIndex]:scale(1.5,1.5)
-        yourTeam[teamIndex] = pokemon:new({xPos=125, yPos=280});
-        yourTeam[teamIndex]:create(pokeInfo1.Pid)
+        trainer.Pokemans[teamIndex] = pokemon:new({xPos=125, yPos=280});
+        trainer.Pokemans[teamIndex]:create(pokeInfo1.Pid)
     elseif (event.target == select2) then
         thumbList[teamIndex] = display.newImage(pokeInfo2.imagesLocation.."/select.png", thumbX, thumbY);
         thumbList[teamIndex]:scale(1.5,1.5)
-        yourTeam[teamIndex] = pokemon:new({xPos=360, yPos=280});
-        yourTeam[teamIndex]:create(pokeInfo2.Pid)
+        trainer.Pokemans[teamIndex] = pokemon:new({xPos=360, yPos=280});
+        trainer.Pokemans[teamIndex]:create(pokeInfo2.Pid)
     elseif (event.target == select3) then
         thumbList[teamIndex] = display.newImage(pokeInfo3.imagesLocation.."/select.png", thumbX, thumbY);
         thumbList[teamIndex]:scale(1.5,1.5)
-        yourTeam[teamIndex] = pokemon:new({xPos=590, yPos=280});
-        yourTeam[teamIndex]:create(pokeInfo3.Pid)
+        trainer.Pokemans[teamIndex] = pokemon:new({xPos=590, yPos=280});
+        trainer.Pokemans[teamIndex]:create(pokeInfo3.Pid)
     end
     if (thumbX < 519) then
         thumbX = thumbX + 173;
@@ -95,10 +129,11 @@ local function selectionListener(event)
         select2:removeSelf();
         select3:removeSelf();
         removeObjectList(thumbList, false);
+		composer.setVariable("trainer", trainer)
         composer.gotoScene("fight")
     end
     
-    local pokemon1 = yourTeam[1].pokemon.selectView
+    local pokemon1 = trainer.Pokemans[1].pokemon.selectView
     pokemon1.x = display.contentCenterX
     pokemon1.y = display.contentCenterX
     pokemon1.width = 500
