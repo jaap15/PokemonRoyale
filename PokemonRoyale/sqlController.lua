@@ -61,3 +61,15 @@ function getPokemonAttackInfo(pID)
 	return pokemonInfo;
 
 end
+function getPokemonStatsInfo(pID)
+	local pokemonInfo;
+
+	sql = "SELECT * FROM stats WHERE Pid == " .. pID
+
+	for row in db:nrows(sql) do
+		pokemonInfo = row;
+	end
+
+	return pokemonInfo;
+
+end
