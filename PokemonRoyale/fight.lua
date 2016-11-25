@@ -216,14 +216,12 @@ end
 function item1(event)
         if ( "ended" == event.phase ) then
         audio.play(menuClick, {loops = 0})
-        audio.play(menuClick, {loops = 0})
         print("item 1")
     end
 end
 
 function item2(event)
         if ( "ended" == event.phase ) then
-        audio.play(menuClick, {loops = 0})
         audio.play(menuClick, {loops = 0})
         print("item 2")
     end
@@ -232,13 +230,13 @@ end
 function item3(event)
         if ( "ended" == event.phase ) then
         audio.play(menuClick, {loops = 0})
-        audio.play(menuClick, {loops = 0})
         print("item 3")
     end
 end
 
 function exitButtonEvent(event)
     if ("ended" == event.phase) then
+        audio.play(menuClick, {loops = 0})
         removeObjectList(trainer.Pokemans, true);
         removeObjectList(enemyTeam, true);
         composer.gotoScene("menu")
@@ -344,7 +342,6 @@ end
 
 function returnToMainMenu(event)
     if ( "ended" == event.phase ) then
-        audio.play(menuClick, {loops = 0})
         audio.play(menuClick, {loops = 0})
         if (fightMenuBG) then
             fightMenuBG.isVisible = false
@@ -458,7 +455,6 @@ function openFightMenu (event)
 
         if ( "ended" == event.phase ) then
         audio.play(menuClick, {loops = 0})
-        audio.play(menuClick, {loops = 0})
         fightMenuBG = display.newImage("images/fightScene/menu/fight/fightMenuBG.png")
         fightMenuBG.width = display.pixelWidth
         fightMenuBG.height = display.pixelHeight/2
@@ -549,7 +545,6 @@ end
 
 function openPokemonMenu(event)
         if ( "ended" == event.phase ) then
-        audio.play(menuClick, {loops = 0})
         audio.play(menuClick, {loops = 0})
         pkmnMenuBG = display.newImage("images/fightScene/menu/pkmn/pkmnMenuBG.png")
         pkmnMenuBG.width = display.pixelWidth
@@ -693,7 +688,6 @@ end
 function openItemsMenu (event)
         if ( "ended" == event.phase ) then
         audio.play(menuClick, {loops = 0})
-        audio.play(menuClick, {loops = 0})
         itemsMenuBG = display.newImage("images/fightScene/menu/item/itemMenuBG.png")
         itemsMenuBG.width = display.pixelWidth
         itemsMenuBG.height = display.pixelHeight/2
@@ -770,7 +764,6 @@ end
 
 function openRunMenu (event)
         if ( "ended" == event.phase ) then
-        audio.play(menuClick, {loops = 0})
         audio.play(menuClick, {loops = 0})
         cancelBtn = widget.newButton({    
                 id = "cancelBtn",
