@@ -268,10 +268,10 @@ function drawBackground()
     platformBG.y = display.contentHeight - (display.contentHeight/1.33) 
 
     enemyInfoBox = display.newImage("images/fightScene/enemyInfoBox.png")
-    enemyInfoBox.width = 300
-    enemyInfoBox.height = 100
+    enemyInfoBox.width = display.contentWidth/2
+    enemyInfoBox.height = display.contentHeight /10
     enemyInfoBox.x = (display.contentWidth + 200) - display.contentWidth
-    enemyInfoBox.y = (display.contentHeight  + 300) - display.contentHeight
+    enemyInfoBox.y = (display.contentHeight  + 100) - display.contentHeight
 
     enemyTrainer = display.newImage("images/fightScene/trainer1.png")
     enemyTrainer.x = 542
@@ -302,8 +302,8 @@ function drawBackground()
     timer.performWithDelay(1500, throwAnimation)
 
     playerInfoBox = display.newImage("images/fightScene/playerInfoBox.png")
-    playerInfoBox.width = 300
-    playerInfoBox.height = 100
+    playerInfoBox.width = display.contentWidth/2
+    playerInfoBox.height = display.contentHeight/10  
     playerInfoBox.x = display.contentWidth - 200
     playerInfoBox.y = display.contentHeight/2 - 100
 

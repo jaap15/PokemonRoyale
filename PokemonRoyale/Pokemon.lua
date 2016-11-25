@@ -107,17 +107,17 @@ end
 
 function Pokemon:drawHealthBar(index)
   if (index == "player") then
-    self.pokemon.healthBar.x = 535
-    self.pokemon.healthBar.y = 545
-    self.pokemon.damageBar.x = 535
-    self.pokemon.damageBar.y = 545
+    self.pokemon.healthBar.x = display.contentWidth - 200
+    self.pokemon.healthBar.y = display.contentHeight/2 - 100
+    self.pokemon.damageBar.x = display.contentWidth - 200
+    self.pokemon.damageBar.y = display.contentHeight/2 - 100
     self.pokemon.healthBar.isVisible = false
     self.pokemon.damageBar.isVisible = false
   elseif (index == "enemy") then
-    self.pokemon.healthBar.x = 190
-    self.pokemon.healthBar.y = 320
-    self.pokemon.damageBar.x = 190
-    self.pokemon.damageBar.y = 320
+    self.pokemon.healthBar.x = (display.contentWidth + 200) - display.contentWidth
+    self.pokemon.healthBar.y = (display.contentHeight  + 100) - display.contentHeight
+    self.pokemon.damageBar.x = (display.contentWidth + 200) - display.contentWidth
+    self.pokemon.damageBar.y = (display.contentHeight  + 100) - display.contentHeight
     self.pokemon.healthBar.isVisible = false
     self.pokemon.damageBar.isVisible = false
   end
