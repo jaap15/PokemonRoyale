@@ -55,7 +55,7 @@ local function gameButtonEvent(event)
 end
 
 local function animationIntro()
-    local function rightSlash()
+    local function slashAnimation()
         local sheetName = require("images.menuScene.animations.slash")
         local spriteSheetData = sheetName:getSheet()
         --Creating the image sheet
@@ -69,9 +69,7 @@ local function animationIntro()
         animation:scale(2,2)
         animation:play()
         sceneGroup:insert( animation )
-    end
 
-    local function leftSlash()
         local sheetName = require("images.menuScene.animations.slash")
         local spriteSheetData = sheetName:getSheet()
         --Creating the image sheet
@@ -85,7 +83,7 @@ local function animationIntro()
         animation.xScale = -1
         animation:scale(2,2)
         animation:play()
-        sceneGroup:insert( animation )
+        sceneGroup:insert( animation )        
     end
 
     local function menuTitle()
@@ -97,8 +95,7 @@ local function animationIntro()
         sceneGroup:insert( menuBG )
     end
 
-    timer.performWithDelay(500, rightSlash)
-    timer.performWithDelay(500, leftSlash)
+    timer.performWithDelay(500, slashAnimation)
     timer.performWithDelay(1250, menuTitle)
 
 
