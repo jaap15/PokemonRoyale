@@ -32,7 +32,7 @@ local pokemon = Pokemon:new( {HP=150} )
 local sceneGroup
 local currentPokemon = 1;
 local eCurrentPokemon = 1;
-local fSize = 50; --font size
+local fSize = 45; --font size
 local enemyTeam = {}
 local trainer = composer.getVariable("trainer")
 
@@ -43,7 +43,7 @@ local menuClick = audio.loadStream("sounds/menuButtonClick.mp3")
 function attack1(event)
     if ( "ended" == event.phase ) then
         audio.play(menuClick, {loops = 0})
-        --enemyTeam[eCurrentPokemon]:takeDamage(trainer.Pokemans[currentPokemon].pokemon.attack1Damage)
+        enemyTeam[eCurrentPokemon]:takeDamage(trainer.Pokemans[currentPokemon].pokemon.attack1Damage)
         trainer.Pokemans[currentPokemon]:takeDamage(25)
         returnAfterAttack()
     end
@@ -310,15 +310,15 @@ function drawBackground()
     local pokemonsAvailable = getIdListOfPokemons()
 
     for i = 1, 6, 1 do
-        local random = math.random(1, #pokemonsAvailable);
-        local pokeInfo = getPokemonTableInfo(random)
-        --enemyTeam[i] = pokemon:new({xPos=542, yPos=350});
-        --enemyTeam[i]:create(pokeInfo.Pid)
+        local random = math.random(#pokemonsAvailable);
+        local pokeInfo = getPokemonTableInfo(pokemonsAvailable[random])
+        enemyTeam[i] = pokemon:new({xPos=542, yPos=350});
+        enemyTeam[i]:create(pokeInfo.Pid)
     end
 
     for i = 1, #trainer.Pokemans do
         trainer.Pokemans[i]:drawHealthBar("player")
-        --enemyTeam[i]:drawHealthBar("enemy")
+        enemyTeam[i]:drawHealthBar("enemy")
     end
 
     local y1Offset = 0
@@ -341,7 +341,7 @@ function drawBackground()
     end    
 
     local function drawEnemyPokemon()
-        --enemyTeam[eCurrentPokemon]:setSelectionView();
+        enemyTeam[eCurrentPokemon]:setSelectionView();
     end
     timer.performWithDelay(2500, drawEnemyPokemon)
     
