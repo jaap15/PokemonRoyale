@@ -35,6 +35,27 @@ function getPokemonTableInfo(chosePokemon)
 
 end
 
+function getEtrainerInfo(trainerChoice)
+
+	local trainerInfo
+	
+	print("inside sql controller " ..trainerChoice)
+	
+	if tonumber(trainerChoice) then
+		--Number passed as a parameter
+		sql = "SELECT * FROM Enemy_Trainers WHERE ID == " ..trainerChoice
+		
+	else
+		sql = 'SELECT * FROM Enemy_Trainers WHERE Trainer_Name == "' ..trainerChoice ..'"'
+	end
+	
+	for row in db:nrows(sql) do
+		trainerInfo = row
+	end
+	
+	return trainerInfo
+end
+
 function getIdListOfPokemons()
 	local PidList = {}
 	local count = 1;
