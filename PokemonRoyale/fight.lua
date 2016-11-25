@@ -184,7 +184,7 @@ function drawBackground()
 
     local y1Offset = 0
     local y2Offset = 0
-    for cnt = 1, #yourTeam do
+--[[    for cnt = 1, #yourTeam do
         pkmnHB[cnt], pkmnDB[cnt] = yourTeam[cnt]:returnHealthStatus()
         if (cnt % 2 == 0) then
             pkmnHB[cnt].x = 550
@@ -199,7 +199,7 @@ function drawBackground()
             pkmnDB[cnt].y = 735+y2Offset                
             y2Offset = y2Offset + 170
         end
-    end    
+    end    ]]
 
     enemyTeam[eCurrentPokemon]:setSelectionView();
 
@@ -229,8 +229,8 @@ function returnToMainMenu(event)
             for cnt = 1, #trainer.Pokemans do       
                 pokemonThumbNails[cnt].isVisible = false 
                 pokemonNames[cnt].isVisible = false
-                pkmnHB[cnt].isVisible = false
-                pkmnDB[cnt].isVisible = false
+                --pkmnHB[cnt].isVisible = false
+                --pkmnDB[cnt].isVisible = false
             end
         end
 
@@ -526,11 +526,11 @@ function openPokemonMenu(event)
         end        
         
         -- Drawing pokemon hp bars
-        for cnt = 1, #yourTeam do
+       --[[for cnt = 1, #yourTeam do
             pkmnHB[cnt], pkmnDB[cnt] = yourTeam[cnt]:returnHealthStatus()
             pkmnHB[cnt].isVisible = true
             pkmnDB[cnt].isVisible = true
-        end    
+        end    ]]
 
         cancelBtn = widget.newButton({    
                 id = "cancelBtn",
