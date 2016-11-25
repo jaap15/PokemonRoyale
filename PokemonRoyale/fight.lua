@@ -41,7 +41,7 @@ function attack1(event)
     if ( "ended" == event.phase ) then
         audio.play(menuClick, {loops = 0})
         print("Player attacked with "..trainer.Pokemans[currentPokemon].pokemon.attack1)
-        enemyTeam[eCurrentPokemon]:takeDamage(trainer.Pokemans[currentPokemon].pokemon.attack1Damage)
+        --enemyTeam[eCurrentPokemon]:takeDamage(trainer.Pokemans[currentPokemon].pokemon.attack1Damage)
         trainer.Pokemans[currentPokemon]:takeDamage(25)
         returnAfterAttack()
     end
@@ -122,11 +122,15 @@ function pokemonSelect1Confirm(event, pkmnIndex)
         if ( i == 1 ) then  
 
         elseif ( i == 2 ) then
-            trainer.Pokemans[currentPokemon]:HidePokemon()  
-            currentPokemon = 1
-            trainer.Pokemans[currentPokemon]:setBattleView()
-            trainer.Pokemans[currentPokemon]:setPos(190,530)
-            returnAfterSwap()
+            transition.to(trainer.Pokemans[currentPokemon].pokemon.battleView, {time = 1250, x = trainer.Pokemans[currentPokemon].pokemon.battleView.x-750})
+            local function spawnNewPkmn()
+                trainer.Pokemans[currentPokemon]:HidePokemon()  
+                currentPokemon = 1
+                trainer.Pokemans[currentPokemon]:setBattleView()
+                trainer.Pokemans[currentPokemon]:setPos(190,530)
+                returnAfterSwap()
+            end
+            timer.performWithDelay(1000, spawnNewPkmn)
         end
     end
 end
@@ -137,11 +141,15 @@ function pokemonSelect2Confirm(event, pkmnIndex)
         if ( i == 1 ) then  
 
         elseif ( i == 2 ) then
-            trainer.Pokemans[currentPokemon]:HidePokemon()  
-            currentPokemon = 2
-            trainer.Pokemans[currentPokemon]:setBattleView()
-            trainer.Pokemans[currentPokemon]:setPos(190,530)
-            returnAfterSwap()
+            transition.to(trainer.Pokemans[currentPokemon].pokemon.battleView, {time = 1250, x = trainer.Pokemans[currentPokemon].pokemon.battleView.x-750})
+            local function spawnNewPkmn()
+                trainer.Pokemans[currentPokemon]:HidePokemon()  
+                currentPokemon = 2
+                trainer.Pokemans[currentPokemon]:setBattleView()
+                trainer.Pokemans[currentPokemon]:setPos(190,530)
+                returnAfterSwap()
+            end
+            timer.performWithDelay(1000, spawnNewPkmn)
         end
     end
 end
@@ -152,11 +160,15 @@ function pokemonSelect3Confirm(event, pkmnIndex)
         if ( i == 1 ) then  
 
         elseif ( i == 2 ) then
-            trainer.Pokemans[currentPokemon]:HidePokemon()  
-            currentPokemon = 3
-            trainer.Pokemans[currentPokemon]:setBattleView()
-            trainer.Pokemans[currentPokemon]:setPos(190,530)
-            returnAfterSwap()
+            transition.to(trainer.Pokemans[currentPokemon].pokemon.battleView, {time = 1250, x = trainer.Pokemans[currentPokemon].pokemon.battleView.x-750})
+            local function spawnNewPkmn()
+                trainer.Pokemans[currentPokemon]:HidePokemon()  
+                currentPokemon = 3
+                trainer.Pokemans[currentPokemon]:setBattleView()
+                trainer.Pokemans[currentPokemon]:setPos(190,530)
+                returnAfterSwap()
+            end
+            timer.performWithDelay(1000, spawnNewPkmn)
         end
     end
 end
@@ -167,11 +179,15 @@ function pokemonSelect4Confirm(event, pkmnIndex)
         if ( i == 1 ) then  
 
         elseif ( i == 2 ) then
-            trainer.Pokemans[currentPokemon]:HidePokemon()  
-            currentPokemon = 4
-            trainer.Pokemans[currentPokemon]:setBattleView()
-            trainer.Pokemans[currentPokemon]:setPos(190,530)
-            returnAfterSwap()
+            transition.to(trainer.Pokemans[currentPokemon].pokemon.battleView, {time = 1250, x = trainer.Pokemans[currentPokemon].pokemon.battleView.x-750})
+            local function spawnNewPkmn()
+                trainer.Pokemans[currentPokemon]:HidePokemon()  
+                currentPokemon = 4
+                trainer.Pokemans[currentPokemon]:setBattleView()
+                trainer.Pokemans[currentPokemon]:setPos(190,530)
+                returnAfterSwap()
+            end
+            timer.performWithDelay(1000, spawnNewPkmn)
         end
     end
 end
@@ -182,11 +198,15 @@ function pokemonSelect5Confirm(event, pkmnIndex)
         if ( i == 1 ) then  
 
         elseif ( i == 2 ) then
-            trainer.Pokemans[currentPokemon]:HidePokemon()  
-            currentPokemon = 5
-            trainer.Pokemans[currentPokemon]:setBattleView()
-            trainer.Pokemans[currentPokemon]:setPos(190,530)
-            returnAfterSwap()
+            transition.to(trainer.Pokemans[currentPokemon].pokemon.battleView, {time = 1250, x = trainer.Pokemans[currentPokemon].pokemon.battleView.x-750})
+            local function spawnNewPkmn()
+                trainer.Pokemans[currentPokemon]:HidePokemon()  
+                currentPokemon = 5
+                trainer.Pokemans[currentPokemon]:setBattleView()
+                trainer.Pokemans[currentPokemon]:setPos(190,530)
+                returnAfterSwap()
+            end
+            timer.performWithDelay(1000, spawnNewPkmn)
         end
     end
 end
@@ -197,11 +217,15 @@ function pokemonSelect6Confirm(event, pkmnIndex)
         if ( i == 1 ) then  
 
         elseif ( i == 2 ) then
-            trainer.Pokemans[currentPokemon]:HidePokemon()  
-            currentPokemon = 6
-            trainer.Pokemans[currentPokemon]:setBattleView()
-            trainer.Pokemans[currentPokemon]:setPos(190,530)
-            returnAfterSwap()
+            transition.to(trainer.Pokemans[currentPokemon].pokemon.battleView, {time = 1250, x = trainer.Pokemans[currentPokemon].pokemon.battleView.x-750})
+            local function spawnNewPkmn()
+                trainer.Pokemans[currentPokemon]:HidePokemon()  
+                currentPokemon = 6
+                trainer.Pokemans[currentPokemon]:setBattleView()
+                trainer.Pokemans[currentPokemon]:setPos(190,530)
+                returnAfterSwap()
+            end
+            timer.performWithDelay(1000, spawnNewPkmn)
         end
     end
 end
@@ -290,13 +314,13 @@ function drawBackground()
     for i = 1, 6, 1 do
         local random = math.random(1, #pokemonsAvailable);
         local pokeInfo = getPokemonTableInfo(random)
-        enemyTeam[i] = pokemon:new({xPos=542, yPos=350});
-        enemyTeam[i]:create(pokeInfo.Pid)
+        --enemyTeam[i] = pokemon:new({xPos=542, yPos=350});
+        --enemyTeam[i]:create(pokeInfo.Pid)
     end
 
     for i = 1, #trainer.Pokemans do
         trainer.Pokemans[i]:drawHealthBar("player")
-        enemyTeam[i]:drawHealthBar("enemy")
+        --enemyTeam[i]:drawHealthBar("enemy")
     end
 
     local y1Offset = 0
@@ -319,7 +343,7 @@ function drawBackground()
     end    
 
     local function drawEnemyPokemon()
-        enemyTeam[eCurrentPokemon]:setSelectionView();
+        --enemyTeam[eCurrentPokemon]:setSelectionView();
     end
     timer.performWithDelay(2500, drawEnemyPokemon)
     
@@ -843,7 +867,7 @@ function scene:create( event )
     sceneGroup = self.view
 
     openingAnimations()
-    timer.performWithDelay(1, openMainMenu)
+    timer.performWithDelay(2500, openMainMenu)
     timer.performWithDelay(1, drawBackground)
 end
 
