@@ -76,42 +76,66 @@ end
 function select1(event)
     if ( "ended" == event.phase ) then
         audio.play(menuClick, {loops = 0})
-        native.showAlert("Are you sure?", "Switch out " .. trainer.Pokemans[currentPokemon].pokemon.tag .. " for " .. trainer.Pokemans[1].pokemon.tag .. "?", {"No", "Yes"}, pokemonSelect1Confirm)
+        if (currentPokemon == 1) then
+
+        else 
+            native.showAlert("Are you sure?", "Switch out " .. trainer.Pokemans[currentPokemon].pokemon.tag .. " for " .. trainer.Pokemans[1].pokemon.tag .. "?", {"No", "Yes"}, pokemonSelect1Confirm)
+        end
     end
 end
 
 function select2(event)
     if ( "ended" == event.phase ) then
         audio.play(menuClick, {loops = 0})
-        native.showAlert("Are you sure?", "Switch out " .. trainer.Pokemans[currentPokemon].pokemon.tag .. " for " .. trainer.Pokemans[2].pokemon.tag .. "?", {"No", "Yes"}, pokemonSelect2Confirm)
+        if (currentPokemon == 2) then
+
+        else         
+            native.showAlert("Are you sure?", "Switch out " .. trainer.Pokemans[currentPokemon].pokemon.tag .. " for " .. trainer.Pokemans[2].pokemon.tag .. "?", {"No", "Yes"}, pokemonSelect2Confirm)
+        end
    end
 end
 
 function select3(event)
     if ( "ended" == event.phase ) then
         audio.play(menuClick, {loops = 0})
-        native.showAlert("Are you sure?", "Switch out " .. trainer.Pokemans[currentPokemon].pokemon.tag .. " for " .. trainer.Pokemans[3].pokemon.tag .. "?", {"No", "Yes"}, pokemonSelect3Confirm)
+        if (currentPokemon == 3) then
+
+        else 
+            native.showAlert("Are you sure?", "Switch out " .. trainer.Pokemans[currentPokemon].pokemon.tag .. " for " .. trainer.Pokemans[3].pokemon.tag .. "?", {"No", "Yes"}, pokemonSelect3Confirm)
+        end
     end
 end
 
 function select4(event)
     if ( "ended" == event.phase ) then
         audio.play(menuClick, {loops = 0})
-        native.showAlert("Are you sure?", "Switch out " .. trainer.Pokemans[currentPokemon].pokemon.tag .. " for " .. trainer.Pokemans[4].pokemon.tag .. "?", {"No", "Yes"}, pokemonSelect4Confirm)
+        if (currentPokemon == 4) then
+
+        else 
+            native.showAlert("Are you sure?", "Switch out " .. trainer.Pokemans[currentPokemon].pokemon.tag .. " for " .. trainer.Pokemans[4].pokemon.tag .. "?", {"No", "Yes"}, pokemonSelect4Confirm)
+        end
     end
 end
 
 function select5(event)
     if ( "ended" == event.phase ) then
         audio.play(menuClick, {loops = 0})
-        native.showAlert("Are you sure?", "Switch out " .. trainer.Pokemans[currentPokemon].pokemon.tag .. " for " .. trainer.Pokemans[5].pokemon.tag .. "?", {"No", "Yes"}, pokemonSelect5Confirm)        
+        if (currentPokemon == 5) then
+
+        else 
+            native.showAlert("Are you sure?", "Switch out " .. trainer.Pokemans[currentPokemon].pokemon.tag .. " for " .. trainer.Pokemans[5].pokemon.tag .. "?", {"No", "Yes"}, pokemonSelect5Confirm)  
+        end      
     end
 end
 
 function select6(event)
     if ( "ended" == event.phase ) then
         audio.play(menuClick, {loops = 0})
-        native.showAlert("Are you sure?", "Switch out " .. trainer.Pokemans[currentPokemon].pokemon.tag .. " for " .. trainer.Pokemans[6].pokemon.tag .. "?", {"No", "Yes"}, pokemonSelect6Confirm)        
+        if (currentPokemon == 6) then
+
+        else 
+            native.showAlert("Are you sure?", "Switch out " .. trainer.Pokemans[currentPokemon].pokemon.tag .. " for " .. trainer.Pokemans[6].pokemon.tag .. "?", {"No", "Yes"}, pokemonSelect6Confirm) 
+        end       
     end
 end
 
@@ -129,6 +153,16 @@ function pokemonSelect1Confirm(event, pkmnIndex)
                 trainer.Pokemans[currentPokemon]:setPos(190,530)
                 returnAfterSwap()
             end
+            local playerSummon = summonPkmnAnimation(190,530)
+            local function summonPlayer()
+                playerSummon.isVisible = true
+                playerSummon:play()
+                local function hideAnimation()
+                    playerSummon.isVisible = false
+                end
+                timer.performWithDelay(500, hideAnimation)        
+            end
+            timer.performWithDelay(500, summonPlayer)
             timer.performWithDelay(1000, spawnNewPkmn)
         end
     end
@@ -148,6 +182,16 @@ function pokemonSelect2Confirm(event, pkmnIndex)
                 trainer.Pokemans[currentPokemon]:setPos(190,530)
                 returnAfterSwap()
             end
+            local playerSummon = summonPkmnAnimation(190,530)
+            local function summonPlayer()
+                playerSummon.isVisible = true
+                playerSummon:play()
+                local function hideAnimation()
+                    playerSummon.isVisible = false
+                end
+                timer.performWithDelay(500, hideAnimation)        
+            end
+            timer.performWithDelay(500, summonPlayer)            
             timer.performWithDelay(1000, spawnNewPkmn)
         end
     end
@@ -167,6 +211,16 @@ function pokemonSelect3Confirm(event, pkmnIndex)
                 trainer.Pokemans[currentPokemon]:setPos(190,530)
                 returnAfterSwap()
             end
+            local playerSummon = summonPkmnAnimation(190,530)
+            local function summonPlayer()
+                playerSummon.isVisible = true
+                playerSummon:play()
+                local function hideAnimation()
+                    playerSummon.isVisible = false
+                end
+                timer.performWithDelay(500, hideAnimation)        
+            end
+            timer.performWithDelay(500, summonPlayer)
             timer.performWithDelay(1000, spawnNewPkmn)
         end
     end
@@ -186,6 +240,16 @@ function pokemonSelect4Confirm(event, pkmnIndex)
                 trainer.Pokemans[currentPokemon]:setPos(190,530)
                 returnAfterSwap()
             end
+            local playerSummon = summonPkmnAnimation(190,530)
+            local function summonPlayer()
+                playerSummon.isVisible = true
+                playerSummon:play()
+                local function hideAnimation()
+                    playerSummon.isVisible = false
+                end
+                timer.performWithDelay(500, hideAnimation)        
+            end
+            timer.performWithDelay(500, summonPlayer)
             timer.performWithDelay(1000, spawnNewPkmn)
         end
     end
@@ -205,6 +269,16 @@ function pokemonSelect5Confirm(event, pkmnIndex)
                 trainer.Pokemans[currentPokemon]:setPos(190,530)
                 returnAfterSwap()
             end
+            local playerSummon = summonPkmnAnimation(190,530)
+            local function summonPlayer()
+                playerSummon.isVisible = true
+                playerSummon:play()
+                local function hideAnimation()
+                    playerSummon.isVisible = false
+                end
+                timer.performWithDelay(500, hideAnimation)        
+            end
+            timer.performWithDelay(500, summonPlayer)
             timer.performWithDelay(1000, spawnNewPkmn)
         end
     end
@@ -224,6 +298,16 @@ function pokemonSelect6Confirm(event, pkmnIndex)
                 trainer.Pokemans[currentPokemon]:setPos(190,530)
                 returnAfterSwap()
             end
+            local playerSummon = summonPkmnAnimation(190,530)
+            local function summonPlayer()
+                playerSummon.isVisible = true
+                playerSummon:play()
+                local function hideAnimation()
+                    playerSummon.isVisible = false
+                end
+                timer.performWithDelay(500, hideAnimation)        
+            end
+            timer.performWithDelay(500, summonPlayer)
             timer.performWithDelay(1000, spawnNewPkmn)
         end
     end
@@ -343,13 +427,33 @@ function drawBackground()
     local function drawEnemyPokemon()
         enemyTeam[eCurrentPokemon]:setSelectionView();
     end
-    timer.performWithDelay(2500, drawEnemyPokemon)
+    local enemySummon = summonPkmnAnimation(542,350)
+    local function summonEnemy()
+        enemySummon.isVisible = true
+        enemySummon:play()
+        local function hideAnimation()
+            enemySummon.isVisible = false
+        end
+        timer.performWithDelay(500, hideAnimation)
+    end
+    timer.performWithDelay(2500, summonEnemy)
+    timer.performWithDelay(3000, drawEnemyPokemon)
     
     local function drawPlayerPokemon()
         trainer.Pokemans[currentPokemon]:setBattleView()
         trainer.Pokemans[currentPokemon]:setPos(190,530)
     end
-    timer.performWithDelay(2500, drawPlayerPokemon)
+    local playerSummon = summonPkmnAnimation(190,530)
+    local function summonPlayer()
+        playerSummon.isVisible = true
+        playerSummon:play()
+        local function hideAnimation()
+            playerSummon.isVisible = false
+        end
+        timer.performWithDelay(500, hideAnimation)        
+    end
+    timer.performWithDelay(2500, summonPlayer)
+    timer.performWithDelay(3000, drawPlayerPokemon)
 
     sceneGroup:insert( platformBG )
     sceneGroup:insert( enemyInfoBox )
@@ -368,6 +472,23 @@ function returnAfterAttack()
     for cnt = 0, 3 do
         mainMenuBtn[cnt].isVisible = true
     end    
+end
+
+function summonPkmnAnimation(x,y)
+    local sheetName = require("images.fightScene.animations.pkmnSummon")
+    local spriteSheetData = sheetName:getSheet()
+    --Creating the image sheet
+    local battleSheet = graphics.newImageSheet( "images/fightScene/animations/pkmnSummon.png", spriteSheetData)
+    --Getting the sequence data from the sprite sheet file
+    local sequenceData = sheetName:getSequence()
+
+    animation = display.newSprite( battleSheet, sequenceData)
+    animation.x = x
+    animation.y = y
+    animation:scale(2,2)
+    animation.isVisible = false
+
+    return animation
 end
 
 function returnAfterSwap()
