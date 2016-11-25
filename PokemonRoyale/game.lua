@@ -32,6 +32,49 @@ local random1;
 local random2;
 local random3;
 
+-- Local Sounds
+local menuClick = audio.loadStream("sounds/pokemonSelectSound.mp3")
+local menuTransition = audio.loadStream("sounds/pokeballEffect2.mp3")
+
+function openingAnimations()
+    local sheetName = require("images.fightScene.animations.battleIntro")
+    local spriteSheetData = sheetName:getSheet()
+    --Creating the image sheet
+    local battleSheet = graphics.newImageSheet( "images/fightScene/animations/battleIntro.png", spriteSheetData)
+    --Getting the sequence data from the sprite sheet file
+    local sequenceData = sheetName:getSequence()
+
+    animation = display.newSprite( battleSheet, sequenceData)
+    animation.x = display.contentCenterX
+    animation.y = display.contentCenterY
+    animation:scale(2,2)
+    animation:play()
+    sceneGroup:insert( animation )
+
+    local sheetName = require("images.fightScene.animations.battleIntro2")
+    local spriteSheetData = sheetName:getSheet()
+    --Creating the image sheet
+    local battleSheet = graphics.newImageSheet( "images/fightScene/animations/battleIntro2.png", spriteSheetData)
+    --Getting the sequence data from the sprite sheet file
+    local sequenceData = sheetName:getSequence()
+
+    local function animateSecond()
+        animation = display.newSprite( battleSheet, sequenceData)
+        animation.x = display.contentCenterX+100
+        animation.y = display.contentCenterY
+        animation:scale(4,4)
+        animation:play()
+        local function removeAnimationSecond()
+            print("TEST")
+            animation:pause()
+            animation.x = 5000
+            animation.isVisible = false
+        end
+        timer.performWithDelay(1900, removeAnimationSecond)
+    end
+    timer.performWithDelay(2000, animateSecond)
+    sceneGroup:insert( animation )    
+end
 
 function removeObjectList(objectList, pokemonObjects)
     for i = 1, #objectList do
@@ -94,18 +137,21 @@ local function selectionListener(event)
         thumbList[teamIndex]:scale(1.5,1.5)
         trainer.Pokemans[teamIndex] = pokemon:new({xPos=125, yPos=280});
         trainer.Pokemans[teamIndex]:create(pokeInfo1.Pid)
+        audio.play(menuClick, {loops = 0})
         table.remove(pokemonsAvailable, random1)
     elseif (event.target == select2) then
         thumbList[teamIndex] = display.newImage(pokeInfo2.imagesLocation.."/select.png", thumbX, thumbY);
         thumbList[teamIndex]:scale(1.5,1.5)
         trainer.Pokemans[teamIndex] = pokemon:new({xPos=360, yPos=280});
         trainer.Pokemans[teamIndex]:create(pokeInfo2.Pid)
+        audio.play(menuClick, {loops = 0})
         table.remove(pokemonsAvailable, random2)
     elseif (event.target == select3) then
         thumbList[teamIndex] = display.newImage(pokeInfo3.imagesLocation.."/select.png", thumbX, thumbY);
         thumbList[teamIndex]:scale(1.5,1.5)
         trainer.Pokemans[teamIndex] = pokemon:new({xPos=590, yPos=280});
         trainer.Pokemans[teamIndex]:create(pokeInfo3.Pid)
+        audio.play(menuClick, {loops = 0})
         table.remove(pokemonsAvailable, random3)
     end
     if (thumbX < 519) then
@@ -126,17 +172,22 @@ local function selectionListener(event)
         select3:removeSelf();
         teamSelect();
     elseif (teamIndex == 7) then
-        selectText:removeSelf();
-        teamText:removeSelf();
-        select1:removeEventListener("tap", selectionListener);
-        select2:removeEventListener("tap", selectionListener);
-        select3:removeEventListener("tap", selectionListener);
-        select1:removeSelf();
-        select2:removeSelf();
-        select3:removeSelf();
-        removeObjectList(thumbList, false);
-		composer.setVariable("trainer", trainer)
-        composer.gotoScene("fight")
+        openingAnimations()
+        audio.play(menuTransition, {loops = 0})
+            selectText:removeSelf();
+            teamText:removeSelf();
+            select1:removeEventListener("tap", selectionListener);
+            select2:removeEventListener("tap", selectionListener);
+            select3:removeEventListener("tap", selectionListener);
+            select1:removeSelf();
+            select2:removeSelf();
+            select3:removeSelf();
+            removeObjectList(thumbList, false);
+            composer.setVariable("trainer", trainer)
+        local function moveToNextScene()
+            composer.gotoScene("fight")
+        end
+        timer.performWithDelay(4500, moveToNextScene)
     end
     
     local pokemon1 = trainer.Pokemans[1].pokemon.selectView
