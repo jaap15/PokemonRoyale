@@ -13,15 +13,6 @@ end
 
 function Pokemon:create(chosePokemon)
 
-  -- ***************************************************
-  -- ***************************************************
-  -- ***************************************************
-  -- Feel free to change any of the daniel added code
-  -- Just make sure it doesn't break anything!
-  -- ***************************************************
-  -- ***************************************************
-  -- ***************************************************
-
   local pokemonInfo;
 
   pokemonInfo = getPokemonTableInfo(chosePokemon)
@@ -32,8 +23,8 @@ function Pokemon:create(chosePokemon)
   self.pokemon.selectView:scale(3,3)
   -- Used for Pokemon Menu scene
   -- if you think of a better way of doing this then change this code
-  self.pokemon.selectViewTN = display.newImage(location, self.xPos, self.yPos); --daniel added code
-  self.pokemon.selectViewTN.isVisible = false --daniel added code
+  self.pokemon.selectViewTN = display.newImage(location, self.xPos, self.yPos);
+  self.pokemon.selectViewTN.isVisible = false
 
   location = pokemonInfo.imagesLocation.."/battle.png"
   self.pokemon.battleView = display.newImage(location, self.xPos, self.yPos);
@@ -42,9 +33,8 @@ function Pokemon:create(chosePokemon)
   self.pokemon.tag = pokemonInfo.name; -- “Pokemon name”
   self.pokemon.Pid = pokemonInfo.Pid; -- “Pokemon's pokedex #”
 
-  self.pokemon.hp = self.HP -- daniel added code
+  self.pokemon.hp = self.HP
 
-  -- daniel added code
   self.pokemon.healthBar = display.newRect(0, -45, healthBarLength, 10)
   self.pokemon.healthBar:setFillColor(0,1,0)
   self.pokemon.healthBar.strokeWidth = 1
@@ -55,8 +45,6 @@ function Pokemon:create(chosePokemon)
   self.pokemon.healthBarTN:setStrokeColor(1,1,1,0.5)
   self.pokemon.healthBarTN.isVisible = false
 
-
-  -- daniel added code
   self.pokemon.damageBar = display.newRect(0, -45, 0, 10)
   self.pokemon.damageBar:setFillColor(1,0,0)
   self.pokemon.damageBarTN = display.newRect(0, -45, 0, 10)
@@ -82,26 +70,25 @@ end
 function Pokemon:setSelectionView()
   self.pokemon.battleView.isVisible = false;
   self.pokemon.selectView.isVisible = true;
-  self.pokemon.healthBar.isVisible = true --daniel added code 
-  self.pokemon.damageBar.isVisible = true --daniel added code 
+  self.pokemon.healthBar.isVisible = true
+  self.pokemon.damageBar.isVisible = true
 end
 
 function Pokemon:setBattleView()
   self.pokemon.selectView.isVisible = false;
   self.pokemon.battleView.isVisible = true;
-  self.pokemon.healthBar.isVisible = true --daniel added code 
-  self.pokemon.damageBar.isVisible = true --daniel added code 
+  self.pokemon.healthBar.isVisible = true
+  self.pokemon.damageBar.isVisible = true
 end
 
 function Pokemon:HidePokemon()
   self.pokemon.isVisible = false;
-  self.pokemon.healthBar.isVisible = false --daniel added code 
-  self.pokemon.damageBar.isVisible = false --daniel added code 
+  self.pokemon.healthBar.isVisible = false
+  self.pokemon.damageBar.isVisible = false 
   self.pokemon.selectView.isVisible = false;
   self.pokemon.battleView.isVisible = false;
 end
 
---daniel added code
 function Pokemon:returnSelectImage() 
   return self.pokemon.selectViewTN
 end
@@ -110,7 +97,6 @@ function Pokemon:returnHealthStatus()
   return self.pokemon.healthBarTN, self.pokemon.damageBarTN
 end
 
---daniel added code, takes damage
 function Pokemon:takeDamage(damageTaken)
   self.pokemon.hp = self.pokemon.hp - damageTaken
   if (self.pokemon.hp < 0) then
@@ -119,7 +105,6 @@ function Pokemon:takeDamage(damageTaken)
   self:updateDamageBar()
 end
 
---daniel added code 
 function Pokemon:drawHealthBar(index)
   if (index == "player") then
     self.pokemon.healthBar.x = 535
@@ -138,7 +123,6 @@ function Pokemon:drawHealthBar(index)
   end
 end
 
---daniel added code, draws the pokemon health bar
 function Pokemon:updateDamageBar()
   self.pokemon.damageBar.x = ((self.pokemon.hp*(((healthBarLength*100)/self.HP)/100)) / 2) + self.pokemon.healthBar.x
   self.pokemon.damageBar.width = (self.HP - self.pokemon.hp) * (((healthBarLength*100)/self.HP)/100)

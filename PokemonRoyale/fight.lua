@@ -21,6 +21,9 @@ local cancelBtn
 local mainMenuBtn = {}
 local fightMenuBtn = {}
 local pkmnMenuBtn = {}
+local pkmnMenuBG
+local fightMenuBG
+local itemsMenuBG
 local pkmnHB = {}
 local pkmnDB = {}
 local pokemonThumbNails = {}
@@ -40,7 +43,6 @@ local menuClick = audio.loadStream("sounds/menuButtonClick.mp3")
 function attack1(event)
     if ( "ended" == event.phase ) then
         audio.play(menuClick, {loops = 0})
-        print("Player attacked with "..trainer.Pokemans[currentPokemon].pokemon.attack1)
         --enemyTeam[eCurrentPokemon]:takeDamage(trainer.Pokemans[currentPokemon].pokemon.attack1Damage)
         trainer.Pokemans[currentPokemon]:takeDamage(25)
         returnAfterAttack()
@@ -50,7 +52,6 @@ end
 function attack2(event)
     if ( "ended" == event.phase ) then
         audio.play(menuClick, {loops = 0})
-        print("Player attacked with "..trainer.Pokemans[currentPokemon].pokemon.attack2)
         enemyTeam[eCurrentPokemon]:takeDamage(trainer.Pokemans[currentPokemon].pokemon.attack2Damage)
         returnAfterAttack()
     end
@@ -59,7 +60,6 @@ end
 function attack3(event)
     if ( "ended" == event.phase ) then
         audio.play(menuClick, {loops = 0})
-        print("Player attacked with "..trainer.Pokemans[currentPokemon].pokemon.attack3)
         enemyTeam[eCurrentPokemon]:takeDamage(trainer.Pokemans[currentPokemon].pokemon.attack3Damage)
         returnAfterAttack()
     end
@@ -68,7 +68,6 @@ end
 function attack4(event)
     if ( "ended" == event.phase ) then
         audio.play(menuClick, {loops = 0})
-        print("Player attacked with "..trainer.Pokemans[currentPokemon].pokemon.attack4)
         enemyTeam[eCurrentPokemon]:takeDamage(trainer.Pokemans[currentPokemon].pokemon.attack4Damage)
         returnAfterAttack()
     end
@@ -279,7 +278,6 @@ function drawBackground()
     enemyTrainer.y = 350
     enemyTrainer:scale(3,3)
     local function translateTrainer1 ()
-        print("TEST")
         transition.to(enemyTrainer, {time = 750, x=enemyTrainer.x+300})
     end
     timer.performWithDelay(1500, translateTrainer1)
@@ -395,14 +393,15 @@ end
 function returnToMainMenu(event)
     if ( "ended" == event.phase ) then
         audio.play(menuClick, {loops = 0})
-        if (fightMenuBG) then
+        if (fightMenuBG ~= nil) then
             fightMenuBG.isVisible = false
             for cnt = 0, #fightMenuBtn do
+                print("fightMenuBtn elements  " .. #fightMenuBtn)
                 fightMenuBtn[cnt].isVisible = false
             end
         end
 
-        if (pkmnMenuBG) then
+        if (pkmnMenuBG ~= nil) then
             pkmnMenuBG.isVisible = false
             for cnt = 0, #pkmnMenuBtn do
                 pkmnMenuBtn[cnt].isVisible = false
@@ -415,7 +414,7 @@ function returnToMainMenu(event)
             end
         end
 
-        if (itemsMenuBG) then
+        if (itemsMenuBG ~= nil) then
             itemsMenuBG.isVisible = false
             for cnt = 0, #itemList do
                 itemList[cnt].isVisible = false
@@ -576,21 +575,15 @@ function openFightMenu (event)
         cancelBtn.x = 638
         cancelBtn.y = 1226    
 
-        --fightMenuBtn[0]:addEventListener("tap", attack1);
-        fightMenuBtn[1]:addEventListener("tap", attack2)
-        fightMenuBtn[2]:addEventListener("tap", attack3)
-        fightMenuBtn[3]:addEventListener("tap", attack4)
-
         mainMenuBG.isVisible = false
         for cnt = 0, 3 do
             mainMenuBtn[cnt].isVisible = false
         end
 
         sceneGroup:insert( fightMenuBG )
-        sceneGroup:insert( fightMenuBtn[0] )
-        sceneGroup:insert( fightMenuBtn[1] )
-        sceneGroup:insert( fightMenuBtn[2] )
-        sceneGroup:insert( fightMenuBtn[3] )
+        for cnt = 0, #fightMenuBtn do
+            sceneGroup:insert(fightMenuBtn[cnt])
+        end
         sceneGroup:insert( cancelBtn )
     end
 end
