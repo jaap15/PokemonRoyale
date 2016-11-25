@@ -114,7 +114,16 @@ function Pokemon:returnHealthStatus()
   return self.pokemon.healthBarTN, self.pokemon.damageBarTN
 end
 
-function Pokemon:takeDamage(damageTaken)
+function Pokemon:attackEffectMultiplier(attackedType)
+  local multiplier = 1;
+
+  return multiplier;
+
+end
+
+function Pokemon:takeDamage(damageTaken, damageTakenType)
+  
+  damageTaken = damageTaken * self.attackEffectMultiplier(damageTakenType)
   self.pokemon.currentHP = self.pokemon.currentHP - damageTaken
   if (self.pokemon.currentHP < 0) then
     self.pokemon.currentHP = 0
