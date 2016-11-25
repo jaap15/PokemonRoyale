@@ -39,103 +39,200 @@ local menuClick = audio.loadStream("sounds/menuButtonClick.mp3")
 -- Fight Menu Functions
 function attack1(event)
     if ( "ended" == event.phase ) then
+        audio.play(menuClick, {loops = 0})
         print("Player attacked with "..trainer.Pokemans[currentPokemon].pokemon.attack1)
         enemyTeam[eCurrentPokemon]:takeDamage(trainer.Pokemans[currentPokemon].pokemon.attack1Damage)
         trainer.Pokemans[currentPokemon]:takeDamage(25)
+        returnAfterAttack()
     end
 end
 
 function attack2(event)
     if ( "ended" == event.phase ) then
+        audio.play(menuClick, {loops = 0})
         print("Player attacked with "..trainer.Pokemans[currentPokemon].pokemon.attack2)
         enemyTeam[eCurrentPokemon]:takeDamage(trainer.Pokemans[currentPokemon].pokemon.attack2Damage)
+        returnAfterAttack()
     end
 end
 
 function attack3(event)
     if ( "ended" == event.phase ) then
+        audio.play(menuClick, {loops = 0})
         print("Player attacked with "..trainer.Pokemans[currentPokemon].pokemon.attack3)
         enemyTeam[eCurrentPokemon]:takeDamage(trainer.Pokemans[currentPokemon].pokemon.attack3Damage)
+        returnAfterAttack()
     end
 end
 
 function attack4(event)
     if ( "ended" == event.phase ) then
+        audio.play(menuClick, {loops = 0})
         print("Player attacked with "..trainer.Pokemans[currentPokemon].pokemon.attack4)
         enemyTeam[eCurrentPokemon]:takeDamage(trainer.Pokemans[currentPokemon].pokemon.attack4Damage)
+        returnAfterAttack()
     end
 end
 
 -- Pokemon Menu Functions
+local customParams = {
+    var1 = "Hello ",
+    var2 = "World!"
+}
+
 function select1(event)
     if ( "ended" == event.phase ) then
-        trainer.Pokemans[currentPokemon]:HidePokemon()
-        currentPokemon = 1;
-        trainer.Pokemans[currentPokemon]:setBattleView()
-        trainer.Pokemans[currentPokemon]:setPos(190,530)
+        audio.play(menuClick, {loops = 0})
+        native.showAlert("Are you sure?", "Switch out " .. trainer.Pokemans[currentPokemon].pokemon.tag .. " for " .. trainer.Pokemans[1].pokemon.tag .. "?", {"No", "Yes"}, pokemonSelect1Confirm)
     end
 end
 
 function select2(event)
     if ( "ended" == event.phase ) then
-        trainer.Pokemans[currentPokemon]:HidePokemon()
-        currentPokemon = 2;
-        trainer.Pokemans[currentPokemon]:setBattleView()
-        trainer.Pokemans[currentPokemon]:setPos(190,530)
+        audio.play(menuClick, {loops = 0})
+        native.showAlert("Are you sure?", "Switch out " .. trainer.Pokemans[currentPokemon].pokemon.tag .. " for " .. trainer.Pokemans[2].pokemon.tag .. "?", {"No", "Yes"}, pokemonSelect2Confirm)
    end
 end
 
 function select3(event)
     if ( "ended" == event.phase ) then
-        trainer.Pokemans[currentPokemon]:HidePokemon()
-        currentPokemon = 3;
-        trainer.Pokemans[currentPokemon]:setBattleView()
-        trainer.Pokemans[currentPokemon]:setPos(190,530)
+        audio.play(menuClick, {loops = 0})
+        native.showAlert("Are you sure?", "Switch out " .. trainer.Pokemans[currentPokemon].pokemon.tag .. " for " .. trainer.Pokemans[3].pokemon.tag .. "?", {"No", "Yes"}, pokemonSelect3Confirm)
     end
 end
 
 function select4(event)
     if ( "ended" == event.phase ) then
-        trainer.Pokemans[currentPokemon]:HidePokemon()
-        currentPokemon = 4;
-        trainer.Pokemans[currentPokemon]:setBattleView()
-        trainer.Pokemans[currentPokemon]:setPos(190,530)
+        audio.play(menuClick, {loops = 0})
+        native.showAlert("Are you sure?", "Switch out " .. trainer.Pokemans[currentPokemon].pokemon.tag .. " for " .. trainer.Pokemans[4].pokemon.tag .. "?", {"No", "Yes"}, pokemonSelect4Confirm)
     end
 end
 
 function select5(event)
     if ( "ended" == event.phase ) then
-        trainer.Pokemans[currentPokemon]:HidePokemon()
-        currentPokemon = 5;
-        trainer.Pokemans[currentPokemon]:setBattleView()
-        trainer.Pokemans[currentPokemon]:setPos(190,530)
+        audio.play(menuClick, {loops = 0})
+        native.showAlert("Are you sure?", "Switch out " .. trainer.Pokemans[currentPokemon].pokemon.tag .. " for " .. trainer.Pokemans[5].pokemon.tag .. "?", {"No", "Yes"}, pokemonSelect5Confirm)        
     end
 end
 
 function select6(event)
     if ( "ended" == event.phase ) then
-        trainer.Pokemans[currentPokemon]:HidePokemon()
-        currentPokemon = 6;
-        trainer.Pokemans[currentPokemon]:setBattleView()
-        trainer.Pokemans[currentPokemon]:setPos(190,530)
+        audio.play(menuClick, {loops = 0})
+        native.showAlert("Are you sure?", "Switch out " .. trainer.Pokemans[currentPokemon].pokemon.tag .. " for " .. trainer.Pokemans[5].pokemon.tag .. "?", {"No", "Yes"}, pokemonSelect6Confirm)        
+    end
+end
+
+function pokemonSelect1Confirm(event, pkmnIndex)
+    if ( event.action == "clicked" ) then
+        local i = event.index  
+        if ( i == 1 ) then  
+
+        elseif ( i == 2 ) then
+            trainer.Pokemans[currentPokemon]:HidePokemon()  
+            currentPokemon = 1
+            trainer.Pokemans[currentPokemon]:setBattleView()
+            trainer.Pokemans[currentPokemon]:setPos(190,530)
+            returnAfterSwap()
+        end
+    end
+end
+
+function pokemonSelect2Confirm(event, pkmnIndex)
+    if ( event.action == "clicked" ) then
+        local i = event.index  
+        if ( i == 1 ) then  
+
+        elseif ( i == 2 ) then
+            trainer.Pokemans[currentPokemon]:HidePokemon()  
+            currentPokemon = 2
+            trainer.Pokemans[currentPokemon]:setBattleView()
+            trainer.Pokemans[currentPokemon]:setPos(190,530)
+            returnAfterSwap()
+        end
+    end
+end
+
+function pokemonSelect3Confirm(event, pkmnIndex)
+    if ( event.action == "clicked" ) then
+        local i = event.index  
+        if ( i == 1 ) then  
+
+        elseif ( i == 2 ) then
+            trainer.Pokemans[currentPokemon]:HidePokemon()  
+            currentPokemon = 3
+            trainer.Pokemans[currentPokemon]:setBattleView()
+            trainer.Pokemans[currentPokemon]:setPos(190,530)
+            returnAfterSwap()
+        end
+    end
+end
+
+function pokemonSelect4Confirm(event, pkmnIndex)
+    if ( event.action == "clicked" ) then
+        local i = event.index  
+        if ( i == 1 ) then  
+
+        elseif ( i == 2 ) then
+            trainer.Pokemans[currentPokemon]:HidePokemon()  
+            currentPokemon = 4
+            trainer.Pokemans[currentPokemon]:setBattleView()
+            trainer.Pokemans[currentPokemon]:setPos(190,530)
+            returnAfterSwap()
+        end
+    end
+end
+
+function pokemonSelect5Confirm(event, pkmnIndex)
+    if ( event.action == "clicked" ) then
+        local i = event.index  
+        if ( i == 1 ) then  
+
+        elseif ( i == 2 ) then
+            trainer.Pokemans[currentPokemon]:HidePokemon()  
+            currentPokemon = 5
+            trainer.Pokemans[currentPokemon]:setBattleView()
+            trainer.Pokemans[currentPokemon]:setPos(190,530)
+            returnAfterSwap()
+        end
+    end
+end
+
+function pokemonSelect6Confirm(event, pkmnIndex)
+    if ( event.action == "clicked" ) then
+        local i = event.index  
+        if ( i == 1 ) then  
+
+        elseif ( i == 2 ) then
+            trainer.Pokemans[currentPokemon]:HidePokemon()  
+            currentPokemon = 6
+            trainer.Pokemans[currentPokemon]:setBattleView()
+            trainer.Pokemans[currentPokemon]:setPos(190,530)
+            returnAfterSwap()
+        end
     end
 end
 
 -- Item Menu Functions
 function item1(event)
-    if ( "ended" == event.phase ) then
+        if ( "ended" == event.phase ) then
+        audio.play(menuClick, {loops = 0})
+        audio.play(menuClick, {loops = 0})
         print("item 1")
     end
 end
 
 function item2(event)
-    if ( "ended" == event.phase ) then
+        if ( "ended" == event.phase ) then
+        audio.play(menuClick, {loops = 0})
+        audio.play(menuClick, {loops = 0})
         print("item 2")
     end
 end
 
 function item3(event)
-    if ( "ended" == event.phase ) then
+        if ( "ended" == event.phase ) then
+        audio.play(menuClick, {loops = 0})
+        audio.play(menuClick, {loops = 0})
         print("item 3")
     end
 end
@@ -211,8 +308,43 @@ function drawBackground()
     sceneGroup:insert( playerInfoBox )
 end
 
+function returnAfterAttack()
+    fightMenuBG.isVisible = false
+    for cnt = 0, #fightMenuBtn do
+        fightMenuBtn[cnt].isVisible = false
+    end
+
+    cancelBtn.isVisible = false
+
+    mainMenuBG.isVisible = true
+    for cnt = 0, 3 do
+        mainMenuBtn[cnt].isVisible = true
+    end    
+end
+
+function returnAfterSwap()
+    pkmnMenuBG.isVisible = false
+    for cnt = 0, #pkmnMenuBtn do
+        pkmnMenuBtn[cnt].isVisible = false
+    end 
+    for cnt = 1, #trainer.Pokemans do       
+        pokemonThumbNails[cnt].isVisible = false 
+        pokemonNames[cnt].isVisible = false
+        pkmnHB[cnt].isVisible = false
+        pkmnDB[cnt].isVisible = false
+    end
+
+    cancelBtn.isVisible = false
+
+    mainMenuBG.isVisible = true
+    for cnt = 0, 3 do
+        mainMenuBtn[cnt].isVisible = true
+    end    
+end
+
 function returnToMainMenu(event)
     if ( "ended" == event.phase ) then
+        audio.play(menuClick, {loops = 0})
         audio.play(menuClick, {loops = 0})
         if (fightMenuBG) then
             fightMenuBG.isVisible = false
@@ -324,7 +456,8 @@ end
 
 function openFightMenu (event)
 
-    if ( "ended" == event.phase ) then
+        if ( "ended" == event.phase ) then
+        audio.play(menuClick, {loops = 0})
         audio.play(menuClick, {loops = 0})
         fightMenuBG = display.newImage("images/fightScene/menu/fight/fightMenuBG.png")
         fightMenuBG.width = display.pixelWidth
@@ -415,7 +548,8 @@ function openFightMenu (event)
 end
 
 function openPokemonMenu(event)
-    if ( "ended" == event.phase ) then
+        if ( "ended" == event.phase ) then
+        audio.play(menuClick, {loops = 0})
         audio.play(menuClick, {loops = 0})
         pkmnMenuBG = display.newImage("images/fightScene/menu/pkmn/pkmnMenuBG.png")
         pkmnMenuBG.width = display.pixelWidth
@@ -557,7 +691,8 @@ function openPokemonMenu(event)
 end
 
 function openItemsMenu (event)
-    if ( "ended" == event.phase ) then
+        if ( "ended" == event.phase ) then
+        audio.play(menuClick, {loops = 0})
         audio.play(menuClick, {loops = 0})
         itemsMenuBG = display.newImage("images/fightScene/menu/item/itemMenuBG.png")
         itemsMenuBG.width = display.pixelWidth
@@ -634,7 +769,8 @@ function openItemsMenu (event)
 end
 
 function openRunMenu (event)
-    if ( "ended" == event.phase ) then
+        if ( "ended" == event.phase ) then
+        audio.play(menuClick, {loops = 0})
         audio.play(menuClick, {loops = 0})
         cancelBtn = widget.newButton({    
                 id = "cancelBtn",
