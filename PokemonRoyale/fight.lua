@@ -44,7 +44,7 @@ local menuClick = audio.loadStream("sounds/menuButtonClick.mp3")
 local function updatePokemonInfoBox()
     infoBoxText.pName.text = string.format("%s Lv:100", trainer.Pokemans[currentPokemon].pokemon.tag)
     infoBoxText.eName.text = string.format("%s Lv:100", enemyTeam[eCurrentPokemon].pokemon.tag)
-    infoBoxText.pHpText.text = string.format("%03d/%03d", trainer.Pokemans[currentPokemon].pokemon.hp, trainer.Pokemans[currentPokemon].HP)
+    infoBoxText.pHpText.text = string.format("%03d/%03d", trainer.Pokemans[currentPokemon].pokemon.currentHP, trainer.Pokemans[currentPokemon].pokemon.maxHP)
  end
 
 -- Fight Menu Functions

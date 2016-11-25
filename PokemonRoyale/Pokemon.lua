@@ -34,8 +34,6 @@ function Pokemon:create(chosePokemon)
   self.pokemon.Pid = pokemonInfo.Pid; -- “Pokemon's pokedex #”
   self.pokemon.imagesLocation = pokemonInfo.imagesLocation
 
-  self.pokemon.hp = self.HP
-
   self.pokemon.healthBar = display.newRect(0, -45, healthBarLength, 10)
   self.pokemon.healthBar:setFillColor(0,1,0)
   self.pokemon.healthBar.strokeWidth = 1
@@ -117,9 +115,9 @@ function Pokemon:returnHealthStatus()
 end
 
 function Pokemon:takeDamage(damageTaken)
-  self.pokemon.hp = self.pokemon.hp - damageTaken
-  if (self.pokemon.hp < 0) then
-    self.pokemon.hp = 0
+  self.pokemon.currentHP = self.pokemon.currentHP - damageTaken
+  if (self.pokemon.currentHP < 0) then
+    self.pokemon.currentHP = 0
   end
   self:updateDamageBar()
 end
@@ -143,10 +141,10 @@ function Pokemon:drawHealthBar(index)
 end
 
 function Pokemon:updateDamageBar()
-  self.pokemon.damageBar.x = ((self.pokemon.hp*(((healthBarLength*100)/self.HP)/100)) / 2) + self.pokemon.healthBar.x
-  self.pokemon.damageBar.width = (self.HP - self.pokemon.hp) * (((healthBarLength*100)/self.HP)/100)
-  self.pokemon.damageBarTN.x = ((self.pokemon.hp*(((healthBarLength*100)/self.HP)/100)) / 2) + self.pokemon.healthBarTN.x
-  self.pokemon.damageBarTN.width = (self.HP - self.pokemon.hp) * (((healthBarLength*100)/self.HP)/100)
+  self.pokemon.damageBar.x = ((self.pokemon.currentHP*(((healthBarLength*100)/self.pokemon.maxHP)/100)) / 2) + self.pokemon.healthBar.x
+  self.pokemon.damageBar.width = (self.pokemon.maxHP - self.pokemon.currentHP) * (((healthBarLength*100)/self.pokemon.maxHP)/100)
+  self.pokemon.damageBarTN.x = ((self.pokemon.currentHP*(((healthBarLength*100)/self.pokemon.maxHP)/100)) / 2) + self.pokemon.healthBarTN.x
+  self.pokemon.damageBarTN.width = (self.pokemon.maxHP - self.pokemon.currentHP) * (((healthBarLength*100)/self.pokemon.maxHP)/100)
 end
 
 function Pokemon:setPos(xP,yP)
