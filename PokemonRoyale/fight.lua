@@ -35,9 +35,17 @@ local eCurrentPokemon = 1;
 local fSize = 45; --font size
 local enemyTeam = {}
 local trainer = composer.getVariable("trainer")
+local infoBoxText = display.newText("", 0, 0, native.systemFont, 28)
 
 -- Local Sounds
 local menuClick = audio.loadStream("sounds/menuButtonClick.mp3")
+
+
+local function updatePokemonInfoBox()
+    infoBoxText.pName.text = string.format("%s Lv:100", trainer.Pokemans[currentPokemon].pokemon.tag)
+    infoBoxText.eName.text = string.format("%s Lv:100", enemyTeam[eCurrentPokemon].pokemon.tag)
+    infoBoxText.pHpText.text = string.format("%03d/%03d", trainer.Pokemans[currentPokemon].pokemon.hp, trainer.Pokemans[currentPokemon].HP)
+ end
 
 -- Fight Menu Functions
 function attack1(event)
@@ -45,6 +53,7 @@ function attack1(event)
         audio.play(menuClick, {loops = 0})
         enemyTeam[eCurrentPokemon]:takeDamage(trainer.Pokemans[currentPokemon].pokemon.attack1Damage)
         trainer.Pokemans[currentPokemon]:takeDamage(25)
+        updatePokemonInfoBox()
         returnAfterAttack()
     end
 end
@@ -149,6 +158,7 @@ function pokemonSelect1Confirm(event, pkmnIndex)
             local function spawnNewPkmn()
                 trainer.Pokemans[currentPokemon]:HidePokemon()  
                 currentPokemon = 1
+                updatePokemonInfoBox()
                 trainer.Pokemans[currentPokemon]:setBattleView()
                 trainer.Pokemans[currentPokemon]:setPos(190,530)
                 returnAfterSwap()
@@ -178,6 +188,7 @@ function pokemonSelect2Confirm(event, pkmnIndex)
             local function spawnNewPkmn()
                 trainer.Pokemans[currentPokemon]:HidePokemon()  
                 currentPokemon = 2
+                updatePokemonInfoBox()
                 trainer.Pokemans[currentPokemon]:setBattleView()
                 trainer.Pokemans[currentPokemon]:setPos(190,530)
                 returnAfterSwap()
@@ -207,6 +218,7 @@ function pokemonSelect3Confirm(event, pkmnIndex)
             local function spawnNewPkmn()
                 trainer.Pokemans[currentPokemon]:HidePokemon()  
                 currentPokemon = 3
+                updatePokemonInfoBox()
                 trainer.Pokemans[currentPokemon]:setBattleView()
                 trainer.Pokemans[currentPokemon]:setPos(190,530)
                 returnAfterSwap()
@@ -236,6 +248,7 @@ function pokemonSelect4Confirm(event, pkmnIndex)
             local function spawnNewPkmn()
                 trainer.Pokemans[currentPokemon]:HidePokemon()  
                 currentPokemon = 4
+                updatePokemonInfoBox()
                 trainer.Pokemans[currentPokemon]:setBattleView()
                 trainer.Pokemans[currentPokemon]:setPos(190,530)
                 returnAfterSwap()
@@ -265,6 +278,7 @@ function pokemonSelect5Confirm(event, pkmnIndex)
             local function spawnNewPkmn()
                 trainer.Pokemans[currentPokemon]:HidePokemon()  
                 currentPokemon = 5
+                updatePokemonInfoBox()
                 trainer.Pokemans[currentPokemon]:setBattleView()
                 trainer.Pokemans[currentPokemon]:setPos(190,530)
                 returnAfterSwap()
@@ -294,6 +308,7 @@ function pokemonSelect6Confirm(event, pkmnIndex)
             local function spawnNewPkmn()
                 trainer.Pokemans[currentPokemon]:HidePokemon()  
                 currentPokemon = 6
+                updatePokemonInfoBox()
                 trainer.Pokemans[currentPokemon]:setBattleView()
                 trainer.Pokemans[currentPokemon]:setPos(190,530)
                 returnAfterSwap()
@@ -346,16 +361,21 @@ end
 
 function drawBackground()
     platformBG = display.newImage("images/fightScene/GrassBG.png")
-    platformBG.width = display.pixelWidth
-    platformBG.height = display.pixelHeight/2
-    platformBG.x = display.pixelWidth - (display.pixelWidth/2)
-    platformBG.y = display.pixelHeight - (display.pixelHeight/1.33) 
+    platformBG.width = display.contentWidth
+    platformBG.height = display.contentHeight/2
+    platformBG.x = display.contentWidth - (display.contentWidth/2)
+    platformBG.y = display.contentHeight - (display.contentHeight/1.33) 
 
     enemyInfoBox = display.newImage("images/fightScene/enemyInfoBox.png")
-    enemyInfoBox.width = 300
-    enemyInfoBox.height = 100
-    enemyInfoBox.x = 200
-    enemyInfoBox.y = 300
+    enemyInfoBox.width = display.contentWidth/2
+    enemyInfoBox.height = display.contentHeight /10
+    enemyInfoBox.x = (display.contentWidth + 200) - display.contentWidth
+    enemyInfoBox.y = (display.contentHeight  + 100) - display.contentHeight
+
+    infoBoxText.eName = display.newText(" ", 0, 0, native.systemFont, 28)
+    infoBoxText.eName:setTextColor(0, 0, 0)
+    infoBoxText.eName.x = (display.contentWidth + 200) - display.contentWidth
+    infoBoxText.eName.y = (display.contentHeight  + 75) - display.contentHeight
 
     enemyTrainer = display.newImage("images/fightScene/trainer1.png")
     enemyTrainer.x = 542
@@ -386,10 +406,21 @@ function drawBackground()
     timer.performWithDelay(1500, throwAnimation)
 
     playerInfoBox = display.newImage("images/fightScene/playerInfoBox.png")
-    playerInfoBox.width = 300
-    playerInfoBox.height = 100        
-    playerInfoBox.x = 525
-    playerInfoBox.y = 525
+    playerInfoBox.width = display.contentWidth/2
+    playerInfoBox.height = display.contentHeight/10  
+    playerInfoBox.x = display.contentWidth - 200
+    playerInfoBox.y = display.contentHeight/2 - 100
+
+    infoBoxText.pName = display.newText(" ", 0, 0, native.systemFont, 28)
+    infoBoxText.pName:setTextColor(0, 0, 0)
+    infoBoxText.pName.x = display.contentWidth - 200
+    infoBoxText.pName.y = display.contentHeight/2 - 125
+
+    infoBoxText.pHpText = display.newText(" ", 0, 0, native.systemFont, 28)
+    infoBoxText.pHpText:setTextColor(0, 0, 0)
+    infoBoxText.pHpText.x = display.contentWidth - 200
+    infoBoxText.pHpText.y = display.contentHeight/2 - 75
+
 
     local pokemonsAvailable = getIdListOfPokemons()
 
@@ -442,6 +473,7 @@ function drawBackground()
     local function drawPlayerPokemon()
         trainer.Pokemans[currentPokemon]:setBattleView()
         trainer.Pokemans[currentPokemon]:setPos(190,530)
+        updatePokemonInfoBox()
     end
     local playerSummon = summonPkmnAnimation(190,530)
     local function summonPlayer()
@@ -458,6 +490,7 @@ function drawBackground()
     sceneGroup:insert( platformBG )
     sceneGroup:insert( enemyInfoBox )
     sceneGroup:insert( playerInfoBox )
+    sceneGroup:insert( infoBoxText )
 end
 
 function returnAfterAttack()
@@ -553,8 +586,8 @@ end
 
 function openMainMenu ()
     mainMenuBG = display.newImage("images/fightScene/menu/main/mainMenuBG.png")
-    mainMenuBG.width = display.pixelWidth
-    mainMenuBG.height = display.pixelHeight/2
+    mainMenuBG.width = display.contentWidth
+    mainMenuBG.height = display.contentHeight/2
 
     mainMenuBtn[0] = widget.newButton({    
             id = "fightBtn",
@@ -613,8 +646,8 @@ function openMainMenu ()
     mainMenuBtn[3].x = 475
     mainMenuBtn[3].y = 1105    
 
-    mainMenuBG.x = display.pixelWidth - (display.pixelWidth/2)
-    mainMenuBG.y = display.pixelHeight - (display.pixelHeight/4) 
+    mainMenuBG.x = display.contentWidth - (display.contentWidth/2)
+    mainMenuBG.y = display.contentHeight - (display.contentHeight/4) 
 
     sceneGroup:insert( mainMenuBG )
     sceneGroup:insert( mainMenuBtn[0] )
@@ -628,10 +661,10 @@ function openFightMenu (event)
         if ( "ended" == event.phase ) then
         audio.play(menuClick, {loops = 0})
         fightMenuBG = display.newImage("images/fightScene/menu/fight/fightMenuBG.png")
-        fightMenuBG.width = display.pixelWidth
-        fightMenuBG.height = display.pixelHeight/2
-        fightMenuBG.x = display.pixelWidth - (display.pixelWidth/2)
-        fightMenuBG.y = display.pixelHeight - (display.pixelHeight/4) 
+        fightMenuBG.width = display.contentWidth
+        fightMenuBG.height = display.contentHeight/2
+        fightMenuBG.x = display.contentWidth - (display.contentWidth/2)
+        fightMenuBG.y = display.contentHeight - (display.contentHeight/4) 
 
         fightMenuBtn[0] = widget.newButton({    
             id = "attack1Btn",
@@ -713,10 +746,10 @@ function openPokemonMenu(event)
         if ( "ended" == event.phase ) then
         audio.play(menuClick, {loops = 0})
         pkmnMenuBG = display.newImage("images/fightScene/menu/pkmn/pkmnMenuBG.png")
-        pkmnMenuBG.width = display.pixelWidth
-        pkmnMenuBG.height = display.pixelHeight/2 
-        pkmnMenuBG.x = display.pixelWidth - (display.pixelWidth/2)
-        pkmnMenuBG.y = display.pixelHeight - (display.pixelHeight/4)    
+        pkmnMenuBG.width = display.contentWidth
+        pkmnMenuBG.height = display.contentHeight/2 
+        pkmnMenuBG.x = display.contentWidth - (display.contentWidth/2)
+        pkmnMenuBG.y = display.contentHeight - (display.contentHeight/4)    
 
 
         pkmnMenuBtn[0] = widget.newButton({    
@@ -855,10 +888,10 @@ function openItemsMenu (event)
         if ( "ended" == event.phase ) then
         audio.play(menuClick, {loops = 0})
         itemsMenuBG = display.newImage("images/fightScene/menu/item/itemMenuBG.png")
-        itemsMenuBG.width = display.pixelWidth
-        itemsMenuBG.height = display.pixelHeight/2
-        itemsMenuBG.x = display.pixelWidth - (display.pixelWidth/2)
-        itemsMenuBG.y = display.pixelHeight - (display.pixelHeight/4)    
+        itemsMenuBG.width = display.contentWidth
+        itemsMenuBG.height = display.contentHeight/2
+        itemsMenuBG.x = display.contentWidth - (display.contentWidth/2)
+        itemsMenuBG.y = display.contentHeight - (display.contentHeight/4)    
 
 
         itemList = {}
