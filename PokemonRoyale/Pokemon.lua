@@ -30,7 +30,7 @@ function Pokemon:create(chosePokemon)
   self.pokemon.battleView = display.newImage(location, self.xPos, self.yPos);
   self.pokemon.battleView:scale(3,3)
   self.pokemon.pp = self;  -- parent object
-  self.pokemon.tag = pokemonInfo.name; -- “Pokemon name”
+  self.pokemon.tag = pokemonInfo.name:gsub("^%l", string.upper); -- “Pokemon name” converts 1st character to uppercase
   self.pokemon.Pid = pokemonInfo.Pid; -- “Pokemon's pokedex #”
 
   self.pokemon.hp = self.HP
