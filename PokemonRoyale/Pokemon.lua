@@ -32,8 +32,7 @@ function Pokemon:create(chosePokemon)
   self.pokemon.pp = self;  -- parent object
   self.pokemon.tag = pokemonInfo.name:gsub("^%l", string.upper); -- “Pokemon name” converts 1st character to uppercase
   self.pokemon.Pid = pokemonInfo.Pid; -- “Pokemon's pokedex #”
-
-  self.pokemon.hp = self.HP
+  self.pokemon.imagesLocation = pokemonInfo.imagesLocation
 
   self.pokemon.status = "healthy"
 
@@ -63,6 +62,24 @@ function Pokemon:create(chosePokemon)
   self.pokemon.attack2Damage = pokemonInfo.attack2Damage;
   self.pokemon.attack3Damage = pokemonInfo.attack3Damage;
   self.pokemon.attack4Damage = pokemonInfo.attack4Damage;
+
+  self.pokemon.attack1Type = pokemonInfo.attack1Type;
+  self.pokemon.attack2Type = pokemonInfo.attack2Type;
+  self.pokemon.attack3Type = pokemonInfo.attack3Type;
+  self.pokemon.attack4Type = pokemonInfo.attack4Type;
+
+  pokemonInfo = getPokemonStatsInfo(self.pokemon.Pid)
+
+  self.pokemon.level = 100;
+  self.pokemon.type1 = pokemonInfo.type1;
+  self.pokemon.type2 = pokemonInfo.type2;
+  self.pokemon.maxHP = pokemonInfo.hp;
+  self.pokemon.currentHP = pokemonInfo.hp;
+  self.pokemon.attackDamage = pokemonInfo.attackDamage;
+  self.pokemon.defense = pokemonInfo.defense;
+  self.pokemon.spAttack = pokemonInfo.spAttack;
+  self.pokemon.spDefense = pokemonInfo.spDefense;
+  self.pokemon.speed = pokemonInfo.speed;
 
   self.pokemon.isVisible = false;
   self.pokemon.selectView.isVisible = false;
@@ -99,10 +116,19 @@ function Pokemon:returnHealthStatus()
   return self.pokemon.healthBarTN, self.pokemon.damageBarTN
 end
 
-function Pokemon:takeDamage(damageTaken)
-  self.pokemon.hp = self.pokemon.hp - damageTaken
-  if (self.pokemon.hp < 0 or self.pokemon.hp == 0) then
-    self.pokemon.hp = 0
+function Pokemon:attackEffectMultiplier(attackedType)
+  local multiplier = 1;
+
+  return multiplier;
+
+end
+
+function Pokemon:takeDamage(damageTaken, damageTakenType)
+  
+  damageTaken = damageTaken * self.attackEffectMultiplier(damageTakenType)
+  self.pokemon.currentHP = self.pokemon.currentHP - damageTaken
+  if (self.pokemon.currentHP < 0) then
+    self.pokemon.currentHP = 0
     self.pokemon.status = "fainted"
     print(self.pokemon.tag .. " has " .. self.pokemon.status)
   end
@@ -128,10 +154,10 @@ function Pokemon:drawHealthBar(index)
 end
 
 function Pokemon:updateDamageBar()
-  self.pokemon.damageBar.x = ((self.pokemon.hp*(((healthBarLength*100)/self.HP)/100)) / 2) + self.pokemon.healthBar.x
-  self.pokemon.damageBar.width = (self.HP - self.pokemon.hp) * (((healthBarLength*100)/self.HP)/100)
-  self.pokemon.damageBarTN.x = ((self.pokemon.hp*(((healthBarLength*100)/self.HP)/100)) / 2) + self.pokemon.healthBarTN.x
-  self.pokemon.damageBarTN.width = (self.HP - self.pokemon.hp) * (((healthBarLength*100)/self.HP)/100)
+  self.pokemon.damageBar.x = ((self.pokemon.currentHP*(((healthBarLength*100)/self.pokemon.maxHP)/100)) / 2) + self.pokemon.healthBar.x
+  self.pokemon.damageBar.width = (self.pokemon.maxHP - self.pokemon.currentHP) * (((healthBarLength*100)/self.pokemon.maxHP)/100)
+  self.pokemon.damageBarTN.x = ((self.pokemon.currentHP*(((healthBarLength*100)/self.pokemon.maxHP)/100)) / 2) + self.pokemon.healthBarTN.x
+  self.pokemon.damageBarTN.width = (self.pokemon.maxHP - self.pokemon.currentHP) * (((healthBarLength*100)/self.pokemon.maxHP)/100)
 end
 
 function Pokemon:setPos(xP,yP)
