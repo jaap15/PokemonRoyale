@@ -51,8 +51,8 @@ local function updatePokemonInfoBox()
 function attack1(event)
     if ( "ended" == event.phase ) then
         audio.play(menuClick, {loops = 0})
-        enemyTeam[eCurrentPokemon]:takeDamage(trainer.Pokemans[currentPokemon].pokemon.attack1Damage)
-        trainer.Pokemans[currentPokemon]:takeDamage(25)
+        enemyTeam[eCurrentPokemon]:takeDamage(trainer.Pokemans[currentPokemon].pokemon.attack1Damage, trainer.Pokemans[currentPokemon].pokemon.attack1Type)
+        trainer.Pokemans[currentPokemon]:takeDamage(25, "grass")
         updatePokemonInfoBox()
         returnAfterAttack()
     end
@@ -61,7 +61,7 @@ end
 function attack2(event)
     if ( "ended" == event.phase ) then
         audio.play(menuClick, {loops = 0})
-        enemyTeam[eCurrentPokemon]:takeDamage(trainer.Pokemans[currentPokemon].pokemon.attack2Damage)
+        enemyTeam[eCurrentPokemon]:takeDamage(trainer.Pokemans[currentPokemon].pokemon.attack2Damage, trainer.Pokemans[currentPokemon].pokemon.attack2Type)
         returnAfterAttack()
     end
 end
@@ -69,7 +69,7 @@ end
 function attack3(event)
     if ( "ended" == event.phase ) then
         audio.play(menuClick, {loops = 0})
-        enemyTeam[eCurrentPokemon]:takeDamage(trainer.Pokemans[currentPokemon].pokemon.attack3Damage)
+        enemyTeam[eCurrentPokemon]:takeDamage(trainer.Pokemans[currentPokemon].pokemon.attack3Damage, trainer.Pokemans[currentPokemon].pokemon.attack3Type)
         returnAfterAttack()
     end
 end
@@ -77,7 +77,7 @@ end
 function attack4(event)
     if ( "ended" == event.phase ) then
         audio.play(menuClick, {loops = 0})
-        enemyTeam[eCurrentPokemon]:takeDamage(trainer.Pokemans[currentPokemon].pokemon.attack4Damage)
+        enemyTeam[eCurrentPokemon]:takeDamage(trainer.Pokemans[currentPokemon].pokemon.attack4Damage,trainer.Pokemans[currentPokemon].pokemon.attack4Type)
         returnAfterAttack()
     end
 end
