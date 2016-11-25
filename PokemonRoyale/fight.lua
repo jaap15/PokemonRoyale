@@ -29,7 +29,7 @@ local pokemon = Pokemon:new( {HP=150} )
 local sceneGroup
 local currentPokemon = 1;
 local eCurrentPokemon = 1;
-local fSize = 50; --font size
+local fSize = 45; --font size
 local enemyTeam = {}
 local trainer = composer.getVariable("trainer")
 
@@ -266,8 +266,8 @@ function drawBackground()
 
     for i = 1, 6, 1 do
         print("Creating enemy: " .. i)
-        local random = math.random(1, #pokemonsAvailable);
-        local pokeInfo = getPokemonTableInfo(random)
+        local random = math.random(#pokemonsAvailable);
+        local pokeInfo = getPokemonTableInfo(pokemonsAvailable[random])
         enemyTeam[i] = pokemon:new({xPos=542, yPos=350});
         enemyTeam[i]:create(pokeInfo.Pid)
     end
