@@ -28,6 +28,9 @@ local select3;
 local pokeInfo1;
 local pokeInfo2;
 local pokeInfo3;
+local random1;
+local random2;
+local random3;
 
 
 function removeObjectList(objectList, pokemonObjects)
@@ -91,16 +94,19 @@ local function selectionListener(event)
         thumbList[teamIndex]:scale(1.5,1.5)
         trainer.Pokemans[teamIndex] = pokemon:new({xPos=125, yPos=280});
         trainer.Pokemans[teamIndex]:create(pokeInfo1.Pid)
+        table.remove(pokemonsAvailable, random1)
     elseif (event.target == select2) then
         thumbList[teamIndex] = display.newImage(pokeInfo2.imagesLocation.."/select.png", thumbX, thumbY);
         thumbList[teamIndex]:scale(1.5,1.5)
         trainer.Pokemans[teamIndex] = pokemon:new({xPos=360, yPos=280});
         trainer.Pokemans[teamIndex]:create(pokeInfo2.Pid)
+        table.remove(pokemonsAvailable, random2)
     elseif (event.target == select3) then
         thumbList[teamIndex] = display.newImage(pokeInfo3.imagesLocation.."/select.png", thumbX, thumbY);
         thumbList[teamIndex]:scale(1.5,1.5)
         trainer.Pokemans[teamIndex] = pokemon:new({xPos=590, yPos=280});
         trainer.Pokemans[teamIndex]:create(pokeInfo3.Pid)
+        table.remove(pokemonsAvailable, random3)
     end
     if (thumbX < 519) then
         thumbX = thumbX + 173;
@@ -144,13 +150,23 @@ function teamSelect()
     selectText = display.newText("Select a Pokemon", display.contentCenterX, 100, native.systemFont, 78, "center");
     teamText = display.newText("Your Team", display.contentCenterX, 800, native.systemFont, 78, "center");
     
-    local random1 = math.random(1, #pokemonsAvailable);
-    local random2 = math.random(1, #pokemonsAvailable);
-    local random3 = math.random(1, #pokemonsAvailable);
+    random1 = math.random(#pokemonsAvailable);
+    random2 = math.random(#pokemonsAvailable);
 
-    pokeInfo1 = getPokemonTableInfo(random1)
-    pokeInfo2 = getPokemonTableInfo(random2)
-    pokeInfo3 = getPokemonTableInfo(random3)
+    while random2 == random1 do
+        random2 = math.random(#pokemonsAvailable);
+    end
+
+    random3 = math.random(#pokemonsAvailable);
+
+    while random3 == random1 or random3 == random2 do
+        random3 = math.random(#pokemonsAvailable);
+    end
+
+    pokeInfo1 = getPokemonTableInfo(pokemonsAvailable[random1])
+    pokeInfo2 = getPokemonTableInfo(pokemonsAvailable[random2])
+    pokeInfo3 = getPokemonTableInfo(pokemonsAvailable[random3])
+
 
     select1 = display.newImage(pokeInfo1.imagesLocation.."/select.png", 125, 280);
     select2 = display.newImage(pokeInfo2.imagesLocation.."/select.png", 360, 280);
