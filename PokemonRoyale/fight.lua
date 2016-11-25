@@ -35,9 +35,16 @@ local eCurrentPokemon = 1;
 local fSize = 45; --font size
 local enemyTeam = {}
 local trainer = composer.getVariable("trainer")
+local infoBoxText = display.newText("", 0, 0, native.systemFont, 28)
 
 -- Local Sounds
 local menuClick = audio.loadStream("sounds/menuButtonClick.mp3")
+
+
+local function updatePokemonName()
+    infoBoxText.pName.text = string.format("%s Lv:100", trainer.Pokemans[currentPokemon].pokemon.tag)
+    infoBoxText.eName.text = string.format("%s Lv:100", enemyTeam[eCurrentPokemon].pokemon.tag)
+ end
 
 -- Fight Menu Functions
 function attack1(event)
@@ -125,6 +132,7 @@ function pokemonSelect1Confirm(event, pkmnIndex)
             local function spawnNewPkmn()
                 trainer.Pokemans[currentPokemon]:HidePokemon()  
                 currentPokemon = 1
+                updatePokemonName()
                 trainer.Pokemans[currentPokemon]:setBattleView()
                 trainer.Pokemans[currentPokemon]:setPos(190,530)
                 returnAfterSwap()
@@ -144,6 +152,7 @@ function pokemonSelect2Confirm(event, pkmnIndex)
             local function spawnNewPkmn()
                 trainer.Pokemans[currentPokemon]:HidePokemon()  
                 currentPokemon = 2
+                updatePokemonName()
                 trainer.Pokemans[currentPokemon]:setBattleView()
                 trainer.Pokemans[currentPokemon]:setPos(190,530)
                 returnAfterSwap()
@@ -163,6 +172,7 @@ function pokemonSelect3Confirm(event, pkmnIndex)
             local function spawnNewPkmn()
                 trainer.Pokemans[currentPokemon]:HidePokemon()  
                 currentPokemon = 3
+                updatePokemonName()
                 trainer.Pokemans[currentPokemon]:setBattleView()
                 trainer.Pokemans[currentPokemon]:setPos(190,530)
                 returnAfterSwap()
@@ -182,6 +192,7 @@ function pokemonSelect4Confirm(event, pkmnIndex)
             local function spawnNewPkmn()
                 trainer.Pokemans[currentPokemon]:HidePokemon()  
                 currentPokemon = 4
+                updatePokemonName()
                 trainer.Pokemans[currentPokemon]:setBattleView()
                 trainer.Pokemans[currentPokemon]:setPos(190,530)
                 returnAfterSwap()
@@ -201,6 +212,7 @@ function pokemonSelect5Confirm(event, pkmnIndex)
             local function spawnNewPkmn()
                 trainer.Pokemans[currentPokemon]:HidePokemon()  
                 currentPokemon = 5
+                updatePokemonName()
                 trainer.Pokemans[currentPokemon]:setBattleView()
                 trainer.Pokemans[currentPokemon]:setPos(190,530)
                 returnAfterSwap()
@@ -220,6 +232,7 @@ function pokemonSelect6Confirm(event, pkmnIndex)
             local function spawnNewPkmn()
                 trainer.Pokemans[currentPokemon]:HidePokemon()  
                 currentPokemon = 6
+                updatePokemonName()
                 trainer.Pokemans[currentPokemon]:setBattleView()
                 trainer.Pokemans[currentPokemon]:setPos(190,530)
                 returnAfterSwap()
@@ -273,6 +286,11 @@ function drawBackground()
     enemyInfoBox.x = (display.contentWidth + 200) - display.contentWidth
     enemyInfoBox.y = (display.contentHeight  + 100) - display.contentHeight
 
+    infoBoxText.eName = display.newText(" ", 0, 0, native.systemFont, 28)
+    infoBoxText.eName:setTextColor(0, 0, 0)
+    infoBoxText.eName.x = (display.contentWidth + 200) - display.contentWidth
+    infoBoxText.eName.y = (display.contentHeight  + 75) - display.contentHeight
+
     enemyTrainer = display.newImage("images/fightScene/trainer1.png")
     enemyTrainer.x = 542
     enemyTrainer.y = 350
@@ -306,6 +324,11 @@ function drawBackground()
     playerInfoBox.height = display.contentHeight/10  
     playerInfoBox.x = display.contentWidth - 200
     playerInfoBox.y = display.contentHeight/2 - 100
+
+    infoBoxText.pName = display.newText(" ", 0, 0, native.systemFont, 28)
+    infoBoxText.pName:setTextColor(0, 0, 0)
+    infoBoxText.pName.x = display.contentWidth - 200
+    infoBoxText.pName.y = display.contentHeight/2 - 125
 
     local pokemonsAvailable = getIdListOfPokemons()
 
@@ -348,12 +371,14 @@ function drawBackground()
     local function drawPlayerPokemon()
         trainer.Pokemans[currentPokemon]:setBattleView()
         trainer.Pokemans[currentPokemon]:setPos(190,530)
+        updatePokemonName()
     end
     timer.performWithDelay(2500, drawPlayerPokemon)
 
     sceneGroup:insert( platformBG )
     sceneGroup:insert( enemyInfoBox )
     sceneGroup:insert( playerInfoBox )
+    sceneGroup:insert( infoBoxText )
 end
 
 function returnAfterAttack()
