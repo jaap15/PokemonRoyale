@@ -32,6 +32,7 @@ function Pokemon:create(chosePokemon)
   self.pokemon.pp = self;  -- parent object
   self.pokemon.tag = pokemonInfo.name:gsub("^%l", string.upper); -- “Pokemon name” converts 1st character to uppercase
   self.pokemon.Pid = pokemonInfo.Pid; -- “Pokemon's pokedex #”
+  self.pokemon.imagesLocation = pokemonInfo.imagesLocation
 
   self.pokemon.hp = self.HP
 
@@ -61,6 +62,24 @@ function Pokemon:create(chosePokemon)
   self.pokemon.attack2Damage = pokemonInfo.attack2Damage;
   self.pokemon.attack3Damage = pokemonInfo.attack3Damage;
   self.pokemon.attack4Damage = pokemonInfo.attack4Damage;
+
+  self.pokemon.attack1Type = pokemonInfo.attack1Type;
+  self.pokemon.attack2Type = pokemonInfo.attack2Type;
+  self.pokemon.attack3Type = pokemonInfo.attack3Type;
+  self.pokemon.attack4Type = pokemonInfo.attack4Type;
+
+  pokemonInfo = getPokemonStatsInfo(self.pokemon.Pid)
+
+  self.pokemon.level = 100;
+  self.pokemon.type1 = pokemonInfo.type1;
+  self.pokemon.type2 = pokemonInfo.type2;
+  self.pokemon.maxHP = pokemonInfo.hp;
+  self.pokemon.currentHP = pokemonInfo.hp;
+  self.pokemon.attackDamage = pokemonInfo.attackDamage;
+  self.pokemon.defense = pokemonInfo.defense;
+  self.pokemon.spAttack = pokemonInfo.spAttack;
+  self.pokemon.spDefense = pokemonInfo.spDefense;
+  self.pokemon.speed = pokemonInfo.speed;
 
   self.pokemon.isVisible = false;
   self.pokemon.selectView.isVisible = false;
