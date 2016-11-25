@@ -118,7 +118,7 @@ end
 function select6(event)
     if ( "ended" == event.phase ) then
         audio.play(menuClick, {loops = 0})
-        native.showAlert("Are you sure?", "Switch out " .. trainer.Pokemans[currentPokemon].pokemon.tag .. " for " .. trainer.Pokemans[5].pokemon.tag .. "?", {"No", "Yes"}, pokemonSelect6Confirm)        
+        native.showAlert("Are you sure?", "Switch out " .. trainer.Pokemans[currentPokemon].pokemon.tag .. " for " .. trainer.Pokemans[6].pokemon.tag .. "?", {"No", "Yes"}, pokemonSelect6Confirm)        
     end
 end
 
