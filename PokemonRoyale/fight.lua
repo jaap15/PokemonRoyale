@@ -262,16 +262,16 @@ end
 
 function drawBackground()
     platformBG = display.newImage("images/fightScene/GrassBG.png")
-    platformBG.width = display.pixelWidth
-    platformBG.height = display.pixelHeight/2
-    platformBG.x = display.pixelWidth - (display.pixelWidth/2)
-    platformBG.y = display.pixelHeight - (display.pixelHeight/1.33) 
+    platformBG.width = display.contentWidth
+    platformBG.height = display.contentHeight/2
+    platformBG.x = display.contentWidth - (display.contentWidth/2)
+    platformBG.y = display.contentHeight - (display.contentHeight/1.33) 
 
     enemyInfoBox = display.newImage("images/fightScene/enemyInfoBox.png")
     enemyInfoBox.width = 300
     enemyInfoBox.height = 100
-    enemyInfoBox.x = 200
-    enemyInfoBox.y = 300
+    enemyInfoBox.x = (display.contentWidth + 200) - display.contentWidth
+    enemyInfoBox.y = (display.contentHeight  + 300) - display.contentHeight
 
     enemyTrainer = display.newImage("images/fightScene/trainer1.png")
     enemyTrainer.x = 542
@@ -303,9 +303,9 @@ function drawBackground()
 
     playerInfoBox = display.newImage("images/fightScene/playerInfoBox.png")
     playerInfoBox.width = 300
-    playerInfoBox.height = 100        
-    playerInfoBox.x = 525
-    playerInfoBox.y = 525
+    playerInfoBox.height = 100
+    playerInfoBox.x = display.contentWidth - 200
+    playerInfoBox.y = display.contentHeight/2 - 100
 
     local pokemonsAvailable = getIdListOfPokemons()
 
@@ -432,8 +432,8 @@ end
 
 function openMainMenu ()
     mainMenuBG = display.newImage("images/fightScene/menu/main/mainMenuBG.png")
-    mainMenuBG.width = display.pixelWidth
-    mainMenuBG.height = display.pixelHeight/2
+    mainMenuBG.width = display.contentWidth
+    mainMenuBG.height = display.contentHeight/2
 
     mainMenuBtn[0] = widget.newButton({    
             id = "fightBtn",
@@ -492,8 +492,8 @@ function openMainMenu ()
     mainMenuBtn[3].x = 475
     mainMenuBtn[3].y = 1105    
 
-    mainMenuBG.x = display.pixelWidth - (display.pixelWidth/2)
-    mainMenuBG.y = display.pixelHeight - (display.pixelHeight/4) 
+    mainMenuBG.x = display.contentWidth - (display.contentWidth/2)
+    mainMenuBG.y = display.contentHeight - (display.contentHeight/4) 
 
     sceneGroup:insert( mainMenuBG )
     sceneGroup:insert( mainMenuBtn[0] )
@@ -507,10 +507,10 @@ function openFightMenu (event)
         if ( "ended" == event.phase ) then
         audio.play(menuClick, {loops = 0})
         fightMenuBG = display.newImage("images/fightScene/menu/fight/fightMenuBG.png")
-        fightMenuBG.width = display.pixelWidth
-        fightMenuBG.height = display.pixelHeight/2
-        fightMenuBG.x = display.pixelWidth - (display.pixelWidth/2)
-        fightMenuBG.y = display.pixelHeight - (display.pixelHeight/4) 
+        fightMenuBG.width = display.contentWidth
+        fightMenuBG.height = display.contentHeight/2
+        fightMenuBG.x = display.contentWidth - (display.contentWidth/2)
+        fightMenuBG.y = display.contentHeight - (display.contentHeight/4) 
 
         fightMenuBtn[0] = widget.newButton({    
             id = "attack1Btn",
@@ -592,10 +592,10 @@ function openPokemonMenu(event)
         if ( "ended" == event.phase ) then
         audio.play(menuClick, {loops = 0})
         pkmnMenuBG = display.newImage("images/fightScene/menu/pkmn/pkmnMenuBG.png")
-        pkmnMenuBG.width = display.pixelWidth
-        pkmnMenuBG.height = display.pixelHeight/2 
-        pkmnMenuBG.x = display.pixelWidth - (display.pixelWidth/2)
-        pkmnMenuBG.y = display.pixelHeight - (display.pixelHeight/4)    
+        pkmnMenuBG.width = display.contentWidth
+        pkmnMenuBG.height = display.contentHeight/2 
+        pkmnMenuBG.x = display.contentWidth - (display.contentWidth/2)
+        pkmnMenuBG.y = display.contentHeight - (display.contentHeight/4)    
 
 
         pkmnMenuBtn[0] = widget.newButton({    
@@ -734,10 +734,10 @@ function openItemsMenu (event)
         if ( "ended" == event.phase ) then
         audio.play(menuClick, {loops = 0})
         itemsMenuBG = display.newImage("images/fightScene/menu/item/itemMenuBG.png")
-        itemsMenuBG.width = display.pixelWidth
-        itemsMenuBG.height = display.pixelHeight/2
-        itemsMenuBG.x = display.pixelWidth - (display.pixelWidth/2)
-        itemsMenuBG.y = display.pixelHeight - (display.pixelHeight/4)    
+        itemsMenuBG.width = display.contentWidth
+        itemsMenuBG.height = display.contentHeight/2
+        itemsMenuBG.x = display.contentWidth - (display.contentWidth/2)
+        itemsMenuBG.y = display.contentHeight - (display.contentHeight/4)    
 
 
         itemList = {}
