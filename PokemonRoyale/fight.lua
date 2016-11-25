@@ -74,12 +74,6 @@ function attack4(event)
     end
 end
 
--- Pokemon Menu Functions
-local customParams = {
-    var1 = "Hello ",
-    var2 = "World!"
-}
-
 function select1(event)
     if ( "ended" == event.phase ) then
         audio.play(menuClick, {loops = 0})
@@ -256,6 +250,35 @@ function drawBackground()
     enemyInfoBox.x = 200
     enemyInfoBox.y = 300
 
+    enemyTrainer = display.newImage("images/fightScene/trainer1.png")
+    enemyTrainer.x = 542
+    enemyTrainer.y = 350
+    enemyTrainer:scale(3,3)
+    local function translateTrainer1 ()
+        print("TEST")
+        transition.to(enemyTrainer, {time = 750, x=enemyTrainer.x+300})
+    end
+    timer.performWithDelay(1500, translateTrainer1)
+
+
+    local sheetName = require("images.fightScene.animations.lucasThrow")
+    local spriteSheetData = sheetName:getSheet()
+    --Creating the image sheet
+    local battleSheet = graphics.newImageSheet( "images/fightScene/animations/lucasThrow.png", spriteSheetData)
+    --Getting the sequence data from the sprite sheet file
+    local sequenceData = sheetName:getSequence()
+
+    userTrainer = display.newSprite( battleSheet, sequenceData)
+    userTrainer.x = 190
+    userTrainer.y = 530
+    userTrainer:scale(2,2)
+    sceneGroup:insert( animation )
+    local function throwAnimation()
+        userTrainer:play()
+        transition.to(userTrainer, {time = 1250, x=enemyTrainer.x-750})
+    end
+    timer.performWithDelay(1500, throwAnimation)
+
     playerInfoBox = display.newImage("images/fightScene/playerInfoBox.png")
     playerInfoBox.width = 300
     playerInfoBox.height = 100        
@@ -265,7 +288,6 @@ function drawBackground()
     local pokemonsAvailable = getIdListOfPokemons()
 
     for i = 1, 6, 1 do
-        print("Creating enemy: " .. i)
         local random = math.random(1, #pokemonsAvailable);
         local pokeInfo = getPokemonTableInfo(random)
         enemyTeam[i] = pokemon:new({xPos=542, yPos=350});
@@ -296,10 +318,16 @@ function drawBackground()
         end
     end    
 
-    enemyTeam[eCurrentPokemon]:setSelectionView();
-
-    trainer.Pokemans[currentPokemon]:setBattleView()
-    trainer.Pokemans[currentPokemon]:setPos(190,530)
+    local function drawEnemyPokemon()
+        enemyTeam[eCurrentPokemon]:setSelectionView();
+    end
+    timer.performWithDelay(2500, drawEnemyPokemon)
+    
+    local function drawPlayerPokemon()
+        trainer.Pokemans[currentPokemon]:setBattleView()
+        trainer.Pokemans[currentPokemon]:setPos(190,530)
+    end
+    timer.performWithDelay(2500, drawPlayerPokemon)
 
     sceneGroup:insert( platformBG )
     sceneGroup:insert( enemyInfoBox )
@@ -784,6 +812,23 @@ function openRunMenu (event)
         sceneGroup:insert( cancelBtn ) 
     end
 end
+
+function openingAnimations()
+    local sheetName = require("images.fightScene.animations.battleIntro")
+    local spriteSheetData = sheetName:getSheet()
+    --Creating the image sheet
+    local battleSheet = graphics.newImageSheet( "images/fightScene/animations/battleIntro.png", spriteSheetData)
+    --Getting the sequence data from the sprite sheet file
+    local sequenceData = sheetName:getSequence()
+
+    animation = display.newSprite( battleSheet, sequenceData)
+    animation.x = display.contentCenterX
+    animation.y = display.contentCenterY
+    animation:scale(2,2)
+    --animation:play()
+    sceneGroup:insert( animation )
+end
+
 -- -----------------------------------------------------------------------------------
 -- Scene event functions
 -- -----------------------------------------------------------------------------------
@@ -797,8 +842,9 @@ end
 function scene:create( event )
     sceneGroup = self.view
 
-    openMainMenu()
-    drawBackground()
+    openingAnimations()
+    timer.performWithDelay(1, openMainMenu)
+    timer.performWithDelay(1, drawBackground)
 end
 
 -- show()
