@@ -181,6 +181,25 @@ function drawBackground()
         enemyTeam[i]:drawHealthBar("enemy")
     end
 
+    local y1Offset = 0
+    local y2Offset = 0
+    for cnt = 1, #yourTeam do
+        pkmnHB[cnt], pkmnDB[cnt] = yourTeam[cnt]:returnHealthStatus()
+        if (cnt % 2 == 0) then
+            pkmnHB[cnt].x = 550
+            pkmnHB[cnt].y = 775+y1Offset
+            pkmnDB[cnt].x = 550
+            pkmnDB[cnt].y = 775+y1Offset                
+            y1Offset = y1Offset+160
+        else                
+            pkmnHB[cnt].x = 200
+            pkmnHB[cnt].y = 735+y2Offset
+            pkmnDB[cnt].x = 200
+            pkmnDB[cnt].y = 735+y2Offset                
+            y2Offset = y2Offset + 170
+        end
+    end    
+
     enemyTeam[eCurrentPokemon]:setSelectionView();
 
     yourTeam[currentPokemon]:setBattleView()
@@ -209,6 +228,8 @@ function returnToMainMenu(event)
             for cnt = 1, #yourTeam do       
                 pokemonThumbNails[cnt].isVisible = false 
                 pokemonNames[cnt].isVisible = false
+                pkmnHB[cnt].isVisible = false
+                pkmnDB[cnt].isVisible = false
             end
         end
 
@@ -503,6 +524,13 @@ function openPokemonMenu(event)
             --sceneGroup:insert(pokemonNames[cnt])
         end        
         
+        -- Drawing pokemon hp bars
+        for cnt = 1, #yourTeam do
+            pkmnHB[cnt], pkmnDB[cnt] = yourTeam[cnt]:returnHealthStatus()
+            pkmnHB[cnt].isVisible = true
+            pkmnDB[cnt].isVisible = true
+        end    
+
         cancelBtn = widget.newButton({    
                 id = "cancelBtn",
                 width = 150,

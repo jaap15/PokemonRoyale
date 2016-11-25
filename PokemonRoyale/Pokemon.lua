@@ -49,10 +49,19 @@ function Pokemon:create(chosePokemon)
   self.pokemon.healthBar:setFillColor(0,1,0)
   self.pokemon.healthBar.strokeWidth = 1
   self.pokemon.healthBar:setStrokeColor(1,1,1,0.5)
+  self.pokemon.healthBarTN = display.newRect(0, -45, healthBarLength, 10)
+  self.pokemon.healthBarTN:setFillColor(0,1,0)
+  self.pokemon.healthBarTN.strokeWidth = 1
+  self.pokemon.healthBarTN:setStrokeColor(1,1,1,0.5)
+  self.pokemon.healthBarTN.isVisible = false
+
 
   -- daniel added code
   self.pokemon.damageBar = display.newRect(0, -45, 0, 10)
   self.pokemon.damageBar:setFillColor(1,0,0)
+  self.pokemon.damageBarTN = display.newRect(0, -45, 0, 10)
+  self.pokemon.damageBarTN:setFillColor(1,0,0)
+  self.pokemon.damageBarTN.isVisible = false
 
   pokemonInfo = getPokemonAttackInfo(self.pokemon.Pid)
   self.pokemon.attack1 = pokemonInfo.attack1;
@@ -97,6 +106,10 @@ function Pokemon:returnSelectImage()
   return self.pokemon.selectViewTN
 end
 
+function Pokemon:returnHealthStatus() 
+  return self.pokemon.healthBarTN, self.pokemon.damageBarTN
+end
+
 --daniel added code, takes damage
 function Pokemon:takeDamage(damageTaken)
   self.pokemon.hp = self.pokemon.hp - damageTaken
@@ -129,7 +142,8 @@ end
 function Pokemon:updateDamageBar()
   self.pokemon.damageBar.x = ((self.pokemon.hp*(((healthBarLength*100)/self.HP)/100)) / 2) + self.pokemon.healthBar.x
   self.pokemon.damageBar.width = (self.HP - self.pokemon.hp) * (((healthBarLength*100)/self.HP)/100)
-  print("POKEMON HEALTH : " .. self.pokemon.hp)
+  self.pokemon.damageBarTN.x = ((self.pokemon.hp*(((healthBarLength*100)/self.HP)/100)) / 2) + self.pokemon.healthBarTN.x
+  self.pokemon.damageBarTN.width = (self.HP - self.pokemon.hp) * (((healthBarLength*100)/self.HP)/100)
 end
 
 function Pokemon:setPos(xP,yP)
