@@ -65,7 +65,6 @@ function openingAnimations()
         animation:scale(4,4)
         animation:play()
         local function removeAnimationSecond()
-            print("TEST")
             animation:pause()
             animation.x = 5000
             animation.isVisible = false

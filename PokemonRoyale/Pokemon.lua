@@ -35,6 +35,8 @@ function Pokemon:create(chosePokemon)
 
   self.pokemon.hp = self.HP
 
+  self.pokemon.status = "healthy"
+
   self.pokemon.healthBar = display.newRect(0, -45, healthBarLength, 10)
   self.pokemon.healthBar:setFillColor(0,1,0)
   self.pokemon.healthBar.strokeWidth = 1
@@ -99,8 +101,10 @@ end
 
 function Pokemon:takeDamage(damageTaken)
   self.pokemon.hp = self.pokemon.hp - damageTaken
-  if (self.pokemon.hp < 0) then
+  if (self.pokemon.hp < 0 or self.pokemon.hp == 0) then
     self.pokemon.hp = 0
+    self.pokemon.status = "fainted"
+    print(self.pokemon.tag .. " has " .. self.pokemon.status)
   end
   self:updateDamageBar()
 end

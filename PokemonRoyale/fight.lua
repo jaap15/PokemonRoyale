@@ -24,6 +24,7 @@ local pkmnMenuBtn = {}
 local pkmnMenuBG
 local fightMenuBG
 local itemsMenuBG
+local enemyPokeballs = {}
 local pkmnHB = {}
 local pkmnDB = {}
 local pokemonThumbNails = {}
@@ -39,7 +40,6 @@ local infoBoxText = display.newText("", 0, 0, native.systemFont, 28)
 
 -- Local Sounds
 local menuClick = audio.loadStream("sounds/menuButtonClick.mp3")
-
 
 local function updatePokemonInfoBox()
     infoBoxText.pName.text = string.format("%s Lv:100", trainer.Pokemans[currentPokemon].pokemon.tag)
@@ -644,16 +644,30 @@ function openMainMenu ()
             onEvent = exitButtonEvent 
         } )
     mainMenuBtn[3].x = 475
-    mainMenuBtn[3].y = 1105    
+    mainMenuBtn[3].y = 1105   
 
     mainMenuBG.x = display.contentWidth - (display.contentWidth/2)
     mainMenuBG.y = display.contentHeight - (display.contentHeight/4) 
 
     sceneGroup:insert( mainMenuBG )
-    sceneGroup:insert( mainMenuBtn[0] )
-    sceneGroup:insert( mainMenuBtn[1] )
-    sceneGroup:insert( mainMenuBtn[2] )
-    sceneGroup:insert( mainMenuBtn[3] )
+    for cnt = 0, #mainMenuBtn do
+        sceneGroup:insert(mainMenuBtn[cnt])
+    end
+end
+
+function drawEnemyPokeballs()
+        local thumbX = 30
+        local thumbY = 675
+    for cnt = 1, #enemyTeam do
+        enemyPokeballs[cnt] = display.newImage("images/fightScene/menu/main/enemyPokeball.png", thumbX, thumbY)
+        if (thumbX < 100) then
+            thumbX = thumbX + 40
+        else
+            thumbX = 30
+            thumbY = 720
+        end
+        enemyPokeballs[cnt]:scale(3,3)
+    end
 end
 
 function openFightMenu (event)
@@ -729,10 +743,7 @@ function openFightMenu (event)
         cancelBtn.x = 638
         cancelBtn.y = 1226    
 
-        mainMenuBG.isVisible = false
-        for cnt = 0, 3 do
-            mainMenuBtn[cnt].isVisible = false
-        end
+        removeMainMenu()
 
         sceneGroup:insert( fightMenuBG )
         for cnt = 0, #fightMenuBtn do
@@ -871,16 +882,20 @@ function openPokemonMenu(event)
         cancelBtn.x = 638
         cancelBtn.y = 1226  
 
-        mainMenuBG.isVisible = false
-        for cnt = 0, 3 do
-            mainMenuBtn[cnt].isVisible = false
-        end
+        removeMainMenu()
 
         sceneGroup:insert( pkmnMenuBG )
         for cnt = 0, #pkmnMenuBtn do
             sceneGroup:insert(pkmnMenuBtn[cnt])
         end 
         sceneGroup:insert( cancelBtn )
+    end
+end
+
+function removeMainMenu ()
+    mainMenuBG.isVisible = false
+    for cnt = 0, 3 do
+        mainMenuBtn[cnt].isVisible = false
     end
 end
 
@@ -948,10 +963,7 @@ function openItemsMenu (event)
         cancelBtn.x = 638
         cancelBtn.y = 1226  
 
-        mainMenuBG.isVisible = false
-        for cnt = 0, 3 do
-            mainMenuBtn[cnt].isVisible = false
-        end   
+        removeMainMenu()
 
         sceneGroup:insert( itemsMenuBG )
         for cnt = 0, #itemList do
@@ -996,7 +1008,6 @@ function openingAnimations()
     animation.x = display.contentCenterX
     animation.y = display.contentCenterY
     animation:scale(2,2)
-    --animation:play()
     sceneGroup:insert( animation )
 end
 
