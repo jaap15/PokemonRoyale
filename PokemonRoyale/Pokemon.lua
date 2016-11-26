@@ -4,6 +4,14 @@ local Pokemon = {tag="Pokemon", HP=100, xPos=0, yPos=0};
 local image
 local healthBarLength = 220
 
+local superEffective = 1.5;
+local notVeryEffective = 0.5;
+local noEffect = 0;
+
+local superEffectiveSound = audio.loadStream("sounds/superEffective.wav")
+local notVeryEffectiveSound = audio.loadStream("sounds/NotVeryEffective.wav")
+local normalEffectiveSound = audio.loadStream("sounds/normalEffective.wav")
+
 function Pokemon:new (o)    --constructor
   o = o or {}; 
   setmetatable(o, self);
@@ -131,9 +139,6 @@ end
 
 function Pokemon:attackEffectMultiplier(attackedType)
   local multiplier = 1;
-  local superEffective = 1.5;
-  local notVeryEffective = 0.5;
-  local noEffect = 0;
   local t1 = self.pokemon.type1;  --for shorter if statement condition
   local t2 = self.pokemon.type2;  --for shorter if statement condition
 
@@ -439,13 +444,25 @@ function Pokemon:attackEffectMultiplier(attackedType)
 end
 
 function Pokemon:takeDamage(damageTaken, damageTakenType)
-  damageTaken = damageTaken * self:attackEffectMultiplier(damageTakenType);
+  local multiplier = self:attackEffectMultiplier(damageTakenType);
+  damageTaken = damageTaken * multiplier;
   self.pokemon.currentHP = self.pokemon.currentHP - damageTaken
   if (self.pokemon.currentHP < 0) then
     self.pokemon.currentHP = 0
     self.pokemon.status = "fainted"
     print(self.pokemon.tag .. " has " .. self.pokemon.status)
   end
+
+  if multiplier == superEffective then
+    audio.play(superEffectiveSound, {loops = 0})
+  elseif multiplier == notVeryEffective then
+    audio.play(notVeryEffectiveSound, {loops = 0})
+  elseif multiplier == noEffect then
+    print("No effect sound so nothing is played")
+  else
+    audio.play(normalEffectiveSound, {loops = 0})
+  end
+
   self:updateDamageBar()
 end
 
