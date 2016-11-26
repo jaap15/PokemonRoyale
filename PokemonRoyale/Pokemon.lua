@@ -16,7 +16,7 @@ function Pokemon:create(chosePokemon)
   local pokemonInfo;
 
   pokemonInfo = getPokemonTableInfo(chosePokemon)
-
+	
   local location = pokemonInfo.imagesLocation.."/select.png"
   self.pokemon = display.newImage(location, 70, 90); --Buffer
   self.pokemon.selectView = display.newImage(location, self.xPos, self.yPos);

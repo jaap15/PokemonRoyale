@@ -41,21 +41,27 @@ function enemy_trainer:populatePokemon(trainerInfo)
 	
 	self.E_Pokemans[1] = pokemon:new({xPos = 542, yPos = 350})
 	self.E_Pokemans[1]:create(trainerInfo.Pokemon1)
+	print(trainerInfo.Pokemon1)
 	
 	self.E_Pokemans[2] = pokemon:new({xPos = 542, yPos = 350})
 	self.E_Pokemans[2]:create(trainerInfo.Pokemon2)
+	print(trainerInfo.Pokemon2)
 	
 	self.E_Pokemans[3] = pokemon:new({xPos = 542, yPos = 350})
 	self.E_Pokemans[3]:create(trainerInfo.Pokemon3)
+	print(trainerInfo.Pokemon3)
 	
 	self.E_Pokemans[4] = pokemon:new({xPos = 542, yPos = 350})
 	self.E_Pokemans[4]:create(trainerInfo.Pokemon4)
+	print(trainerInfo.Pokemon4)
 	
 	self.E_Pokemans[5] = pokemon:new({xPos = 542, yPos = 350})
 	self.E_Pokemans[5]:create(trainerInfo.Pokemon5)
+	print(trainerInfo.Pokemon5)
 	
 	self.E_Pokemans[6] = pokemon:new({xPos = 542, yPos = 350})
 	self.E_Pokemans[6]:create(trainerInfo.Pokemon6)
+	print(trainerInfo.Pokemon6)
 	
 end
 
