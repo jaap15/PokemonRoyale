@@ -997,7 +997,7 @@ end
 function scene:create( event )
     sceneGroup = self.view
 	
-	e_trainer:create(2)
+	e_trainer:create(3)
 	trainer:create()
     openingAnimations()
     timer.performWithDelay(2500, openMainMenu)
