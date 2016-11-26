@@ -379,11 +379,6 @@ function exitButtonEvent(event)
 end
 
 function drawBackground()
-    platformBG = display.newImage("images/fightScene/GrassBG.png")
-    platformBG.width = display.contentWidth
-    platformBG.height = display.contentHeight/2
-    platformBG.x = display.contentWidth - (display.contentWidth/2)
-    platformBG.y = display.contentHeight - (display.contentHeight/1.33) 
 
     enemyInfoBox = display.newImage("images/fightScene/enemyInfoBox.png")
     enemyInfoBox.width = display.contentWidth/2
@@ -471,7 +466,7 @@ function drawBackground()
     timer.performWithDelay(2500, summonPlayer)
     timer.performWithDelay(3000, drawPlayerPokemon)
 
-    sceneGroup:insert( platformBG )
+    sceneGroup:insert( e_trainer.arena )
     sceneGroup:insert( enemyInfoBox )
     sceneGroup:insert( playerInfoBox )
     sceneGroup:insert( infoBoxText )
@@ -997,7 +992,7 @@ end
 function scene:create( event )
     sceneGroup = self.view
 	
-	e_trainer:create(3)
+	e_trainer:create(2)
 	trainer:create()
     openingAnimations()
     timer.performWithDelay(2500, openMainMenu)

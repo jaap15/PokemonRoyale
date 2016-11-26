@@ -23,11 +23,17 @@ function enemy_trainer:create(trainerChoice)
 	local trainerInfo = getEtrainerInfo(trainerChoice)
 	
 	local location = trainerInfo.imagesLocation ..".png"
+	local bgLocation = trainerInfo.stageLocation ..".png"
 	print(trainerInfo.imagesLocation)
 	self.trainer = display.newImage(location, self.xpos, self.ypos)
 	self.trainer:scale(3,3)
 	self.trainer.pp = self
 	self.trainer.tag = trainerInfo.Trainer_Name
+	self.arena = display.newImage(bgLocation)
+	self.arena.width = display.contentWidth
+	self.arena.height = display.contentHeight/2
+	self.arena.x = display.contentWidth - (display.contentWidth/2)
+	self.arena.y = display.contentHeight - (display.contentHeight/1.33)
 	
 	self:populatePokemon(trainerInfo)
 	
