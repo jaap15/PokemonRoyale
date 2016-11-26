@@ -82,6 +82,7 @@ function getPokemonAttackInfo(pID)
 	return pokemonInfo;
 
 end
+
 function getPokemonStatsInfo(pID)
 	local pokemonInfo;
 
