@@ -24,6 +24,8 @@ function enemy_trainer:create(trainerChoice)
 	
 	local location = trainerInfo.imagesLocation ..".png"
 	local bgLocation = trainerInfo.stageLocation ..".png"
+	local musLocation = trainerInfo.musicLocation ..".mp3"
+	
 	print(trainerInfo.imagesLocation)
 	self.trainer = display.newImage(location, self.xpos, self.ypos)
 	self.trainer:scale(3,3)
@@ -36,6 +38,11 @@ function enemy_trainer:create(trainerChoice)
 	self.arena.y = display.contentHeight - (display.contentHeight/1.33)
 	
 	self:populatePokemon(trainerInfo)
+	
+	self.currentPokemon = math.random(1, #self.E_Pokemans)
+	
+	self.music = audio.loadStream(musLocation)
+	audio.play(self.music)
 	
 	local function translateTrainer1 ()
         transition.to(self.trainer, {time = 750, x=self.trainer.x+300})
@@ -69,6 +76,12 @@ function enemy_trainer:populatePokemon(trainerInfo)
 	self.E_Pokemans[6]:create(trainerInfo.Pokemon6)
 	print(trainerInfo.Pokemon6)
 	
+end
+
+function enemy_trainer:audioStop()
+	
+	audio.stop()
+	audio.dispose(self.music)
 end
 
 return enemy_trainer

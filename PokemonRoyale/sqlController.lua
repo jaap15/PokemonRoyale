@@ -67,6 +67,20 @@ function getIdListOfPokemons()
 	return PidList;
 end
 
+function getIdListofTrainers()
+	
+	local IdList = {}
+	local count = 1
+	
+	sql = "SELECT ID FROM Enemy_Trainers"
+	
+	for row in db:nrows(sql) do
+		table.insert(IdList, row.ID)
+	end
+	
+	return IdList
+end
+
 function getPokemonAttackInfo(pID)
 	local pokemonInfo;
 

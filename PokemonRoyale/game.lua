@@ -17,6 +17,7 @@ require("sqlController");
 -- the scene is removed entirely (not recycled) via "composer.removeScene()"
 -- ----------------------------------------------------------------------------------
 local pokemonsAvailable = getIdListOfPokemons()
+local trainersAvailable = getIdListofTrainers()
 local pokemon = Pokemon:new( {HP=150} );
 teamIndex = 1
 thumbX = 173;
@@ -32,7 +33,7 @@ local random1;
 local random2;
 local random3;
 
---trainer:create()
+composer.setVariable("trainersAvailable", trainersAvailable)
 
 -- Local Sounds
 local menuClick = audio.loadStream("sounds/pokemonSelectSound.mp3")
