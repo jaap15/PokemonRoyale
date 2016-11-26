@@ -39,7 +39,7 @@ local infoBoxText = display.newText("", 0, 0, native.systemFont, 28)
 
 -- Local Sounds
 local menuClick = audio.loadStream("sounds/menuButtonClick.mp3")
-
+local summonSound = audio.loadStream("sounds/summon.wav")
 
 local function updatePokemonInfoBox()
     infoBoxText.pName.text = string.format("%s Lv:100", trainer.Pokemans[currentPokemon].pokemon.tag)
@@ -167,6 +167,7 @@ function pokemonSelect1Confirm(event, pkmnIndex)
             local function summonPlayer()
                 playerSummon.isVisible = true
                 playerSummon:play()
+                audio.play(summonSound, {loops = 0})
                 local function hideAnimation()
                     playerSummon.isVisible = false
                 end
@@ -197,6 +198,7 @@ function pokemonSelect2Confirm(event, pkmnIndex)
             local function summonPlayer()
                 playerSummon.isVisible = true
                 playerSummon:play()
+                audio.play(summonSound, {loops = 0})
                 local function hideAnimation()
                     playerSummon.isVisible = false
                 end
@@ -227,6 +229,7 @@ function pokemonSelect3Confirm(event, pkmnIndex)
             local function summonPlayer()
                 playerSummon.isVisible = true
                 playerSummon:play()
+                audio.play(summonSound, {loops = 0})
                 local function hideAnimation()
                     playerSummon.isVisible = false
                 end
@@ -257,6 +260,7 @@ function pokemonSelect4Confirm(event, pkmnIndex)
             local function summonPlayer()
                 playerSummon.isVisible = true
                 playerSummon:play()
+                audio.play(summonSound, {loops = 0})
                 local function hideAnimation()
                     playerSummon.isVisible = false
                 end
@@ -287,6 +291,7 @@ function pokemonSelect5Confirm(event, pkmnIndex)
             local function summonPlayer()
                 playerSummon.isVisible = true
                 playerSummon:play()
+                audio.play(summonSound, {loops = 0})
                 local function hideAnimation()
                     playerSummon.isVisible = false
                 end
@@ -317,6 +322,7 @@ function pokemonSelect6Confirm(event, pkmnIndex)
             local function summonPlayer()
                 playerSummon.isVisible = true
                 playerSummon:play()
+                audio.play(summonSound, {loops = 0})
                 local function hideAnimation()
                     playerSummon.isVisible = false
                 end
@@ -456,6 +462,7 @@ function drawBackground()
     local function summonPlayer()
         playerSummon.isVisible = true
         playerSummon:play()
+        audio.play(summonSound, {loops = 0})
         local function hideAnimation()
             playerSummon.isVisible = false
         end
