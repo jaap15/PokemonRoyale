@@ -9,6 +9,7 @@ local composer = require("composer")
 local scene = composer.newScene()
 local widget = require("widget")
 local Pokemon = require ("Pokemon")
+local e_trainer = require("Enemy_Trainer")
 
 -- -----------------------------------------------------------------------------------
 -- Code outside of the scene event functions below will only be executed ONCE unless
@@ -24,7 +25,6 @@ local pkmnMenuBtn = {}
 local pkmnMenuBG
 local fightMenuBG
 local itemsMenuBG
-local enemyPokeballs = {}
 local pkmnHB = {}
 local pkmnDB = {}
 local pokemonThumbNails = {}
@@ -34,16 +34,16 @@ local sceneGroup
 local currentPokemon = 1;
 local eCurrentPokemon = 1;
 local fSize = 45; --font size
-local enemyTeam = {}
 local trainer = composer.getVariable("trainer")
 local infoBoxText = display.newText("", 0, 0, native.systemFont, 28)
 
 -- Local Sounds
 local menuClick = audio.loadStream("sounds/menuButtonClick.mp3")
 
+
 local function updatePokemonInfoBox()
     infoBoxText.pName.text = string.format("%s Lv:100", trainer.Pokemans[currentPokemon].pokemon.tag)
-    infoBoxText.eName.text = string.format("%s Lv:100", enemyTeam[eCurrentPokemon].pokemon.tag)
+    infoBoxText.eName.text = string.format("%s Lv:100", e_trainer.E_Pokemans[eCurrentPokemon].pokemon.tag)
     infoBoxText.pHpText.text = string.format("%03d/%03d", trainer.Pokemans[currentPokemon].pokemon.currentHP, trainer.Pokemans[currentPokemon].pokemon.maxHP)
  end
 
@@ -51,7 +51,7 @@ local function updatePokemonInfoBox()
 function attack1(event)
     if ( "ended" == event.phase ) then
         audio.play(menuClick, {loops = 0})
-        enemyTeam[eCurrentPokemon]:takeDamage(trainer.Pokemans[currentPokemon].pokemon.attack1Damage, trainer.Pokemans[currentPokemon].pokemon.attack1Type)
+        e_trainer.E_Pokemans[eCurrentPokemon]:takeDamage(trainer.Pokemans[currentPokemon].pokemon.attack1Damage, trainer.Pokemans[currentPokemon].pokemon.attack1Type)
         trainer.Pokemans[currentPokemon]:takeDamage(25, "grass")
         updatePokemonInfoBox()
         returnAfterAttack()
@@ -61,7 +61,7 @@ end
 function attack2(event)
     if ( "ended" == event.phase ) then
         audio.play(menuClick, {loops = 0})
-        enemyTeam[eCurrentPokemon]:takeDamage(trainer.Pokemans[currentPokemon].pokemon.attack2Damage, trainer.Pokemans[currentPokemon].pokemon.attack2Type)
+        e_trainer.E_Pokemans[eCurrentPokemon]:takeDamage(trainer.Pokemans[currentPokemon].pokemon.attack2Damage, trainer.Pokemans[currentPokemon].pokemon.attack2Type)
         returnAfterAttack()
     end
 end
@@ -69,7 +69,7 @@ end
 function attack3(event)
     if ( "ended" == event.phase ) then
         audio.play(menuClick, {loops = 0})
-        enemyTeam[eCurrentPokemon]:takeDamage(trainer.Pokemans[currentPokemon].pokemon.attack3Damage, trainer.Pokemans[currentPokemon].pokemon.attack3Type)
+        e_trainer.E_Pokemans[eCurrentPokemon]:takeDamage(trainer.Pokemans[currentPokemon].pokemon.attack3Damage, trainer.Pokemans[currentPokemon].pokemon.attack3Type)
         returnAfterAttack()
     end
 end
@@ -77,7 +77,7 @@ end
 function attack4(event)
     if ( "ended" == event.phase ) then
         audio.play(menuClick, {loops = 0})
-        enemyTeam[eCurrentPokemon]:takeDamage(trainer.Pokemans[currentPokemon].pokemon.attack4Damage,trainer.Pokemans[currentPokemon].pokemon.attack4Type)
+        e_trainer.E_Pokemans[eCurrentPokemon]:takeDamage(trainer.Pokemans[currentPokemon].pokemon.attack4Damage,trainer.Pokemans[currentPokemon].pokemon.attack4Type)
         returnAfterAttack()
     end
 end
@@ -350,24 +350,11 @@ function item3(event)
     end
 end
 
-function removeObject(objectName)
-
-    if(objectName ~= nil) then
-        objectName:removeSelf();
-        objectName = nil;
-    end
-
-end
-
 function exitButtonEvent(event)
     if ("ended" == event.phase) then
         audio.play(menuClick, {loops = 0})
-        removeObject(infoBoxText.pName)
-        removeObject(infoBoxText.eName)
-        removeObject(infoBoxText.pHpText)
-        removeObject(infoBoxText)
         removeObjectList(trainer.Pokemans, true);
-        removeObjectList(enemyTeam, true);
+        removeObjectList(e_trainer.E_Pokemans, true);
         composer.gotoScene("menu")
     end
 end
@@ -390,33 +377,7 @@ function drawBackground()
     infoBoxText.eName.x = (display.contentWidth + 200) - display.contentWidth
     infoBoxText.eName.y = (display.contentHeight  + 75) - display.contentHeight
 
-    enemyTrainer = display.newImage("images/fightScene/trainer1.png")
-    enemyTrainer.x = 542
-    enemyTrainer.y = 350
-    enemyTrainer:scale(3,3)
-    local function translateTrainer1 ()
-        transition.to(enemyTrainer, {time = 750, x=enemyTrainer.x+300})
-    end
-    timer.performWithDelay(1500, translateTrainer1)
-
-
-    local sheetName = require("images.fightScene.animations.lucasThrow")
-    local spriteSheetData = sheetName:getSheet()
-    --Creating the image sheet
-    local battleSheet = graphics.newImageSheet( "images/fightScene/animations/lucasThrow.png", spriteSheetData)
-    --Getting the sequence data from the sprite sheet file
-    local sequenceData = sheetName:getSequence()
-
-    userTrainer = display.newSprite( battleSheet, sequenceData)
-    userTrainer.x = 190
-    userTrainer.y = 530
-    userTrainer:scale(2,2)
     sceneGroup:insert( animation )
-    local function throwAnimation()
-        userTrainer:play()
-        transition.to(userTrainer, {time = 1250, x=enemyTrainer.x-750})
-    end
-    timer.performWithDelay(1500, throwAnimation)
 
     playerInfoBox = display.newImage("images/fightScene/playerInfoBox.png")
     playerInfoBox.width = display.contentWidth/2
@@ -434,19 +395,9 @@ function drawBackground()
     infoBoxText.pHpText.x = display.contentWidth - 200
     infoBoxText.pHpText.y = display.contentHeight/2 - 75
 
-
-    local pokemonsAvailable = getIdListOfPokemons()
-
-    for i = 1, 6, 1 do
-        local random = math.random(#pokemonsAvailable);
-        local pokeInfo = getPokemonTableInfo(pokemonsAvailable[random])
-        enemyTeam[i] = pokemon:new({xPos=542, yPos=350});
-        enemyTeam[i]:create(pokeInfo.Pid)
-    end
-
     for i = 1, #trainer.Pokemans do
         trainer.Pokemans[i]:drawHealthBar("player")
-        enemyTeam[i]:drawHealthBar("enemy")
+        e_trainer.E_Pokemans[i]:drawHealthBar("enemy")
     end
 
     local y1Offset = 0
@@ -469,7 +420,7 @@ function drawBackground()
     end    
 
     local function drawEnemyPokemon()
-        enemyTeam[eCurrentPokemon]:setSelectionView();
+        e_trainer.E_Pokemans[eCurrentPokemon]:setSelectionView();
     end
     local enemySummon = summonPkmnAnimation(542,350)
     local function summonEnemy()
@@ -657,30 +608,16 @@ function openMainMenu ()
             onEvent = exitButtonEvent 
         } )
     mainMenuBtn[3].x = 475
-    mainMenuBtn[3].y = 1105   
+    mainMenuBtn[3].y = 1105    
 
     mainMenuBG.x = display.contentWidth - (display.contentWidth/2)
     mainMenuBG.y = display.contentHeight - (display.contentHeight/4) 
 
     sceneGroup:insert( mainMenuBG )
-    for cnt = 0, #mainMenuBtn do
-        sceneGroup:insert(mainMenuBtn[cnt])
-    end
-end
-
-function drawEnemyPokeballs()
-        local thumbX = 30
-        local thumbY = 675
-    for cnt = 1, #enemyTeam do
-        enemyPokeballs[cnt] = display.newImage("images/fightScene/menu/main/enemyPokeball.png", thumbX, thumbY)
-        if (thumbX < 100) then
-            thumbX = thumbX + 40
-        else
-            thumbX = 30
-            thumbY = 720
-        end
-        enemyPokeballs[cnt]:scale(3,3)
-    end
+    sceneGroup:insert( mainMenuBtn[0] )
+    sceneGroup:insert( mainMenuBtn[1] )
+    sceneGroup:insert( mainMenuBtn[2] )
+    sceneGroup:insert( mainMenuBtn[3] )
 end
 
 function openFightMenu (event)
@@ -756,7 +693,10 @@ function openFightMenu (event)
         cancelBtn.x = 638
         cancelBtn.y = 1226    
 
-        removeMainMenu()
+        mainMenuBG.isVisible = false
+        for cnt = 0, 3 do
+            mainMenuBtn[cnt].isVisible = false
+        end
 
         sceneGroup:insert( fightMenuBG )
         for cnt = 0, #fightMenuBtn do
@@ -895,20 +835,16 @@ function openPokemonMenu(event)
         cancelBtn.x = 638
         cancelBtn.y = 1226  
 
-        removeMainMenu()
+        mainMenuBG.isVisible = false
+        for cnt = 0, 3 do
+            mainMenuBtn[cnt].isVisible = false
+        end
 
         sceneGroup:insert( pkmnMenuBG )
         for cnt = 0, #pkmnMenuBtn do
             sceneGroup:insert(pkmnMenuBtn[cnt])
         end 
         sceneGroup:insert( cancelBtn )
-    end
-end
-
-function removeMainMenu ()
-    mainMenuBG.isVisible = false
-    for cnt = 0, 3 do
-        mainMenuBtn[cnt].isVisible = false
     end
 end
 
@@ -976,7 +912,10 @@ function openItemsMenu (event)
         cancelBtn.x = 638
         cancelBtn.y = 1226  
 
-        removeMainMenu()
+        mainMenuBG.isVisible = false
+        for cnt = 0, 3 do
+            mainMenuBtn[cnt].isVisible = false
+        end   
 
         sceneGroup:insert( itemsMenuBG )
         for cnt = 0, #itemList do
@@ -1021,6 +960,7 @@ function openingAnimations()
     animation.x = display.contentCenterX
     animation.y = display.contentCenterY
     animation:scale(2,2)
+    --animation:play()
     sceneGroup:insert( animation )
 end
 
@@ -1036,7 +976,9 @@ end
 --      them to the scene group. It also loads all the sound files that we will be using.
 function scene:create( event )
     sceneGroup = self.view
-
+	
+	e_trainer:create(2)
+	trainer:create()
     openingAnimations()
     timer.performWithDelay(2500, openMainMenu)
     timer.performWithDelay(1, drawBackground)
