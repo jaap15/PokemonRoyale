@@ -350,9 +350,22 @@ function item3(event)
     end
 end
 
+function removeObject(objectName)
+ 
+    if(objectName ~= nil) then
+     objectName:removeSelf();
+     objectName = nil;
+    end
+ 
+end
+
 function exitButtonEvent(event)
     if ("ended" == event.phase) then
         audio.play(menuClick, {loops = 0})
+        removeObject(infoBoxText.pName)
+        removeObject(infoBoxText.eName)
+        removeObject(infoBoxText.pHpText)
+        removeObject(infoBoxText)
         removeObjectList(trainer.Pokemans, true);
         removeObjectList(e_trainer.E_Pokemans, true);
         composer.gotoScene("menu")
