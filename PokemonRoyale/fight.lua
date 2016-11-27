@@ -424,7 +424,7 @@ end
 function select1(event)
     if ( "ended" == event.phase ) then
         audio.play(menuClick, {loops = 0})
-        if (currentPokemon == 1 or trainer.Pokemans[1].pokemon.status == "fainted") then
+        if (trainer.currentPokemon == 1 or trainer.Pokemans[1].pokemon.status == "fainted") then
 
         else 
             native.showAlert("Are you sure?", "Switch out " .. trainer.Pokemans[trainer.currentPokemon].pokemon.tag .. " for " .. trainer.Pokemans[1].pokemon.tag .. "?", {"No", "Yes"}, pokemonSelect1Confirm)
@@ -435,7 +435,7 @@ end
 function select2(event)
     if ( "ended" == event.phase ) then
         audio.play(menuClick, {loops = 0})
-        if (currentPokemon == 2 or trainer.Pokemans[2].pokemon.status == "fainted") then
+        if (trainer.currentPokemon == 2 or trainer.Pokemans[2].pokemon.status == "fainted") then
 
         else         
             native.showAlert("Are you sure?", "Switch out " .. trainer.Pokemans[trainer.currentPokemon].pokemon.tag .. " for " .. trainer.Pokemans[2].pokemon.tag .. "?", {"No", "Yes"}, pokemonSelect2Confirm)
@@ -446,7 +446,7 @@ end
 function select3(event)
     if ( "ended" == event.phase ) then
         audio.play(menuClick, {loops = 0})
-        if (currentPokemon == 3 or trainer.Pokemans[3].pokemon.status == "fainted") then
+        if (trainer.currentPokemon == 3 or trainer.Pokemans[3].pokemon.status == "fainted") then
 
         else 
             native.showAlert("Are you sure?", "Switch out " .. trainer.Pokemans[trainer.currentPokemon].pokemon.tag .. " for " .. trainer.Pokemans[3].pokemon.tag .. "?", {"No", "Yes"}, pokemonSelect3Confirm)
@@ -457,7 +457,7 @@ end
 function select4(event)
     if ( "ended" == event.phase ) then
         audio.play(menuClick, {loops = 0})
-        if (currentPokemon == 4 or trainer.Pokemans[4].pokemon.status == "fainted") then
+        if (trainer.currentPokemon == 4 or trainer.Pokemans[4].pokemon.status == "fainted") then
 
         else 
             native.showAlert("Are you sure?", "Switch out " .. trainer.Pokemans[trainer.currentPokemon].pokemon.tag .. " for " .. trainer.Pokemans[4].pokemon.tag .. "?", {"No", "Yes"}, pokemonSelect4Confirm)
@@ -468,7 +468,7 @@ end
 function select5(event)
     if ( "ended" == event.phase ) then
         audio.play(menuClick, {loops = 0})
-        if (currentPokemon == 5 or trainer.Pokemans[5].pokemon.status == "fainted") then
+        if (trainer.currentPokemon == 5 or trainer.Pokemans[5].pokemon.status == "fainted") then
 
         else 
             native.showAlert("Are you sure?", "Switch out " .. trainer.Pokemans[trainer.currentPokemon].pokemon.tag .. " for " .. trainer.Pokemans[5].pokemon.tag .. "?", {"No", "Yes"}, pokemonSelect5Confirm)  
@@ -479,7 +479,7 @@ end
 function select6(event)
     if ( "ended" == event.phase ) then
         audio.play(menuClick, {loops = 0})
-        if (currentPokemon == 6 or trainer.Pokemans[6].pokemon.status == "fainted") then
+        if (trainer.currentPokemon == 6 or trainer.Pokemans[6].pokemon.status == "fainted") then
 
         else 
             native.showAlert("Are you sure?", "Switch out " .. trainer.Pokemans[trainer.currentPokemon].pokemon.tag .. " for " .. trainer.Pokemans[6].pokemon.tag .. "?", {"No", "Yes"}, pokemonSelect6Confirm) 
@@ -1426,6 +1426,7 @@ function openPokemonMenuFromItemSelect()
     pkmnMenuBG.y = display.contentHeight - (display.contentHeight/4)    
 
 
+
     pkmnMenuBtn[0] = widget.newButton({    
         id = "selectBtn1",
         width = 355,
@@ -1534,16 +1535,7 @@ function openPokemonMenuFromItemSelect()
         pkmnDB[cnt].isVisible = true
     end    
 
-    cancelBtn = widget.newButton({    
-            id = "cancelBtn",
-            width = 150,
-            height = 75,
-            defaultFile = "images/fightScene/menu/cancelBtn.png",
-            overFile  = "images/fightScene/menu/cancelBtnOnClick.png",
-            onEvent = returnToMainMenu 
-        } )
-    cancelBtn.x = 638
-    cancelBtn.y = 1226  
+    cancelBtn.isVisible = false
 
     mainMenuBG.isVisible = false
     for cnt = 0, 3 do
@@ -1554,7 +1546,6 @@ function openPokemonMenuFromItemSelect()
     for cnt = 0, #pkmnMenuBtn do
         sceneGroup:insert(pkmnMenuBtn[cnt])
     end 
-    sceneGroup:insert( cancelBtn )
 end
 
 function openItemsMenu (event)
