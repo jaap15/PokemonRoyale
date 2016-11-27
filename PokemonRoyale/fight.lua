@@ -42,6 +42,8 @@ local item
 local menuClick = audio.loadStream("sounds/menuButtonClick.mp3")
 local summonSound = audio.loadStream("sounds/summon.wav")
 local potionUse = audio.loadStream("sounds/onPotionUse.mp3")
+local bigPotionUse = audio.loadStream("sounds/superPotion.wav")
+local maxPotionUse = audio.loadStream("sounds/maxPotion.wav")
 
 local function updatePokemonInfoBox()
     infoBoxText.pName.text = string.format("%s Lv:100", trainer.Pokemans[trainer.currentPokemon].pokemon.tag)
@@ -1042,7 +1044,6 @@ end
 
 function useItem(event)
     if ( "ended" == event.phase ) then
-        audio.play(potionUse)
         local i = event.target.id
         local itemValue = 0
 
@@ -1064,10 +1065,13 @@ function useItem(event)
 
         if (item == "healthPotion") then
             itemValue = 50    
+            audio.play(potionUse)
         elseif(item == "bigHealthPotion") then
             itemValue = 100
+            audio.play(bigPotionUse)
         elseif(item == "fullPotion") then
             itemValue = 99999
+            audio.play(maxPotionUse)
         end
         trainer.Pokemans[i]:useItem(itemValue)
         itemsMenuBG.isVisible = false
