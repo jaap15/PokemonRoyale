@@ -31,15 +31,45 @@ local pokemonNames = {}
 local pokemon = Pokemon:new( {HP=150} )
 local sceneGroup
 local currentPokemon = 1;
-local currentEnemy = 2;
+local currentEnemy = 1;
 local fSize = 45; --font size
 local trainer = composer.getVariable("trainer")
 local infoBoxText = display.newText("", 0, 0, native.systemFont, 28)
 local trainersAvailable = composer.getVariable("trainersAvailable")
+local pSelected = false;
+local eSelected = false;
+local moveMadeTimer;
 
 -- Local Sounds
 local menuClick = audio.loadStream("sounds/menuButtonClick.mp3")
 local summonSound = audio.loadStream("sounds/summon.wav")
+
+local function startBattle()
+    timer.performWithDelay(2500, openMainMenu)
+    timer.performWithDelay(1, drawBackground)
+end
+
+local function endBattle()
+    timer.cancel(moveMadeTimer)
+    enemyList[currentEnemy]:moveTrainerIn()
+    trainer:moveTrainerIn()
+end
+
+local function enemyAttack(attackNumber)
+
+end
+
+local function result()
+    
+end
+
+local function moveMade()
+    if pSelected then
+
+    end
+end
+
+
 
 local function updatePokemonInfoBox()
     infoBoxText.pName.text = string.format("%s Lv:100", trainer.Pokemans[currentPokemon].pokemon.tag)
@@ -438,9 +468,7 @@ function drawBackground()
     end    
 
     local function drawEnemyPokemon()
-        -- enemyList[currentEnemy].trainer.E_Pokemans[enemyList[currentEnemy].currentPokemon]:setSelectionView();
-        enemyList[currentEnemy].trainer.E_Pokemans[1]:setSelectionView();
-        print(enemyList[1].trainer.E_Pokemans[1].pokemon.tag)
+        enemyList[currentEnemy].trainer.E_Pokemans[enemyList[currentEnemy].currentPokemon]:setSelectionView();
     end
     local enemySummon = summonPkmnAnimation(542,350)
     local function summonEnemy()
@@ -472,6 +500,7 @@ function drawBackground()
     timer.performWithDelay(2500, summonPlayer)
     timer.performWithDelay(3000, drawPlayerPokemon)
 
+    moveMadeTimer = timer.performWithDelay(100, moveMade)
     sceneGroup:insert( enemyList[currentEnemy].arena )
     sceneGroup:insert( enemyInfoBox )
     sceneGroup:insert( playerInfoBox )
@@ -1150,8 +1179,6 @@ function scene:create( event )
 	
     openingAnimations()
     trainer:create()
-    timer.performWithDelay(2500, openMainMenu)
-    timer.performWithDelay(1, drawBackground)
 end
 
 -- show()
@@ -1168,6 +1195,9 @@ function scene:show( event )
         -- Code here runs when the scene is still off screen (but is about to come on screen)
     elseif ( phase == "did" ) then
         -- Code here runs when the scene is entirely on screen
+        startBattle();
+        -- timer.performWithDelay(2000, endBattle)
+
     end
 end
 
