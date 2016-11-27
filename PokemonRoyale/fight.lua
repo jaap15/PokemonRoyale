@@ -43,7 +43,7 @@ local summonSound = audio.loadStream("sounds/summon.wav")
 
 local function updatePokemonInfoBox()
     infoBoxText.pName.text = string.format("%s Lv:100", trainer.Pokemans[currentPokemon].pokemon.tag)
-    infoBoxText.eName.text = string.format("%s Lv:100", enemyList[currentEnemy].E_Pokemans[enemyList[currentEnemy].currentPokemon].pokemon.tag)
+    infoBoxText.eName.text = string.format("%s Lv:100", enemyList[currentEnemy].trainer.E_Pokemans[enemyList[currentEnemy].currentPokemon].pokemon.tag)
     infoBoxText.pHpText.text = string.format("%03d/%03d", trainer.Pokemans[currentPokemon].pokemon.currentHP, trainer.Pokemans[currentPokemon].pokemon.maxHP)
  end
 
@@ -51,7 +51,7 @@ local function updatePokemonInfoBox()
 function attack1(event)
     if ( "ended" == event.phase ) then
         audio.play(menuClick, {loops = 0})
-        enemyList[currentEnemy].E_Pokemans[enemyList[currentEnemy].currentPokemon]:takeDamage(trainer.Pokemans[currentPokemon].pokemon.attack1Damage, trainer.Pokemans[currentPokemon].pokemon.attack1Type)
+        enemyList[currentEnemy].trainer.E_Pokemans[enemyList[currentEnemy].currentPokemon]:takeDamage(trainer.Pokemans[currentPokemon].pokemon.attack1Damage, trainer.Pokemans[currentPokemon].pokemon.attack1Type)
         trainer.Pokemans[currentPokemon]:takeDamage(25, "grass")
         updatePokemonInfoBox()
         returnAfterAttack()
@@ -61,7 +61,7 @@ end
 function attack2(event)
     if ( "ended" == event.phase ) then
         audio.play(menuClick, {loops = 0})
-        enemyList[currentEnemy].E_Pokemans[enemyList[currentEnemy].currentPokemon]:takeDamage(trainer.Pokemans[currentPokemon].pokemon.attack2Damage, trainer.Pokemans[currentPokemon].pokemon.attack2Type)
+        enemyList[currentEnemy].trainer.E_Pokemans[enemyList[currentEnemy].currentPokemon]:takeDamage(trainer.Pokemans[currentPokemon].pokemon.attack2Damage, trainer.Pokemans[currentPokemon].pokemon.attack2Type)
         returnAfterAttack()
     end
 end
@@ -69,7 +69,7 @@ end
 function attack3(event)
     if ( "ended" == event.phase ) then
         audio.play(menuClick, {loops = 0})
-        enemyList[currentEnemy].E_Pokemans[enemyList[currentEnemy].currentPokemon]:takeDamage(trainer.Pokemans[currentPokemon].pokemon.attack3Damage, trainer.Pokemans[currentPokemon].pokemon.attack3Type)
+        enemyList[currentEnemy].trainer.E_Pokemans[enemyList[currentEnemy].currentPokemon]:takeDamage(trainer.Pokemans[currentPokemon].pokemon.attack3Damage, trainer.Pokemans[currentPokemon].pokemon.attack3Type)
         returnAfterAttack()
     end
 end
@@ -77,7 +77,7 @@ end
 function attack4(event)
     if ( "ended" == event.phase ) then
         audio.play(menuClick, {loops = 0})
-        enemyList[currentEnemy].E_Pokemans[enemyList[currentEnemy].currentPokemon]:takeDamage(trainer.Pokemans[currentPokemon].pokemon.attack4Damage,trainer.Pokemans[currentPokemon].pokemon.attack4Type)
+        enemyList[currentEnemy].trainer.E_Pokemans[enemyList[currentEnemy].currentPokemon]:takeDamage(trainer.Pokemans[currentPokemon].pokemon.attack4Damage,trainer.Pokemans[currentPokemon].pokemon.attack4Type)
         returnAfterAttack()
     end
 end
@@ -373,7 +373,7 @@ function exitButtonEvent(event)
         removeObject(infoBoxText.pHpText)
         removeObject(infoBoxText)
         removeObjectList(trainer.Pokemans, true);
-        removeObjectList(enemyList[currentEnemy].E_Pokemans, true);
+        removeObjectList(enemyList[currentEnemy].trainer.E_Pokemans, true);
 		enemyList[currentEnemy]:audioStop()
         composer.gotoScene("menu")
     end
@@ -415,7 +415,7 @@ function drawBackground()
 
     for i = 1, #trainer.Pokemans do
         trainer.Pokemans[i]:drawHealthBar("player")
-        enemyList[currentEnemy].E_Pokemans[i]:drawHealthBar("enemy")
+        enemyList[currentEnemy].trainer.E_Pokemans[i]:drawHealthBar("enemy")
     end
 
     local y1Offset = 0
@@ -438,7 +438,9 @@ function drawBackground()
     end    
 
     local function drawEnemyPokemon()
-        enemyList[currentEnemy].E_Pokemans[enemyList[currentEnemy].currentPokemon]:setSelectionView();
+        -- enemyList[currentEnemy].trainer.E_Pokemans[enemyList[currentEnemy].currentPokemon]:setSelectionView();
+        enemyList[currentEnemy].trainer.E_Pokemans[1]:setSelectionView();
+        print(enemyList[1].trainer.E_Pokemans[1].pokemon.tag)
     end
     local enemySummon = summonPkmnAnimation(542,350)
     local function summonEnemy()
