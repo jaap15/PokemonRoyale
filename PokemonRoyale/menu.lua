@@ -15,7 +15,7 @@ local scene = composer.newScene()
 local widget = require("widget")
 local Pokemon = require ("Pokemon")
 local e_trainer = require("Enemy_Trainer")
-
+local eTrainer = e_trainer:new({});
 -- -----------------------------------------------------------------------------------
 -- Code outside of the scene event functions below will only be executed ONCE unless
 -- the scene is removed entirely (not recycled) via "composer.removeScene()"
@@ -31,8 +31,11 @@ enemyList = {} --holds all of the enemy objects that the player will battle
 --      This function just switches from the menu scene to the game scene
 local function startButtonEvent(event)
 	if ("ended" == event.phase) then
-        -- enemyList[1] = e_trainer:create(3)
-        -- enemyList[2] = e_trainer:create(2)
+        enemyList[1] = eTrainer:new({})
+        enemyList[1]:create(3)
+        enemyList[2] = eTrainer:new({})
+        enemyList[2]:create(2)
+        
 		composer.gotoScene("game")
 	end
 end

@@ -9,7 +9,6 @@ local composer = require("composer")
 local scene = composer.newScene()
 local widget = require("widget")
 local Pokemon = require ("Pokemon")
-local e_trainer = require("Enemy_Trainer")
 
 -- -----------------------------------------------------------------------------------
 -- Code outside of the scene event functions below will only be executed ONCE unless
@@ -32,6 +31,7 @@ local pokemonNames = {}
 local pokemon = Pokemon:new( {HP=150} )
 local sceneGroup
 local currentPokemon = 1;
+local currentEnemy = 2;
 local fSize = 45; --font size
 local trainer = composer.getVariable("trainer")
 local infoBoxText = display.newText("", 0, 0, native.systemFont, 28)
@@ -43,7 +43,7 @@ local summonSound = audio.loadStream("sounds/summon.wav")
 
 local function updatePokemonInfoBox()
     infoBoxText.pName.text = string.format("%s Lv:100", trainer.Pokemans[currentPokemon].pokemon.tag)
-    infoBoxText.eName.text = string.format("%s Lv:100", e_trainer.E_Pokemans[e_trainer.currentPokemon].pokemon.tag)
+    infoBoxText.eName.text = string.format("%s Lv:100", enemyList[currentEnemy].E_Pokemans[enemyList[currentEnemy].currentPokemon].pokemon.tag)
     infoBoxText.pHpText.text = string.format("%03d/%03d", trainer.Pokemans[currentPokemon].pokemon.currentHP, trainer.Pokemans[currentPokemon].pokemon.maxHP)
  end
 
@@ -51,7 +51,7 @@ local function updatePokemonInfoBox()
 function attack1(event)
     if ( "ended" == event.phase ) then
         audio.play(menuClick, {loops = 0})
-        e_trainer.E_Pokemans[e_trainer.currentPokemon]:takeDamage(trainer.Pokemans[currentPokemon].pokemon.attack1Damage, trainer.Pokemans[currentPokemon].pokemon.attack1Type)
+        enemyList[currentEnemy].E_Pokemans[enemyList[currentEnemy].currentPokemon]:takeDamage(trainer.Pokemans[currentPokemon].pokemon.attack1Damage, trainer.Pokemans[currentPokemon].pokemon.attack1Type)
         trainer.Pokemans[currentPokemon]:takeDamage(25, "grass")
         updatePokemonInfoBox()
         returnAfterAttack()
@@ -61,7 +61,7 @@ end
 function attack2(event)
     if ( "ended" == event.phase ) then
         audio.play(menuClick, {loops = 0})
-        e_trainer.E_Pokemans[e_trainer.currentPokemon]:takeDamage(trainer.Pokemans[currentPokemon].pokemon.attack2Damage, trainer.Pokemans[currentPokemon].pokemon.attack2Type)
+        enemyList[currentEnemy].E_Pokemans[enemyList[currentEnemy].currentPokemon]:takeDamage(trainer.Pokemans[currentPokemon].pokemon.attack2Damage, trainer.Pokemans[currentPokemon].pokemon.attack2Type)
         returnAfterAttack()
     end
 end
@@ -69,7 +69,7 @@ end
 function attack3(event)
     if ( "ended" == event.phase ) then
         audio.play(menuClick, {loops = 0})
-        e_trainer.E_Pokemans[e_trainer.currentPokemon]:takeDamage(trainer.Pokemans[currentPokemon].pokemon.attack3Damage, trainer.Pokemans[currentPokemon].pokemon.attack3Type)
+        enemyList[currentEnemy].E_Pokemans[enemyList[currentEnemy].currentPokemon]:takeDamage(trainer.Pokemans[currentPokemon].pokemon.attack3Damage, trainer.Pokemans[currentPokemon].pokemon.attack3Type)
         returnAfterAttack()
     end
 end
@@ -77,7 +77,7 @@ end
 function attack4(event)
     if ( "ended" == event.phase ) then
         audio.play(menuClick, {loops = 0})
-        e_trainer.E_Pokemans[e_trainer.currentPokemon]:takeDamage(trainer.Pokemans[currentPokemon].pokemon.attack4Damage,trainer.Pokemans[currentPokemon].pokemon.attack4Type)
+        enemyList[currentEnemy].E_Pokemans[enemyList[currentEnemy].currentPokemon]:takeDamage(trainer.Pokemans[currentPokemon].pokemon.attack4Damage,trainer.Pokemans[currentPokemon].pokemon.attack4Type)
         returnAfterAttack()
     end
 end
@@ -373,18 +373,16 @@ function exitButtonEvent(event)
         removeObject(infoBoxText.pHpText)
         removeObject(infoBoxText)
         removeObjectList(trainer.Pokemans, true);
-        removeObjectList(e_trainer.E_Pokemans, true);
-		e_trainer:audioStop()
+        removeObjectList(enemyList[currentEnemy].E_Pokemans, true);
+		enemyList[currentEnemy]:audioStop()
         composer.gotoScene("menu")
     end
 end
 
 function drawBackground()
 	
-    e_trainer:create(3)
-	trainer:create()
     trainer:throwAnimation()
-    e_trainer:beginBattle()
+    enemyList[currentEnemy]:beginBattle()
 
     enemyInfoBox = display.newImage("images/fightScene/enemyInfoBox.png")
     enemyInfoBox.width = display.contentWidth/2
@@ -417,7 +415,7 @@ function drawBackground()
 
     for i = 1, #trainer.Pokemans do
         trainer.Pokemans[i]:drawHealthBar("player")
-        e_trainer.E_Pokemans[i]:drawHealthBar("enemy")
+        enemyList[currentEnemy].E_Pokemans[i]:drawHealthBar("enemy")
     end
 
     local y1Offset = 0
@@ -440,7 +438,7 @@ function drawBackground()
     end    
 
     local function drawEnemyPokemon()
-        e_trainer.E_Pokemans[e_trainer.currentPokemon]:setSelectionView();
+        enemyList[currentEnemy].E_Pokemans[enemyList[currentEnemy].currentPokemon]:setSelectionView();
     end
     local enemySummon = summonPkmnAnimation(542,350)
     local function summonEnemy()
@@ -472,7 +470,7 @@ function drawBackground()
     timer.performWithDelay(2500, summonPlayer)
     timer.performWithDelay(3000, drawPlayerPokemon)
 
-    sceneGroup:insert( e_trainer.arena )
+    sceneGroup:insert( enemyList[currentEnemy].arena )
     sceneGroup:insert( enemyInfoBox )
     sceneGroup:insert( playerInfoBox )
     sceneGroup:insert( infoBoxText )
@@ -1149,6 +1147,7 @@ function scene:create( event )
     sceneGroup = self.view
 	
     openingAnimations()
+    trainer:create()
     timer.performWithDelay(2500, openMainMenu)
     timer.performWithDelay(1, drawBackground)
 end
