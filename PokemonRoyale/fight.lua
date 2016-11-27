@@ -31,64 +31,403 @@ local pokemonThumbNails = {}
 local pokemonNames = {}
 local pokemon = Pokemon:new( {HP=150} )
 local sceneGroup
-local currentPokemon = 1;
-local eCurrentPokemon = 1;
 local fSize = 45; --font size
 local trainer = composer.getVariable("trainer")
 local infoBoxText = display.newText("", 0, 0, native.systemFont, 28)
+local trainersAvailable
+local item
 
 -- Local Sounds
 local menuClick = audio.loadStream("sounds/menuButtonClick.mp3")
-
+local summonSound = audio.loadStream("sounds/summon.wav")
+local potionUse = audio.loadStream("sounds/onPotionUse.mp3")
 
 local function updatePokemonInfoBox()
-    infoBoxText.pName.text = string.format("%s Lv:100", trainer.Pokemans[currentPokemon].pokemon.tag)
-    infoBoxText.eName.text = string.format("%s Lv:100", e_trainer.E_Pokemans[eCurrentPokemon].pokemon.tag)
-    infoBoxText.pHpText.text = string.format("%03d/%03d", trainer.Pokemans[currentPokemon].pokemon.currentHP, trainer.Pokemans[currentPokemon].pokemon.maxHP)
+    infoBoxText.pName.text = string.format("%s Lv:100", trainer.Pokemans[trainer.currentPokemon].pokemon.tag)
+    infoBoxText.eName.text = string.format("%s Lv:100", e_trainer.E_Pokemans[e_trainer.currentPokemon].pokemon.tag)
+    infoBoxText.pHpText.text = string.format("%03d/%03d", trainer.Pokemans[trainer.currentPokemon].pokemon.currentHP, trainer.Pokemans[trainer.currentPokemon].pokemon.maxHP)
  end
+
+function playerWins()
+	
+	composer.gotoScene("transition")
+end
+
+function playerLoses()
+
+	composer.gotoScene("transition")
+end
 
 -- Fight Menu Functions
 function attack1(event)
-    if ( "ended" == event.phase ) then
+	
+	if ( "ended" == event.phase ) then
         audio.play(menuClick, {loops = 0})
-        e_trainer.E_Pokemans[eCurrentPokemon]:takeDamage(trainer.Pokemans[currentPokemon].pokemon.attack1Damage, trainer.Pokemans[currentPokemon].pokemon.attack1Type)
-        trainer.Pokemans[currentPokemon]:takeDamage(25, "grass")
-        updatePokemonInfoBox()
-        returnAfterAttack()
-    end
+		
+		if(trainer.Pokemans[trainer.currentPokemon].pokemon.speed >= e_trainer.E_Pokemans[e_trainer.currentPokemon].pokemon.speed) then
+			e_trainer.E_Pokemans[e_trainer.currentPokemon]:takeDamage(trainer.Pokemans[trainer.currentPokemon].pokemon.attack1Damage, trainer.Pokemans[trainer.currentPokemon].pokemon.attack1Type)
+			updatePokemonInfoBox()
+			
+			if(e_trainer.E_Pokemans[e_trainer.currentPokemon].pokemon.status == "fainted") then
+				
+				if(e_trainer.numPokemans == 0) then
+					
+					playerWins()
+				
+				else
+					transition.to(e_trainer.E_Pokemans[e_trainer.currentPokemon].pokemon.selectView, {time = 1250, x = e_trainer.E_Pokemans[e_trainer.currentPokemon].pokemon.selectView.x+750})
+					local function spawnNewPkmn()
+						e_trainer.E_Pokemans[e_trainer.currentPokemon]:HidePokemon()
+						updatePokemonInfoBox()
+						e_trainer:pickNewPokemon()
+						e_trainer.E_Pokemans[e_trainer.currentPokemon]:setSelectionView()
+						e_trainer.E_Pokemans[e_trainer.currentPokemon]:setPos(542,350)
+					end
+					local playerSummon = summonPkmnAnimation(542,350)
+					local function summonPlayer()
+						playerSummon.isVisible = true
+						playerSummon:play()
+						audio.play(summonSound, {loops = 0})
+						local function hideAnimation()
+							playerSummon.isVisible = false
+						end
+						timer.performWithDelay(500, hideAnimation)        
+					end
+					timer.performWithDelay(500, summonPlayer)
+					timer.performWithDelay(1000, spawnNewPkmn)
+				end
+			else
+				
+				e_trainer:BattleTurn(trainer)
+				updatePokemonInfoBox()
+			end
+			
+			returnAfterAttack()
+			
+		elseif(trainer.Pokemans[trainer.currentPokemon].pokemon.speed < e_trainer.E_Pokemans[e_trainer.currentPokemon].pokemon.speed) then
+			
+			e_trainer:BattleTurn(trainer)
+			updatePokemonInfoBox()
+  
+			if(trainer.Pokemans[trainer.currentPokemon].pokemon.status ~= "fainted") then
+				e_trainer.E_Pokemans[e_trainer.currentPokemon]:takeDamage(trainer.Pokemans[trainer.currentPokemon].pokemon.attack1Damage, trainer.Pokemans[trainer.currentPokemon].pokemon.attack1Type)
+				updatePokemonInfoBox()
+				
+				if(e_trainer.E_Pokemans[e_trainer.currentPokemon].pokemon.status == "fainted") then
+				
+					if(e_trainer.numPokemans == 0) then
+						
+						playerWins()
+					
+					else
+						transition.to(e_trainer.E_Pokemans[e_trainer.currentPokemon].pokemon.selectView, {time = 1250, x = e_trainer.E_Pokemans[e_trainer.currentPokemon].pokemon.selectView.x+750})
+						local function spawnNewPkmn()
+							e_trainer.E_Pokemans[e_trainer.currentPokemon]:HidePokemon()
+							updatePokemonInfoBox()
+							e_trainer:pickNewPokemon()
+							e_trainer.E_Pokemans[e_trainer.currentPokemon]:setSelectionView()
+							e_trainer.E_Pokemans[e_trainer.currentPokemon]:setPos(542,350)
+						end
+						local playerSummon = summonPkmnAnimation(542,350)
+						local function summonPlayer()
+							playerSummon.isVisible = true
+							playerSummon:play()
+							audio.play(summonSound, {loops = 0})
+							local function hideAnimation()
+								playerSummon.isVisible = false
+							end
+							timer.performWithDelay(500, hideAnimation)        
+						end
+						timer.performWithDelay(500, summonPlayer)
+						timer.performWithDelay(1000, spawnNewPkmn)
+					end
+				end
+				
+				returnAfterAttack()
+			else
+				returnAfterAttack()
+			end
+		end
+	end
 end
 
 function attack2(event)
     if ( "ended" == event.phase ) then
         audio.play(menuClick, {loops = 0})
-        e_trainer.E_Pokemans[eCurrentPokemon]:takeDamage(trainer.Pokemans[currentPokemon].pokemon.attack2Damage, trainer.Pokemans[currentPokemon].pokemon.attack2Type)
-        returnAfterAttack()
+       if(trainer.Pokemans[trainer.currentPokemon].pokemon.speed >= e_trainer.E_Pokemans[e_trainer.currentPokemon].pokemon.speed) then
+			e_trainer.E_Pokemans[e_trainer.currentPokemon]:takeDamage(trainer.Pokemans[trainer.currentPokemon].pokemon.attack1Damage, trainer.Pokemans[trainer.currentPokemon].pokemon.attack1Type)
+			updatePokemonInfoBox()
+			
+			if(e_trainer.E_Pokemans[e_trainer.currentPokemon].pokemon.status == "fainted") then
+				
+				if(e_trainer.numPokemans == 0) then
+					
+					playerWins()
+				
+				else
+					transition.to(e_trainer.E_Pokemans[e_trainer.currentPokemon].pokemon.selectView, {time = 1250, x = e_trainer.E_Pokemans[e_trainer.currentPokemon].pokemon.selectView.x+750})
+					local function spawnNewPkmn()
+						e_trainer.E_Pokemans[e_trainer.currentPokemon]:HidePokemon()
+						updatePokemonInfoBox()
+						e_trainer:pickNewPokemon()
+						e_trainer.E_Pokemans[e_trainer.currentPokemon]:setSelectionView()
+						e_trainer.E_Pokemans[e_trainer.currentPokemon]:setPos(542,350)
+					end
+					local playerSummon = summonPkmnAnimation(542,350)
+					local function summonPlayer()
+						playerSummon.isVisible = true
+						playerSummon:play()
+						audio.play(summonSound, {loops = 0})
+						local function hideAnimation()
+							playerSummon.isVisible = false
+						end
+						timer.performWithDelay(500, hideAnimation)        
+					end
+					timer.performWithDelay(500, summonPlayer)
+					timer.performWithDelay(1000, spawnNewPkmn)
+				end
+			else
+				
+				e_trainer:BattleTurn(trainer)
+				updatePokemonInfoBox()
+			end
+			
+			returnAfterAttack()
+			
+		elseif(trainer.Pokemans[trainer.currentPokemon].pokemon.speed < e_trainer.E_Pokemans[e_trainer.currentPokemon].pokemon.speed) then
+			
+			e_trainer:BattleTurn(trainer)
+			updatePokemonInfoBox()
+  
+			if(trainer.Pokemans[trainer.currentPokemon].pokemon.status ~= "fainted") then
+				e_trainer.E_Pokemans[e_trainer.currentPokemon]:takeDamage(trainer.Pokemans[trainer.currentPokemon].pokemon.attack1Damage, trainer.Pokemans[trainer.currentPokemon].pokemon.attack1Type)
+				updatePokemonInfoBox()
+				
+				if(e_trainer.E_Pokemans[e_trainer.currentPokemon].pokemon.status == "fainted") then
+				
+					if(e_trainer.numPokemans == 0) then
+						
+						playerWins()
+					
+					else
+						transition.to(e_trainer.E_Pokemans[e_trainer.currentPokemon].pokemon.selectView, {time = 1250, x = e_trainer.E_Pokemans[e_trainer.currentPokemon].pokemon.selectView.x+750})
+						local function spawnNewPkmn()
+							e_trainer.E_Pokemans[e_trainer.currentPokemon]:HidePokemon()
+							updatePokemonInfoBox()
+							e_trainer:pickNewPokemon()
+							e_trainer.E_Pokemans[e_trainer.currentPokemon]:setSelectionView()
+							e_trainer.E_Pokemans[e_trainer.currentPokemon]:setPos(542,350)
+						end
+						local playerSummon = summonPkmnAnimation(542,350)
+						local function summonPlayer()
+							playerSummon.isVisible = true
+							playerSummon:play()
+							audio.play(summonSound, {loops = 0})
+							local function hideAnimation()
+								playerSummon.isVisible = false
+							end
+							timer.performWithDelay(500, hideAnimation)        
+						end
+						timer.performWithDelay(500, summonPlayer)
+						timer.performWithDelay(1000, spawnNewPkmn)
+					end
+				end
+				
+				returnAfterAttack()
+			else
+				returnAfterAttack()
+			end
+		end
     end
 end
 
 function attack3(event)
     if ( "ended" == event.phase ) then
         audio.play(menuClick, {loops = 0})
-        e_trainer.E_Pokemans[eCurrentPokemon]:takeDamage(trainer.Pokemans[currentPokemon].pokemon.attack3Damage, trainer.Pokemans[currentPokemon].pokemon.attack3Type)
-        returnAfterAttack()
+        if(trainer.Pokemans[trainer.currentPokemon].pokemon.speed >= e_trainer.E_Pokemans[e_trainer.currentPokemon].pokemon.speed) then
+			e_trainer.E_Pokemans[e_trainer.currentPokemon]:takeDamage(trainer.Pokemans[trainer.currentPokemon].pokemon.attack1Damage, trainer.Pokemans[trainer.currentPokemon].pokemon.attack1Type)
+			updatePokemonInfoBox()
+			
+			if(e_trainer.E_Pokemans[e_trainer.currentPokemon].pokemon.status == "fainted") then
+				
+				if(e_trainer.numPokemans == 0) then
+					
+					playerWins()
+				
+				else
+					transition.to(e_trainer.E_Pokemans[e_trainer.currentPokemon].pokemon.selectView, {time = 1250, x = e_trainer.E_Pokemans[e_trainer.currentPokemon].pokemon.selectView.x+750})
+					local function spawnNewPkmn()
+						e_trainer.E_Pokemans[e_trainer.currentPokemon]:HidePokemon()
+						updatePokemonInfoBox()
+						e_trainer:pickNewPokemon()
+						e_trainer.E_Pokemans[e_trainer.currentPokemon]:setSelectionView()
+						e_trainer.E_Pokemans[e_trainer.currentPokemon]:setPos(542,350)
+					end
+					local playerSummon = summonPkmnAnimation(542,350)
+					local function summonPlayer()
+						playerSummon.isVisible = true
+						playerSummon:play()
+						audio.play(summonSound, {loops = 0})
+						local function hideAnimation()
+							playerSummon.isVisible = false
+						end
+						timer.performWithDelay(500, hideAnimation)        
+					end
+					timer.performWithDelay(500, summonPlayer)
+					timer.performWithDelay(1000, spawnNewPkmn)
+				end
+			else
+				
+				e_trainer:BattleTurn(trainer)
+				updatePokemonInfoBox()
+			end
+			
+			returnAfterAttack()
+			
+		elseif(trainer.Pokemans[trainer.currentPokemon].pokemon.speed < e_trainer.E_Pokemans[e_trainer.currentPokemon].pokemon.speed) then
+			
+			e_trainer:BattleTurn(trainer)
+			updatePokemonInfoBox()
+  
+			if(trainer.Pokemans[trainer.currentPokemon].pokemon.status ~= "fainted") then
+				e_trainer.E_Pokemans[e_trainer.currentPokemon]:takeDamage(trainer.Pokemans[trainer.currentPokemon].pokemon.attack1Damage, trainer.Pokemans[trainer.currentPokemon].pokemon.attack1Type)
+				updatePokemonInfoBox()
+				
+				if(e_trainer.E_Pokemans[e_trainer.currentPokemon].pokemon.status == "fainted") then
+				
+					if(e_trainer.numPokemans == 0) then
+						
+						playerWins()
+					
+					else
+						transition.to(e_trainer.E_Pokemans[e_trainer.currentPokemon].pokemon.selectView, {time = 1250, x = e_trainer.E_Pokemans[e_trainer.currentPokemon].pokemon.selectView.x+750})
+						local function spawnNewPkmn()
+							e_trainer.E_Pokemans[e_trainer.currentPokemon]:HidePokemon()
+							updatePokemonInfoBox()
+							e_trainer:pickNewPokemon()
+							e_trainer.E_Pokemans[e_trainer.currentPokemon]:setSelectionView()
+							e_trainer.E_Pokemans[e_trainer.currentPokemon]:setPos(542,350)
+						end
+						local playerSummon = summonPkmnAnimation(542,350)
+						local function summonPlayer()
+							playerSummon.isVisible = true
+							playerSummon:play()
+							audio.play(summonSound, {loops = 0})
+							local function hideAnimation()
+								playerSummon.isVisible = false
+							end
+							timer.performWithDelay(500, hideAnimation)        
+						end
+						timer.performWithDelay(500, summonPlayer)
+						timer.performWithDelay(1000, spawnNewPkmn)
+					end
+				end
+				
+				returnAfterAttack()
+			else
+				returnAfterAttack()
+			end
+		end
     end
 end
 
 function attack4(event)
     if ( "ended" == event.phase ) then
         audio.play(menuClick, {loops = 0})
-        e_trainer.E_Pokemans[eCurrentPokemon]:takeDamage(trainer.Pokemans[currentPokemon].pokemon.attack4Damage,trainer.Pokemans[currentPokemon].pokemon.attack4Type)
-        returnAfterAttack()
+        if(trainer.Pokemans[trainer.currentPokemon].pokemon.speed >= e_trainer.E_Pokemans[e_trainer.currentPokemon].pokemon.speed) then
+			e_trainer.E_Pokemans[e_trainer.currentPokemon]:takeDamage(trainer.Pokemans[trainer.currentPokemon].pokemon.attack1Damage, trainer.Pokemans[trainer.currentPokemon].pokemon.attack1Type)
+			updatePokemonInfoBox()
+			
+			if(e_trainer.E_Pokemans[e_trainer.currentPokemon].pokemon.status == "fainted") then
+				
+				if(e_trainer.numPokemans == 0) then
+					
+					playerWins()
+				
+				else
+					transition.to(e_trainer.E_Pokemans[e_trainer.currentPokemon].pokemon.selectView, {time = 1250, x = e_trainer.E_Pokemans[e_trainer.currentPokemon].pokemon.selectView.x+750})
+					local function spawnNewPkmn()
+						e_trainer.E_Pokemans[e_trainer.currentPokemon]:HidePokemon()
+						updatePokemonInfoBox()
+						e_trainer:pickNewPokemon()
+						e_trainer.E_Pokemans[e_trainer.currentPokemon]:setSelectionView()
+						e_trainer.E_Pokemans[e_trainer.currentPokemon]:setPos(542,350)
+					end
+					local playerSummon = summonPkmnAnimation(542,350)
+					local function summonPlayer()
+						playerSummon.isVisible = true
+						playerSummon:play()
+						audio.play(summonSound, {loops = 0})
+						local function hideAnimation()
+							playerSummon.isVisible = false
+						end
+						timer.performWithDelay(500, hideAnimation)        
+					end
+					timer.performWithDelay(500, summonPlayer)
+					timer.performWithDelay(1000, spawnNewPkmn)
+				end
+			else
+				
+				e_trainer:BattleTurn(trainer)
+				updatePokemonInfoBox()
+			end
+			
+			returnAfterAttack()
+			
+		elseif(trainer.Pokemans[trainer.currentPokemon].pokemon.speed < e_trainer.E_Pokemans[e_trainer.currentPokemon].pokemon.speed) then
+			
+			e_trainer:BattleTurn(trainer)
+			updatePokemonInfoBox()
+  
+			if(trainer.Pokemans[trainer.currentPokemon].pokemon.status ~= "fainted") then
+				e_trainer.E_Pokemans[e_trainer.currentPokemon]:takeDamage(trainer.Pokemans[trainer.currentPokemon].pokemon.attack1Damage, trainer.Pokemans[trainer.currentPokemon].pokemon.attack1Type)
+				updatePokemonInfoBox()
+				
+				if(e_trainer.E_Pokemans[e_trainer.currentPokemon].pokemon.status == "fainted") then
+				
+					if(e_trainer.numPokemans == 0) then
+						
+						playerWins()
+					
+					else
+						transition.to(e_trainer.E_Pokemans[e_trainer.currentPokemon].pokemon.selectView, {time = 1250, x = e_trainer.E_Pokemans[e_trainer.currentPokemon].pokemon.selectView.x+750})
+						local function spawnNewPkmn()
+							e_trainer.E_Pokemans[e_trainer.currentPokemon]:HidePokemon()
+							updatePokemonInfoBox()
+							e_trainer:pickNewPokemon()
+							e_trainer.E_Pokemans[e_trainer.currentPokemon]:setSelectionView()
+							e_trainer.E_Pokemans[e_trainer.currentPokemon]:setPos(542,350)
+						end
+						local playerSummon = summonPkmnAnimation(542,350)
+						local function summonPlayer()
+							playerSummon.isVisible = true
+							playerSummon:play()
+							audio.play(summonSound, {loops = 0})
+							local function hideAnimation()
+								playerSummon.isVisible = false
+							end
+							timer.performWithDelay(500, hideAnimation)        
+						end
+						timer.performWithDelay(500, summonPlayer)
+						timer.performWithDelay(1000, spawnNewPkmn)
+					end
+				end
+				
+				returnAfterAttack()
+			else
+				returnAfterAttack()
+			end
+		end
     end
 end
 
 function select1(event)
     if ( "ended" == event.phase ) then
         audio.play(menuClick, {loops = 0})
-        if (currentPokemon == 1) then
+        if (currentPokemon == 1 or trainer.Pokemans[1].pokemon.status == "fainted") then
 
         else 
-            native.showAlert("Are you sure?", "Switch out " .. trainer.Pokemans[currentPokemon].pokemon.tag .. " for " .. trainer.Pokemans[1].pokemon.tag .. "?", {"No", "Yes"}, pokemonSelect1Confirm)
+            native.showAlert("Are you sure?", "Switch out " .. trainer.Pokemans[trainer.currentPokemon].pokemon.tag .. " for " .. trainer.Pokemans[1].pokemon.tag .. "?", {"No", "Yes"}, pokemonSelect1Confirm)
         end
     end
 end
@@ -96,10 +435,10 @@ end
 function select2(event)
     if ( "ended" == event.phase ) then
         audio.play(menuClick, {loops = 0})
-        if (currentPokemon == 2) then
+        if (currentPokemon == 2 or trainer.Pokemans[2].pokemon.status == "fainted") then
 
         else         
-            native.showAlert("Are you sure?", "Switch out " .. trainer.Pokemans[currentPokemon].pokemon.tag .. " for " .. trainer.Pokemans[2].pokemon.tag .. "?", {"No", "Yes"}, pokemonSelect2Confirm)
+            native.showAlert("Are you sure?", "Switch out " .. trainer.Pokemans[trainer.currentPokemon].pokemon.tag .. " for " .. trainer.Pokemans[2].pokemon.tag .. "?", {"No", "Yes"}, pokemonSelect2Confirm)
         end
    end
 end
@@ -107,10 +446,10 @@ end
 function select3(event)
     if ( "ended" == event.phase ) then
         audio.play(menuClick, {loops = 0})
-        if (currentPokemon == 3) then
+        if (currentPokemon == 3 or trainer.Pokemans[3].pokemon.status == "fainted") then
 
         else 
-            native.showAlert("Are you sure?", "Switch out " .. trainer.Pokemans[currentPokemon].pokemon.tag .. " for " .. trainer.Pokemans[3].pokemon.tag .. "?", {"No", "Yes"}, pokemonSelect3Confirm)
+            native.showAlert("Are you sure?", "Switch out " .. trainer.Pokemans[trainer.currentPokemon].pokemon.tag .. " for " .. trainer.Pokemans[3].pokemon.tag .. "?", {"No", "Yes"}, pokemonSelect3Confirm)
         end
     end
 end
@@ -118,10 +457,10 @@ end
 function select4(event)
     if ( "ended" == event.phase ) then
         audio.play(menuClick, {loops = 0})
-        if (currentPokemon == 4) then
+        if (currentPokemon == 4 or trainer.Pokemans[4].pokemon.status == "fainted") then
 
         else 
-            native.showAlert("Are you sure?", "Switch out " .. trainer.Pokemans[currentPokemon].pokemon.tag .. " for " .. trainer.Pokemans[4].pokemon.tag .. "?", {"No", "Yes"}, pokemonSelect4Confirm)
+            native.showAlert("Are you sure?", "Switch out " .. trainer.Pokemans[trainer.currentPokemon].pokemon.tag .. " for " .. trainer.Pokemans[4].pokemon.tag .. "?", {"No", "Yes"}, pokemonSelect4Confirm)
         end
     end
 end
@@ -129,10 +468,10 @@ end
 function select5(event)
     if ( "ended" == event.phase ) then
         audio.play(menuClick, {loops = 0})
-        if (currentPokemon == 5) then
+        if (currentPokemon == 5 or trainer.Pokemans[5].pokemon.status == "fainted") then
 
         else 
-            native.showAlert("Are you sure?", "Switch out " .. trainer.Pokemans[currentPokemon].pokemon.tag .. " for " .. trainer.Pokemans[5].pokemon.tag .. "?", {"No", "Yes"}, pokemonSelect5Confirm)  
+            native.showAlert("Are you sure?", "Switch out " .. trainer.Pokemans[trainer.currentPokemon].pokemon.tag .. " for " .. trainer.Pokemans[5].pokemon.tag .. "?", {"No", "Yes"}, pokemonSelect5Confirm)  
         end      
     end
 end
@@ -140,10 +479,10 @@ end
 function select6(event)
     if ( "ended" == event.phase ) then
         audio.play(menuClick, {loops = 0})
-        if (currentPokemon == 6) then
+        if (currentPokemon == 6 or trainer.Pokemans[6].pokemon.status == "fainted") then
 
         else 
-            native.showAlert("Are you sure?", "Switch out " .. trainer.Pokemans[currentPokemon].pokemon.tag .. " for " .. trainer.Pokemans[6].pokemon.tag .. "?", {"No", "Yes"}, pokemonSelect6Confirm) 
+            native.showAlert("Are you sure?", "Switch out " .. trainer.Pokemans[trainer.currentPokemon].pokemon.tag .. " for " .. trainer.Pokemans[6].pokemon.tag .. "?", {"No", "Yes"}, pokemonSelect6Confirm) 
         end       
     end
 end
@@ -154,19 +493,20 @@ function pokemonSelect1Confirm(event, pkmnIndex)
         if ( i == 1 ) then  
 
         elseif ( i == 2 ) then
-            transition.to(trainer.Pokemans[currentPokemon].pokemon.battleView, {time = 1250, x = trainer.Pokemans[currentPokemon].pokemon.battleView.x-750})
+            transition.to(trainer.Pokemans[trainer.currentPokemon].pokemon.battleView, {time = 1250, x = trainer.Pokemans[trainer.currentPokemon].pokemon.battleView.x-750})
             local function spawnNewPkmn()
-                trainer.Pokemans[currentPokemon]:HidePokemon()  
-                currentPokemon = 1
+                trainer.Pokemans[trainer.currentPokemon]:HidePokemon()  
+                trainer.currentPokemon = 1
                 updatePokemonInfoBox()
-                trainer.Pokemans[currentPokemon]:setBattleView()
-                trainer.Pokemans[currentPokemon]:setPos(190,530)
+                trainer.Pokemans[trainer.currentPokemon]:setBattleView()
+                trainer.Pokemans[trainer.currentPokemon]:setPos(190,530)
                 returnAfterSwap()
             end
             local playerSummon = summonPkmnAnimation(190,530)
             local function summonPlayer()
                 playerSummon.isVisible = true
                 playerSummon:play()
+                audio.play(summonSound, {loops = 0})
                 local function hideAnimation()
                     playerSummon.isVisible = false
                 end
@@ -184,19 +524,20 @@ function pokemonSelect2Confirm(event, pkmnIndex)
         if ( i == 1 ) then  
 
         elseif ( i == 2 ) then
-            transition.to(trainer.Pokemans[currentPokemon].pokemon.battleView, {time = 1250, x = trainer.Pokemans[currentPokemon].pokemon.battleView.x-750})
+            transition.to(trainer.Pokemans[trainer.currentPokemon].pokemon.battleView, {time = 1250, x = trainer.Pokemans[trainer.currentPokemon].pokemon.battleView.x-750})
             local function spawnNewPkmn()
-                trainer.Pokemans[currentPokemon]:HidePokemon()  
-                currentPokemon = 2
+                trainer.Pokemans[trainer.currentPokemon]:HidePokemon()  
+                trainer.currentPokemon = 2
                 updatePokemonInfoBox()
-                trainer.Pokemans[currentPokemon]:setBattleView()
-                trainer.Pokemans[currentPokemon]:setPos(190,530)
+                trainer.Pokemans[trainer.currentPokemon]:setBattleView()
+                trainer.Pokemans[trainer.currentPokemon]:setPos(190,530)
                 returnAfterSwap()
             end
             local playerSummon = summonPkmnAnimation(190,530)
             local function summonPlayer()
                 playerSummon.isVisible = true
                 playerSummon:play()
+                audio.play(summonSound, {loops = 0})
                 local function hideAnimation()
                     playerSummon.isVisible = false
                 end
@@ -214,19 +555,20 @@ function pokemonSelect3Confirm(event, pkmnIndex)
         if ( i == 1 ) then  
 
         elseif ( i == 2 ) then
-            transition.to(trainer.Pokemans[currentPokemon].pokemon.battleView, {time = 1250, x = trainer.Pokemans[currentPokemon].pokemon.battleView.x-750})
+            transition.to(trainer.Pokemans[trainer.currentPokemon].pokemon.battleView, {time = 1250, x = trainer.Pokemans[trainer.currentPokemon].pokemon.battleView.x-750})
             local function spawnNewPkmn()
-                trainer.Pokemans[currentPokemon]:HidePokemon()  
-                currentPokemon = 3
+                trainer.Pokemans[trainer.currentPokemon]:HidePokemon()  
+                trainer.currentPokemon = 3
                 updatePokemonInfoBox()
-                trainer.Pokemans[currentPokemon]:setBattleView()
-                trainer.Pokemans[currentPokemon]:setPos(190,530)
+                trainer.Pokemans[trainer.currentPokemon]:setBattleView()
+                trainer.Pokemans[trainer.currentPokemon]:setPos(190,530)
                 returnAfterSwap()
             end
             local playerSummon = summonPkmnAnimation(190,530)
             local function summonPlayer()
                 playerSummon.isVisible = true
                 playerSummon:play()
+                audio.play(summonSound, {loops = 0})
                 local function hideAnimation()
                     playerSummon.isVisible = false
                 end
@@ -244,19 +586,20 @@ function pokemonSelect4Confirm(event, pkmnIndex)
         if ( i == 1 ) then  
 
         elseif ( i == 2 ) then
-            transition.to(trainer.Pokemans[currentPokemon].pokemon.battleView, {time = 1250, x = trainer.Pokemans[currentPokemon].pokemon.battleView.x-750})
+            transition.to(trainer.Pokemans[trainer.currentPokemon].pokemon.battleView, {time = 1250, x = trainer.Pokemans[trainer.currentPokemon].pokemon.battleView.x-750})
             local function spawnNewPkmn()
-                trainer.Pokemans[currentPokemon]:HidePokemon()  
-                currentPokemon = 4
+                trainer.Pokemans[trainer.currentPokemon]:HidePokemon()  
+                trainer.currentPokemon = 4
                 updatePokemonInfoBox()
-                trainer.Pokemans[currentPokemon]:setBattleView()
-                trainer.Pokemans[currentPokemon]:setPos(190,530)
+                trainer.Pokemans[trainer.currentPokemon]:setBattleView()
+                trainer.Pokemans[trainer.currentPokemon]:setPos(190,530)
                 returnAfterSwap()
             end
             local playerSummon = summonPkmnAnimation(190,530)
             local function summonPlayer()
                 playerSummon.isVisible = true
                 playerSummon:play()
+                audio.play(summonSound, {loops = 0})
                 local function hideAnimation()
                     playerSummon.isVisible = false
                 end
@@ -274,19 +617,20 @@ function pokemonSelect5Confirm(event, pkmnIndex)
         if ( i == 1 ) then  
 
         elseif ( i == 2 ) then
-            transition.to(trainer.Pokemans[currentPokemon].pokemon.battleView, {time = 1250, x = trainer.Pokemans[currentPokemon].pokemon.battleView.x-750})
+            transition.to(trainer.Pokemans[trainer.currentPokemon].pokemon.battleView, {time = 1250, x = trainer.Pokemans[trainer.currentPokemon].pokemon.battleView.x-750})
             local function spawnNewPkmn()
-                trainer.Pokemans[currentPokemon]:HidePokemon()  
-                currentPokemon = 5
+                trainer.Pokemans[trainer.currentPokemon]:HidePokemon()  
+                trainer.currentPokemon = 5
                 updatePokemonInfoBox()
-                trainer.Pokemans[currentPokemon]:setBattleView()
-                trainer.Pokemans[currentPokemon]:setPos(190,530)
+                trainer.Pokemans[trainer.currentPokemon]:setBattleView()
+                trainer.Pokemans[trainer.currentPokemon]:setPos(190,530)
                 returnAfterSwap()
             end
             local playerSummon = summonPkmnAnimation(190,530)
             local function summonPlayer()
                 playerSummon.isVisible = true
                 playerSummon:play()
+                audio.play(summonSound, {loops = 0})
                 local function hideAnimation()
                     playerSummon.isVisible = false
                 end
@@ -304,19 +648,20 @@ function pokemonSelect6Confirm(event, pkmnIndex)
         if ( i == 1 ) then  
 
         elseif ( i == 2 ) then
-            transition.to(trainer.Pokemans[currentPokemon].pokemon.battleView, {time = 1250, x = trainer.Pokemans[currentPokemon].pokemon.battleView.x-750})
+            transition.to(trainer.Pokemans[trainer.currentPokemon].pokemon.battleView, {time = 1250, x = trainer.Pokemans[trainer.currentPokemon].pokemon.battleView.x-750})
             local function spawnNewPkmn()
-                trainer.Pokemans[currentPokemon]:HidePokemon()  
-                currentPokemon = 6
+                trainer.Pokemans[trainer.currentPokemon]:HidePokemon()  
+                trainer.currentPokemon = 6
                 updatePokemonInfoBox()
-                trainer.Pokemans[currentPokemon]:setBattleView()
-                trainer.Pokemans[currentPokemon]:setPos(190,530)
+                trainer.Pokemans[trainer.currentPokemon]:setBattleView()
+                trainer.Pokemans[trainer.currentPokemon]:setPos(190,530)
                 returnAfterSwap()
             end
             local playerSummon = summonPkmnAnimation(190,530)
             local function summonPlayer()
                 playerSummon.isVisible = true
                 playerSummon:play()
+                audio.play(summonSound, {loops = 0})
                 local function hideAnimation()
                     playerSummon.isVisible = false
                 end
@@ -332,40 +677,66 @@ end
 function item1(event)
         if ( "ended" == event.phase ) then
         audio.play(menuClick, {loops = 0})
-        print("item 1")
+        openPokemonMenuFromItemSelect()
+        item = "healthPotion"
     end
 end
 
 function item2(event)
         if ( "ended" == event.phase ) then
         audio.play(menuClick, {loops = 0})
-        print("item 2")
+        openPokemonMenuFromItemSelect()
+        item = "bigHealthPotion"
     end
 end
 
 function item3(event)
         if ( "ended" == event.phase ) then
         audio.play(menuClick, {loops = 0})
-        print("item 3")
+        openPokemonMenuFromItemSelect()
+        item = "fullPotion"
     end
+end
+
+function removeObject(objectName)
+ 
+    if(objectName ~= nil) then
+     objectName:removeSelf();
+     objectName = nil;
+    end
+ 
 end
 
 function exitButtonEvent(event)
     if ("ended" == event.phase) then
         audio.play(menuClick, {loops = 0})
+        removeObject(infoBoxText.pName)
+        removeObject(infoBoxText.eName)
+        removeObject(infoBoxText.pHpText)
+        removeObject(infoBoxText)
         removeObjectList(trainer.Pokemans, true);
         removeObjectList(e_trainer.E_Pokemans, true);
-        composer.gotoScene("menu")
+		e_trainer:audioStop()
+        composer.gotoScene("transitionScene")
     end
 end
 
-function drawBackground()
-    platformBG = display.newImage("images/fightScene/GrassBG.png")
-    platformBG.width = display.contentWidth
-    platformBG.height = display.contentHeight/2
-    platformBG.x = display.contentWidth - (display.contentWidth/2)
-    platformBG.y = display.contentHeight - (display.contentHeight/1.33) 
+local function selectTrainer()
+	
+	trainersAvailable = composer.getVariable("trainersAvailable")
+	trainerSelec = math.random(1, #trainersAvailable)
+	
+	e_trainer:create(trainerSelec)
+	
+	table.remove(trainersAvailable, trainerSelec)
+	composer.setVariable("trainersAvailable", trainersAvailable)
+end
 
+function drawBackground()
+	
+	selectTrainer()
+	trainer:create()
+	
     enemyInfoBox = display.newImage("images/fightScene/enemyInfoBox.png")
     enemyInfoBox.width = display.contentWidth/2
     enemyInfoBox.height = display.contentHeight /10
@@ -420,7 +791,7 @@ function drawBackground()
     end    
 
     local function drawEnemyPokemon()
-        e_trainer.E_Pokemans[eCurrentPokemon]:setSelectionView();
+        e_trainer.E_Pokemans[e_trainer.currentPokemon]:setSelectionView();
     end
     local enemySummon = summonPkmnAnimation(542,350)
     local function summonEnemy()
@@ -435,14 +806,15 @@ function drawBackground()
     timer.performWithDelay(3000, drawEnemyPokemon)
     
     local function drawPlayerPokemon()
-        trainer.Pokemans[currentPokemon]:setBattleView()
-        trainer.Pokemans[currentPokemon]:setPos(190,530)
+        trainer.Pokemans[trainer.currentPokemon]:setBattleView()
+        trainer.Pokemans[trainer.currentPokemon]:setPos(190,530)
         updatePokemonInfoBox()
     end
     local playerSummon = summonPkmnAnimation(190,530)
     local function summonPlayer()
         playerSummon.isVisible = true
         playerSummon:play()
+        audio.play(summonSound, {loops = 0})
         local function hideAnimation()
             playerSummon.isVisible = false
         end
@@ -451,7 +823,7 @@ function drawBackground()
     timer.performWithDelay(2500, summonPlayer)
     timer.performWithDelay(3000, drawPlayerPokemon)
 
-    sceneGroup:insert( platformBG )
+    sceneGroup:insert( e_trainer.arena )
     sceneGroup:insert( enemyInfoBox )
     sceneGroup:insert( playerInfoBox )
     sceneGroup:insert( infoBoxText )
@@ -468,7 +840,26 @@ function returnAfterAttack()
     mainMenuBG.isVisible = true
     for cnt = 0, 3 do
         mainMenuBtn[cnt].isVisible = true
-    end    
+    end
+
+    print(trainer.Pokemans[trainer.currentPokemon].pokemon.tag .. " has " .. trainer.Pokemans[trainer.currentPokemon].pokemon.status)
+    if (trainer.Pokemans[trainer.currentPokemon].pokemon.status == "fainted") then
+        print("FAINTED")
+		trainer.numfaintedPokemon = trainer.numfaintedPokemon + 1
+        local function swapToPokemonSelect(event)
+            local i = event.index 
+            if ( i == 1 ) then  
+                openPokemonMenu() 
+            end
+        end
+		
+		if(trainer.numfaintedPokemon == 6) then
+			
+			playerLoses()
+		else
+			native.showAlert("Pokemon has fainted",  trainer.Pokemans[trainer.currentPokemon].pokemon.tag .. " has fainted \n Select your next pokemon ", {"Go"}, openPokemonMenuFromAlertBox)
+		end
+    end      
 end
 
 function summonPkmnAnimation(x,y)
@@ -632,7 +1023,7 @@ function openFightMenu (event)
 
         fightMenuBtn[0] = widget.newButton({    
             id = "attack1Btn",
-            label = trainer.Pokemans[currentPokemon].pokemon.attack1,
+            label = trainer.Pokemans[trainer.currentPokemon].pokemon.attack1,
             fontSize = fSize,
             width = 333,
             height = 206,
@@ -645,7 +1036,7 @@ function openFightMenu (event)
 
         fightMenuBtn[1] = widget.newButton({    
             id = "attack2Btn",
-            label = trainer.Pokemans[currentPokemon].pokemon.attack2,
+            label = trainer.Pokemans[trainer.currentPokemon].pokemon.attack2,
             fontSize = fSize,
             width = 333,
             height = 206,
@@ -658,7 +1049,7 @@ function openFightMenu (event)
 
         fightMenuBtn[2] = widget.newButton({    
             id = "attack3Btn",
-            label = trainer.Pokemans[currentPokemon].pokemon.attack3,
+            label = trainer.Pokemans[trainer.currentPokemon].pokemon.attack3,
             fontSize = fSize,
             width = 333,
             height = 206,
@@ -671,7 +1062,7 @@ function openFightMenu (event)
 
         fightMenuBtn[3] = widget.newButton({    
             id = "attack4Btn",
-            label = trainer.Pokemans[currentPokemon].pokemon.attack4,
+            label = trainer.Pokemans[trainer.currentPokemon].pokemon.attack4,
             fontSize = fSize,
             width = 333,
             height = 206,
@@ -797,7 +1188,6 @@ function openPokemonMenu(event)
                 pokemonThumbNails[cnt].y = 685+y2Offset
                 y2Offset = y2Offset + 170
             end
-            --sceneGroup:insert(pokemonThumbNails[cnt])
         end
 
         -- Drawing pokemon names
@@ -814,7 +1204,6 @@ function openPokemonMenu(event)
                 pokemonNames[cnt].y = 685+y2Offset
                 y2Offset = y2Offset + 170
             end
-            --sceneGroup:insert(pokemonNames[cnt])
         end        
         
         -- Drawing pokemon hp bars
@@ -848,6 +1237,322 @@ function openPokemonMenu(event)
     end
 end
 
+function openPokemonMenuFromAlertBox()
+    audio.play(menuClick, {loops = 0})
+    pkmnMenuBG = display.newImage("images/fightScene/menu/pkmn/pkmnMenuBG.png")
+    pkmnMenuBG.width = display.contentWidth
+    pkmnMenuBG.height = display.contentHeight/2 
+    pkmnMenuBG.x = display.contentWidth - (display.contentWidth/2)
+    pkmnMenuBG.y = display.contentHeight - (display.contentHeight/4)    
+
+
+    pkmnMenuBtn[0] = widget.newButton({    
+        id = "select1Btn",
+        width = 355,
+        height = 150,
+        defaultFile = "images/fightScene/menu/pkmn/pkmnMenuBtn.png",
+        overFile  = "images/fightScene/menu/pkmn/pkmnMenuBtnOnClick.png",
+        onEvent = select1 
+    } )        
+    pkmnMenuBtn[0].x = 180
+    pkmnMenuBtn[0].y = 716  
+
+    pkmnMenuBtn[1] = widget.newButton({    
+        id = "select2Btn",
+        width = 355,
+        height = 150,
+        defaultFile = "images/fightScene/menu/pkmn/pkmnMenuBtn.png",
+        overFile  = "images/fightScene/menu/pkmn/pkmnMenuBtnOnClick.png",
+        onEvent = select2 
+    } )        
+    pkmnMenuBtn[1].x = 540
+    pkmnMenuBtn[1].y = 752 
+
+    pkmnMenuBtn[2] = widget.newButton({    
+        id = "select3Btn",
+        width = 355,
+        height = 150,
+        defaultFile = "images/fightScene/menu/pkmn/pkmnMenuBtn.png",
+        overFile  = "images/fightScene/menu/pkmn/pkmnMenuBtnOnClick.png",
+        onEvent = select3 
+    } )        
+    pkmnMenuBtn[2].x = 180
+    pkmnMenuBtn[2].y = 887     
+
+    pkmnMenuBtn[3] = widget.newButton({    
+        id = "select4Btn",
+        width = 355,
+        height = 150,
+        defaultFile = "images/fightScene/menu/pkmn/pkmnMenuBtn.png",
+        overFile  = "images/fightScene/menu/pkmn/pkmnMenuBtnOnClick.png",
+        onEvent = select4 
+    } )        
+    pkmnMenuBtn[3].x = 540
+    pkmnMenuBtn[3].y = 914 
+
+    pkmnMenuBtn[4] = widget.newButton({    
+        id = "select5Btn",
+        width = 355,
+        height = 150,
+        defaultFile = "images/fightScene/menu/pkmn/pkmnMenuBtn.png",
+        overFile  = "images/fightScene/menu/pkmn/pkmnMenuBtnOnClick.png",
+        onEvent = select5 
+    } )        
+    pkmnMenuBtn[4].x = 180
+    pkmnMenuBtn[4].y = 1047   
+
+    pkmnMenuBtn[5] = widget.newButton({    
+        id = "select6Btn",
+        width = 355,
+        height = 150,
+        defaultFile = "images/fightScene/menu/pkmn/pkmnMenuBtn.png",
+        overFile  = "images/fightScene/menu/pkmn/pkmnMenuBtnOnClick.png",
+        onEvent = select6 
+    } )        
+    pkmnMenuBtn[5].x = 540
+    pkmnMenuBtn[5].y = 1074        
+
+    -- Drawing pokemon thumbnails
+    local y1Offset = 0
+    local y2Offset = 0
+    for cnt = 1, #trainer.Pokemans do
+        pokemonThumbNails[cnt] = trainer.Pokemans[cnt]:returnSelectImage()
+        pokemonThumbNails[cnt].isVisible = true
+        if (cnt % 2 == 0) then
+            pokemonThumbNails[cnt].x = 470
+            pokemonThumbNails[cnt].y = 725+y1Offset
+            y1Offset = y1Offset+160
+        else                
+            pokemonThumbNails[cnt].x = 100
+            pokemonThumbNails[cnt].y = 685+y2Offset
+            y2Offset = y2Offset + 170
+        end
+        --sceneGroup:insert(pokemonThumbNails[cnt])
+    end
+
+    -- Drawing pokemon names
+    local y1Offset = 0
+    local y2Offset = 0
+    for cnt = 1, #trainer.Pokemans do
+        pokemonNames[cnt] = display.newText(trainer.Pokemans[cnt].pokemon.tag, 0, 0, native.systemFont, 30)
+        if (cnt % 2 == 0) then
+            pokemonNames[cnt].x = 600
+            pokemonNames[cnt].y = 725+y1Offset
+            y1Offset = y1Offset+160
+        else                
+            pokemonNames[cnt].x = 200
+            pokemonNames[cnt].y = 685+y2Offset
+            y2Offset = y2Offset + 170
+        end
+        --sceneGroup:insert(pokemonNames[cnt])
+    end        
+    
+    -- Drawing pokemon hp bars
+    for cnt = 1, #trainer.Pokemans do
+        pkmnHB[cnt], pkmnDB[cnt] = trainer.Pokemans[cnt]:returnHealthStatus()
+        pkmnHB[cnt].isVisible = true
+        pkmnDB[cnt].isVisible = true
+    end    
+
+    cancelBtn = widget.newButton({    
+            id = "cancelBtn",
+            width = 150,
+            height = 75,
+            defaultFile = "images/fightScene/menu/cancelBtn.png",
+            overFile  = "images/fightScene/menu/cancelBtnOnClick.png",
+            onEvent = returnToMainMenu 
+        } )
+    cancelBtn.x = 638
+    cancelBtn.y = 1226  
+
+    mainMenuBG.isVisible = false
+    for cnt = 0, 3 do
+        mainMenuBtn[cnt].isVisible = false
+    end
+
+    sceneGroup:insert( pkmnMenuBG )
+    for cnt = 0, #pkmnMenuBtn do
+        sceneGroup:insert(pkmnMenuBtn[cnt])
+    end 
+    sceneGroup:insert( cancelBtn )
+end
+
+function useItem(event)
+    if ( "ended" == event.phase ) then
+        audio.play(potionUse)
+        local i = event.target.id
+        local itemValue = 0
+
+        if (i == "selectBtn1") then
+            i = 1
+        elseif (i == "selectBtn2") then
+            i = 2
+        elseif (i == "selectBtn3") then
+            i = 3
+        elseif (i == "selectBtn4") then
+            i = 4
+        elseif (i == "selectBtn5") then
+            i = 5
+        elseif (i == "selectBtn6") then
+            i = 6
+        end
+
+        if (item == "healthPotion") then
+            itemValue = 50    
+        elseif(item == "bigHealthPotion") then
+            itemValue = 100
+        elseif(item == "fullPotion") then
+            itemValue = 99999
+        end
+        trainer.Pokemans[i]:useItem(itemValue)
+        itemsMenuBG.isVisible = false
+        for cnt = 0, #itemList do
+            itemList[cnt].isVisible = false
+        end
+        returnAfterSwap()
+    end
+end
+
+function openPokemonMenuFromItemSelect()
+    audio.play(menuClick, {loops = 0})
+    pkmnMenuBG = display.newImage("images/fightScene/menu/pkmn/pkmnMenuBG.png")
+    pkmnMenuBG.width = display.contentWidth
+    pkmnMenuBG.height = display.contentHeight/2 
+    pkmnMenuBG.x = display.contentWidth - (display.contentWidth/2)
+    pkmnMenuBG.y = display.contentHeight - (display.contentHeight/4)    
+
+
+    pkmnMenuBtn[0] = widget.newButton({    
+        id = "selectBtn1",
+        width = 355,
+        height = 150,
+        defaultFile = "images/fightScene/menu/pkmn/pkmnMenuBtn.png",
+        overFile  = "images/fightScene/menu/pkmn/pkmnMenuBtnOnClick.png",
+        onEvent = useItem 
+    } )        
+    pkmnMenuBtn[0].x = 180
+    pkmnMenuBtn[0].y = 716  
+
+    pkmnMenuBtn[1] = widget.newButton({    
+        id = "selectBtn2",
+        width = 355,
+        height = 150,
+        defaultFile = "images/fightScene/menu/pkmn/pkmnMenuBtn.png",
+        overFile  = "images/fightScene/menu/pkmn/pkmnMenuBtnOnClick.png",
+        onEvent = useItem 
+    } )        
+    pkmnMenuBtn[1].x = 540
+    pkmnMenuBtn[1].y = 752 
+
+    pkmnMenuBtn[2] = widget.newButton({    
+        id = "selectBtn3",
+        width = 355,
+        height = 150,
+        defaultFile = "images/fightScene/menu/pkmn/pkmnMenuBtn.png",
+        overFile  = "images/fightScene/menu/pkmn/pkmnMenuBtnOnClick.png",
+        onEvent = useItem 
+    } )        
+    pkmnMenuBtn[2].x = 180
+    pkmnMenuBtn[2].y = 887     
+
+    pkmnMenuBtn[3] = widget.newButton({    
+        id = "selectBtn4",
+        width = 355,
+        height = 150,
+        defaultFile = "images/fightScene/menu/pkmn/pkmnMenuBtn.png",
+        overFile  = "images/fightScene/menu/pkmn/pkmnMenuBtnOnClick.png",
+        onEvent = useItem 
+    } )        
+    pkmnMenuBtn[3].x = 540
+    pkmnMenuBtn[3].y = 914 
+
+    pkmnMenuBtn[4] = widget.newButton({    
+        id = "selectBtn5",
+        width = 355,
+        height = 150,
+        defaultFile = "images/fightScene/menu/pkmn/pkmnMenuBtn.png",
+        overFile  = "images/fightScene/menu/pkmn/pkmnMenuBtnOnClick.png",
+        onEvent = useItem 
+    } )        
+    pkmnMenuBtn[4].x = 180
+    pkmnMenuBtn[4].y = 1047   
+
+    pkmnMenuBtn[5] = widget.newButton({    
+        id = "selectBtn6",
+        width = 355,
+        height = 150,
+        defaultFile = "images/fightScene/menu/pkmn/pkmnMenuBtn.png",
+        overFile  = "images/fightScene/menu/pkmn/pkmnMenuBtnOnClick.png",
+        onEvent = useItem 
+    } )        
+    pkmnMenuBtn[5].x = 540
+    pkmnMenuBtn[5].y = 1074        
+
+    -- Drawing pokemon thumbnails
+    local y1Offset = 0
+    local y2Offset = 0
+    for cnt = 1, #trainer.Pokemans do
+        pokemonThumbNails[cnt] = trainer.Pokemans[cnt]:returnSelectImage()
+        pokemonThumbNails[cnt].isVisible = true
+        if (cnt % 2 == 0) then
+            pokemonThumbNails[cnt].x = 470
+            pokemonThumbNails[cnt].y = 725+y1Offset
+            y1Offset = y1Offset+160
+        else                
+            pokemonThumbNails[cnt].x = 100
+            pokemonThumbNails[cnt].y = 685+y2Offset
+            y2Offset = y2Offset + 170
+        end
+        --sceneGroup:insert(pokemonThumbNails[cnt])
+    end
+
+    -- Drawing pokemon names
+    local y1Offset = 0
+    local y2Offset = 0
+    for cnt = 1, #trainer.Pokemans do
+        pokemonNames[cnt] = display.newText(trainer.Pokemans[cnt].pokemon.tag, 0, 0, native.systemFont, 30)
+        if (cnt % 2 == 0) then
+            pokemonNames[cnt].x = 600
+            pokemonNames[cnt].y = 725+y1Offset
+            y1Offset = y1Offset+160
+        else                
+            pokemonNames[cnt].x = 200
+            pokemonNames[cnt].y = 685+y2Offset
+            y2Offset = y2Offset + 170
+        end
+        --sceneGroup:insert(pokemonNames[cnt])
+    end        
+    
+    -- Drawing pokemon hp bars
+    for cnt = 1, #trainer.Pokemans do
+        pkmnHB[cnt], pkmnDB[cnt] = trainer.Pokemans[cnt]:returnHealthStatus()
+        pkmnHB[cnt].isVisible = true
+        pkmnDB[cnt].isVisible = true
+    end    
+
+    cancelBtn = widget.newButton({    
+            id = "cancelBtn",
+            width = 150,
+            height = 75,
+            defaultFile = "images/fightScene/menu/cancelBtn.png",
+            overFile  = "images/fightScene/menu/cancelBtnOnClick.png",
+            onEvent = returnToMainMenu 
+        } )
+    cancelBtn.x = 638
+    cancelBtn.y = 1226  
+
+    mainMenuBG.isVisible = false
+    for cnt = 0, 3 do
+        mainMenuBtn[cnt].isVisible = false
+    end
+
+    sceneGroup:insert( pkmnMenuBG )
+    for cnt = 0, #pkmnMenuBtn do
+        sceneGroup:insert(pkmnMenuBtn[cnt])
+    end 
+    sceneGroup:insert( cancelBtn )
+end
+
 function openItemsMenu (event)
         if ( "ended" == event.phase ) then
         audio.play(menuClick, {loops = 0})
@@ -863,7 +1568,7 @@ function openItemsMenu (event)
             id = "item1",
             width = 350,
             height = 40,
-            label = "Item 1",    
+            label = "Health Potion (+50)",    
             labelColor = { default={ 1, 1, 0 }, over={ 0, 1, 1, 0.5 } },
             fontSize = 30,
             defaultFile = "images/menuScene/menuBtn.png",
@@ -877,7 +1582,7 @@ function openItemsMenu (event)
             id = "item2",
             width = 350,
             height = 40,
-            label = "Item 2",    
+            label = "Big Health Potion (+100)",    
             labelColor = { default={ 1, 1, 0 }, over={ 0, 1, 1, 0.5 } },
             fontSize = 30,
             defaultFile = "images/menuScene/menuBtn.png",
@@ -891,7 +1596,7 @@ function openItemsMenu (event)
             id = "item3",
             width = 350,
             height = 40,
-            label = "Item 3",    
+            label = "Full Health Potion (+max)",    
             labelColor = { default={ 1, 1, 0 }, over={ 0, 1, 1, 0.5 } },
             fontSize = 30,
             defaultFile = "images/menuScene/menuBtn.png",
@@ -977,8 +1682,6 @@ end
 function scene:create( event )
     sceneGroup = self.view
 	
-	e_trainer:create(2)
-	trainer:create()
     openingAnimations()
     timer.performWithDelay(2500, openMainMenu)
     timer.performWithDelay(1, drawBackground)
