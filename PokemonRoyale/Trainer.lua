@@ -22,12 +22,28 @@ function trainer:create()
 	self.player.x = 190
 	self.player.y = 530
 	self.player:scale(2,2)
-	
-	local function throwAnimation()
+	self.player.isVisible = false;
+
+end
+
+function trainer:throwAnimation()
+	local function throw()
+		self.player.isVisible = true;
 		trainer.player:play()
-        transition.to(trainer.player, {time = 1250, x=542-750})
-    end
-    timer.performWithDelay(1500, throwAnimation)
+	    transition.to(trainer.player, {time = 1250, x=542-750})
+	end
+
+	timer.performWithDelay(500, throw)	
+end
+
+function trainer:moveTrainerIn()
+	local function appear()
+		self.player.isVisible = true;
+		self.player:setFrame(1)
+	    transition.to(trainer.player, {time = 1250, x=750-542})
+	end
+
+    timer.performWithDelay(500, appear)	
 end
 
 function trainer:createPokemonTable(pokemon, numChoice)

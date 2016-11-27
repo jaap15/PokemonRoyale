@@ -379,21 +379,13 @@ function exitButtonEvent(event)
     end
 end
 
-local function selectTrainer()
-	
-	trainerSelec = math.random(1, #trainersAvailable)
-	
-	e_trainer:create(trainerSelec)
-	
-	table.remove(trainersAvailable, trainerSelec)
-	composer.setVariable("trainersAvailable", trainersAvailable)
-end
-
 function drawBackground()
 	
-	selectTrainer()
+    e_trainer:create(3)
 	trainer:create()
-	
+    trainer:throwAnimation()
+    e_trainer:beginBattle()
+
     enemyInfoBox = display.newImage("images/fightScene/enemyInfoBox.png")
     enemyInfoBox.width = display.contentWidth/2
     enemyInfoBox.height = display.contentHeight /10

@@ -39,16 +39,37 @@ function enemy_trainer:create(trainerChoice)
 	
 	self:populatePokemon(trainerInfo)
 	
-	self.currentPokemon = math.random(1, #self.E_Pokemans)
-	
+	-- self.currentPokemon = math.random(1, #self.E_Pokemans)
+	self.currentPokemon = 1
+
 	self.music = audio.loadStream(musLocation)
-	audio.setVolume(0.5)
-	audio.play(self.music)
 	
+	self.arena.isVisible = false;
+	self.trainer.isVisible = false;
+
+end
+
+function enemy_trainer:moveTrainerIn()
+	local function translateTrainer1 ()
+        transition.to(self.trainer, {time = 750, x=self.trainer.x-300})
+    end
+    timer.performWithDelay(500, translateTrainer1)
+end
+
+function enemy_trainer:moveTrainerOut()
 	local function translateTrainer1 ()
         transition.to(self.trainer, {time = 750, x=self.trainer.x+300})
     end
-    timer.performWithDelay(1500, translateTrainer1)
+    timer.performWithDelay(500, translateTrainer1)
+end
+
+function enemy_trainer:beginBattle()
+
+	self.arena.isVisible = true;
+	self.trainer.isVisible = true;
+	self:moveTrainerOut()
+	audio.setVolume(0.5)
+	audio.play(self.music)
 end
 
 function enemy_trainer:populatePokemon(trainerInfo)
