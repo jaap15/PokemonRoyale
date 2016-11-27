@@ -43,7 +43,7 @@ function enemy_trainer:create(trainerChoice)
 	
 	self.music = audio.loadStream(musLocation)
 	audio.setVolume(0.5)
-	audio.play(self.music)
+	audio.play(self.music, {loops = -1})
 	
 	local function translateTrainer1 ()
         transition.to(self.trainer, {time = 750, x=self.trainer.x+300})
