@@ -1410,6 +1410,10 @@ function useItem(event)
             itemList[cnt].isVisible = false
         end
         returnAfterSwap()
+		
+		e_trainer:BattleTurn(trainer)
+		updatePokemonInfoBox()
+		returnAfterAttack()
     end
 end
 
