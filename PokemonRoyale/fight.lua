@@ -85,7 +85,7 @@ end
 function select1(event)
     if ( "ended" == event.phase ) then
         audio.play(menuClick, {loops = 0})
-        if (currentPokemon == 1) then
+        if (currentPokemon == 1 or trainer.Pokemans[1].pokemon.status == "fainted") then
 
         else 
             native.showAlert("Are you sure?", "Switch out " .. trainer.Pokemans[currentPokemon].pokemon.tag .. " for " .. trainer.Pokemans[1].pokemon.tag .. "?", {"No", "Yes"}, pokemonSelect1Confirm)
@@ -96,7 +96,7 @@ end
 function select2(event)
     if ( "ended" == event.phase ) then
         audio.play(menuClick, {loops = 0})
-        if (currentPokemon == 2) then
+        if (currentPokemon == 2 or trainer.Pokemans[2].pokemon.status == "fainted") then
 
         else         
             native.showAlert("Are you sure?", "Switch out " .. trainer.Pokemans[currentPokemon].pokemon.tag .. " for " .. trainer.Pokemans[2].pokemon.tag .. "?", {"No", "Yes"}, pokemonSelect2Confirm)
@@ -107,7 +107,7 @@ end
 function select3(event)
     if ( "ended" == event.phase ) then
         audio.play(menuClick, {loops = 0})
-        if (currentPokemon == 3) then
+        if (currentPokemon == 3 or trainer.Pokemans[3].pokemon.status == "fainted") then
 
         else 
             native.showAlert("Are you sure?", "Switch out " .. trainer.Pokemans[currentPokemon].pokemon.tag .. " for " .. trainer.Pokemans[3].pokemon.tag .. "?", {"No", "Yes"}, pokemonSelect3Confirm)
@@ -118,7 +118,7 @@ end
 function select4(event)
     if ( "ended" == event.phase ) then
         audio.play(menuClick, {loops = 0})
-        if (currentPokemon == 4) then
+        if (currentPokemon == 4 or trainer.Pokemans[4].pokemon.status == "fainted") then
 
         else 
             native.showAlert("Are you sure?", "Switch out " .. trainer.Pokemans[currentPokemon].pokemon.tag .. " for " .. trainer.Pokemans[4].pokemon.tag .. "?", {"No", "Yes"}, pokemonSelect4Confirm)
@@ -129,7 +129,7 @@ end
 function select5(event)
     if ( "ended" == event.phase ) then
         audio.play(menuClick, {loops = 0})
-        if (currentPokemon == 5) then
+        if (currentPokemon == 5 or trainer.Pokemans[5].pokemon.status == "fainted") then
 
         else 
             native.showAlert("Are you sure?", "Switch out " .. trainer.Pokemans[currentPokemon].pokemon.tag .. " for " .. trainer.Pokemans[5].pokemon.tag .. "?", {"No", "Yes"}, pokemonSelect5Confirm)  
@@ -140,7 +140,7 @@ end
 function select6(event)
     if ( "ended" == event.phase ) then
         audio.play(menuClick, {loops = 0})
-        if (currentPokemon == 6) then
+        if (currentPokemon == 6 or trainer.Pokemans[6].pokemon.status == "fainted") then
 
         else 
             native.showAlert("Are you sure?", "Switch out " .. trainer.Pokemans[currentPokemon].pokemon.tag .. " for " .. trainer.Pokemans[6].pokemon.tag .. "?", {"No", "Yes"}, pokemonSelect6Confirm) 
@@ -497,7 +497,19 @@ function returnAfterAttack()
     mainMenuBG.isVisible = true
     for cnt = 0, 3 do
         mainMenuBtn[cnt].isVisible = true
-    end    
+    end
+
+    print(trainer.Pokemans[currentPokemon].pokemon.tag .. " has " .. trainer.Pokemans[currentPokemon].pokemon.status)
+    if (trainer.Pokemans[currentPokemon].pokemon.status == "fainted") then
+        print("FAINTED")
+        local function swapToPokemonSelect(event)
+            local i = event.index 
+            if ( i == 1 ) then  
+                openPokemonMenu() 
+            end
+        end
+        native.showAlert("Pokemon has fainted",  trainer.Pokemans[currentPokemon].pokemon.tag .. " has fainted \n Select your next pokemon ", {"Go"}, openPokemonMenuFromAlertBox)
+    end      
 end
 
 function summonPkmnAnimation(x,y)
@@ -826,7 +838,6 @@ function openPokemonMenu(event)
                 pokemonThumbNails[cnt].y = 685+y2Offset
                 y2Offset = y2Offset + 170
             end
-            --sceneGroup:insert(pokemonThumbNails[cnt])
         end
 
         -- Drawing pokemon names
@@ -843,7 +854,6 @@ function openPokemonMenu(event)
                 pokemonNames[cnt].y = 685+y2Offset
                 y2Offset = y2Offset + 170
             end
-            --sceneGroup:insert(pokemonNames[cnt])
         end        
         
         -- Drawing pokemon hp bars
@@ -875,6 +885,146 @@ function openPokemonMenu(event)
         end 
         sceneGroup:insert( cancelBtn )
     end
+end
+
+function openPokemonMenuFromAlertBox()
+    audio.play(menuClick, {loops = 0})
+    pkmnMenuBG = display.newImage("images/fightScene/menu/pkmn/pkmnMenuBG.png")
+    pkmnMenuBG.width = display.contentWidth
+    pkmnMenuBG.height = display.contentHeight/2 
+    pkmnMenuBG.x = display.contentWidth - (display.contentWidth/2)
+    pkmnMenuBG.y = display.contentHeight - (display.contentHeight/4)    
+
+
+    pkmnMenuBtn[0] = widget.newButton({    
+        id = "select1Btn",
+        width = 355,
+        height = 150,
+        defaultFile = "images/fightScene/menu/pkmn/pkmnMenuBtn.png",
+        overFile  = "images/fightScene/menu/pkmn/pkmnMenuBtnOnClick.png",
+        onEvent = select1 
+    } )        
+    pkmnMenuBtn[0].x = 180
+    pkmnMenuBtn[0].y = 716  
+
+    pkmnMenuBtn[1] = widget.newButton({    
+        id = "select2Btn",
+        width = 355,
+        height = 150,
+        defaultFile = "images/fightScene/menu/pkmn/pkmnMenuBtn.png",
+        overFile  = "images/fightScene/menu/pkmn/pkmnMenuBtnOnClick.png",
+        onEvent = select2 
+    } )        
+    pkmnMenuBtn[1].x = 540
+    pkmnMenuBtn[1].y = 752 
+
+    pkmnMenuBtn[2] = widget.newButton({    
+        id = "select3Btn",
+        width = 355,
+        height = 150,
+        defaultFile = "images/fightScene/menu/pkmn/pkmnMenuBtn.png",
+        overFile  = "images/fightScene/menu/pkmn/pkmnMenuBtnOnClick.png",
+        onEvent = select3 
+    } )        
+    pkmnMenuBtn[2].x = 180
+    pkmnMenuBtn[2].y = 887     
+
+    pkmnMenuBtn[3] = widget.newButton({    
+        id = "select4Btn",
+        width = 355,
+        height = 150,
+        defaultFile = "images/fightScene/menu/pkmn/pkmnMenuBtn.png",
+        overFile  = "images/fightScene/menu/pkmn/pkmnMenuBtnOnClick.png",
+        onEvent = select4 
+    } )        
+    pkmnMenuBtn[3].x = 540
+    pkmnMenuBtn[3].y = 914 
+
+    pkmnMenuBtn[4] = widget.newButton({    
+        id = "select5Btn",
+        width = 355,
+        height = 150,
+        defaultFile = "images/fightScene/menu/pkmn/pkmnMenuBtn.png",
+        overFile  = "images/fightScene/menu/pkmn/pkmnMenuBtnOnClick.png",
+        onEvent = select5 
+    } )        
+    pkmnMenuBtn[4].x = 180
+    pkmnMenuBtn[4].y = 1047   
+
+    pkmnMenuBtn[5] = widget.newButton({    
+        id = "select6Btn",
+        width = 355,
+        height = 150,
+        defaultFile = "images/fightScene/menu/pkmn/pkmnMenuBtn.png",
+        overFile  = "images/fightScene/menu/pkmn/pkmnMenuBtnOnClick.png",
+        onEvent = select6 
+    } )        
+    pkmnMenuBtn[5].x = 540
+    pkmnMenuBtn[5].y = 1074        
+
+    -- Drawing pokemon thumbnails
+    local y1Offset = 0
+    local y2Offset = 0
+    for cnt = 1, #trainer.Pokemans do
+        pokemonThumbNails[cnt] = trainer.Pokemans[cnt]:returnSelectImage()
+        pokemonThumbNails[cnt].isVisible = true
+        if (cnt % 2 == 0) then
+            pokemonThumbNails[cnt].x = 470
+            pokemonThumbNails[cnt].y = 725+y1Offset
+            y1Offset = y1Offset+160
+        else                
+            pokemonThumbNails[cnt].x = 100
+            pokemonThumbNails[cnt].y = 685+y2Offset
+            y2Offset = y2Offset + 170
+        end
+        --sceneGroup:insert(pokemonThumbNails[cnt])
+    end
+
+    -- Drawing pokemon names
+    local y1Offset = 0
+    local y2Offset = 0
+    for cnt = 1, #trainer.Pokemans do
+        pokemonNames[cnt] = display.newText(trainer.Pokemans[cnt].pokemon.tag, 0, 0, native.systemFont, 30)
+        if (cnt % 2 == 0) then
+            pokemonNames[cnt].x = 600
+            pokemonNames[cnt].y = 725+y1Offset
+            y1Offset = y1Offset+160
+        else                
+            pokemonNames[cnt].x = 200
+            pokemonNames[cnt].y = 685+y2Offset
+            y2Offset = y2Offset + 170
+        end
+        --sceneGroup:insert(pokemonNames[cnt])
+    end        
+    
+    -- Drawing pokemon hp bars
+    for cnt = 1, #trainer.Pokemans do
+        pkmnHB[cnt], pkmnDB[cnt] = trainer.Pokemans[cnt]:returnHealthStatus()
+        pkmnHB[cnt].isVisible = true
+        pkmnDB[cnt].isVisible = true
+    end    
+
+    cancelBtn = widget.newButton({    
+            id = "cancelBtn",
+            width = 150,
+            height = 75,
+            defaultFile = "images/fightScene/menu/cancelBtn.png",
+            overFile  = "images/fightScene/menu/cancelBtnOnClick.png",
+            onEvent = returnToMainMenu 
+        } )
+    cancelBtn.x = 638
+    cancelBtn.y = 1226  
+
+    mainMenuBG.isVisible = false
+    for cnt = 0, 3 do
+        mainMenuBtn[cnt].isVisible = false
+    end
+
+    sceneGroup:insert( pkmnMenuBG )
+    for cnt = 0, #pkmnMenuBtn do
+        sceneGroup:insert(pkmnMenuBtn[cnt])
+    end 
+    sceneGroup:insert( cancelBtn )
 end
 
 function openItemsMenu (event)
