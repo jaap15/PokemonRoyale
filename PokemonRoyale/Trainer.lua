@@ -1,5 +1,7 @@
 trainer = {tag = "trainer", Pokemans = {}, Inventory = {}}
 
+local menuClick = audio.loadStream("sounds/menuButtonClick.mp3")
+
 function trainer:new(o)
 	
 	o = o or {}
@@ -22,27 +24,18 @@ function trainer:create()
 	self.player.x = 190
 	self.player.y = 530
 	self.player:scale(2,2)
+	self.currentPokemon = 1
+	self.numfaintedPokemon = 0
 	
 	local function throwAnimation()
 		trainer.player:play()
         transition.to(trainer.player, {time = 1250, x=542-750})
     end
     timer.performWithDelay(1500, throwAnimation)
-end
-
-function trainer:createPokemonTable(pokemon, numChoice)
-	
-	self.Pokemans[numChoice] = pokemon
-	
-	print(self.Pokemans[numChoice])
-end
-
-function trainer:switchPokemon(numChoice)
-	
 	
 end
 
-function trainer:addItemtoInventory(item, quantity)
+function trainer:addItemtoInventory(item)
 
 	
 end
