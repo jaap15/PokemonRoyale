@@ -42,6 +42,7 @@ function enemy_trainer:create(trainerChoice)
 	self.currentPokemon = math.random(1, #self.E_Pokemans)
 	
 	self.music = audio.loadStream(musLocation)
+	audio.setVolume(0.5)
 	audio.play(self.music)
 	
 	local function translateTrainer1 ()
