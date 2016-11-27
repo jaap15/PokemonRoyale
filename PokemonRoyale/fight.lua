@@ -61,172 +61,361 @@ function attack1(event)
 	
 	if ( "ended" == event.phase ) then
         audio.play(menuClick, {loops = 0})
-        e_trainer.E_Pokemans[e_trainer.currentPokemon]:takeDamage(trainer.Pokemans[trainer.currentPokemon].pokemon.attack1Damage, trainer.Pokemans[trainer.currentPokemon].pokemon.attack1Type)
-        updatePokemonInfoBox()
 		
-		if(e_trainer.E_Pokemans[e_trainer.currentPokemon].pokemon.status == "fainted") then
+		if(trainer.Pokemans[trainer.currentPokemon].pokemon.speed >= e_trainer.E_Pokemans[e_trainer.currentPokemon].pokemon.speed) then
+			e_trainer.E_Pokemans[e_trainer.currentPokemon]:takeDamage(trainer.Pokemans[trainer.currentPokemon].pokemon.attack1Damage, trainer.Pokemans[trainer.currentPokemon].pokemon.attack1Type)
+			updatePokemonInfoBox()
 			
-			if(e_trainer.numPokemans == 0) then
+			if(e_trainer.E_Pokemans[e_trainer.currentPokemon].pokemon.status == "fainted") then
 				
-				playerWins()
-			
-			else
-				transition.to(e_trainer.E_Pokemans[e_trainer.currentPokemon].pokemon.selectView, {time = 1250, x = e_trainer.E_Pokemans[e_trainer.currentPokemon].pokemon.selectView.x+750})
-				local function spawnNewPkmn()
-					e_trainer.E_Pokemans[e_trainer.currentPokemon]:HidePokemon()
-					updatePokemonInfoBox()
-					e_trainer:pickNewPokemon()
-					e_trainer.E_Pokemans[e_trainer.currentPokemon]:setSelectionView()
-					e_trainer.E_Pokemans[e_trainer.currentPokemon]:setPos(542,350)
-				end
-				local playerSummon = summonPkmnAnimation(542,350)
-				local function summonPlayer()
-					playerSummon.isVisible = true
-					playerSummon:play()
-					audio.play(summonSound, {loops = 0})
-					local function hideAnimation()
-						playerSummon.isVisible = false
+				if(e_trainer.numPokemans == 0) then
+					
+					playerWins()
+				
+				else
+					transition.to(e_trainer.E_Pokemans[e_trainer.currentPokemon].pokemon.selectView, {time = 1250, x = e_trainer.E_Pokemans[e_trainer.currentPokemon].pokemon.selectView.x+750})
+					local function spawnNewPkmn()
+						e_trainer.E_Pokemans[e_trainer.currentPokemon]:HidePokemon()
+						updatePokemonInfoBox()
+						e_trainer:pickNewPokemon()
+						e_trainer.E_Pokemans[e_trainer.currentPokemon]:setSelectionView()
+						e_trainer.E_Pokemans[e_trainer.currentPokemon]:setPos(542,350)
 					end
-					timer.performWithDelay(500, hideAnimation)        
+					local playerSummon = summonPkmnAnimation(542,350)
+					local function summonPlayer()
+						playerSummon.isVisible = true
+						playerSummon:play()
+						audio.play(summonSound, {loops = 0})
+						local function hideAnimation()
+							playerSummon.isVisible = false
+						end
+						timer.performWithDelay(500, hideAnimation)        
+					end
+					timer.performWithDelay(500, summonPlayer)
+					timer.performWithDelay(1000, spawnNewPkmn)
 				end
-				timer.performWithDelay(500, summonPlayer)
-				timer.performWithDelay(1000, spawnNewPkmn)
+			else
+				
+				e_trainer:BattleTurn(trainer)
+				updatePokemonInfoBox()
 			end
-		else
+			
+			returnAfterAttack()
+			
+		elseif(trainer.Pokemans[trainer.currentPokemon].pokemon.speed < e_trainer.E_Pokemans[e_trainer.currentPokemon].pokemon.speed) then
 			
 			e_trainer:BattleTurn(trainer)
+			updatePokemonInfoBox()
+  
+			if(trainer.Pokemans[trainer.currentPokemon].pokemon.status ~= "fainted") then
+				e_trainer.E_Pokemans[e_trainer.currentPokemon]:takeDamage(trainer.Pokemans[trainer.currentPokemon].pokemon.attack1Damage, trainer.Pokemans[trainer.currentPokemon].pokemon.attack1Type)
+				updatePokemonInfoBox()
+				
+				if(e_trainer.E_Pokemans[e_trainer.currentPokemon].pokemon.status == "fainted") then
+				
+					if(e_trainer.numPokemans == 0) then
+						
+						playerWins()
+					
+					else
+						transition.to(e_trainer.E_Pokemans[e_trainer.currentPokemon].pokemon.selectView, {time = 1250, x = e_trainer.E_Pokemans[e_trainer.currentPokemon].pokemon.selectView.x+750})
+						local function spawnNewPkmn()
+							e_trainer.E_Pokemans[e_trainer.currentPokemon]:HidePokemon()
+							updatePokemonInfoBox()
+							e_trainer:pickNewPokemon()
+							e_trainer.E_Pokemans[e_trainer.currentPokemon]:setSelectionView()
+							e_trainer.E_Pokemans[e_trainer.currentPokemon]:setPos(542,350)
+						end
+						local playerSummon = summonPkmnAnimation(542,350)
+						local function summonPlayer()
+							playerSummon.isVisible = true
+							playerSummon:play()
+							audio.play(summonSound, {loops = 0})
+							local function hideAnimation()
+								playerSummon.isVisible = false
+							end
+							timer.performWithDelay(500, hideAnimation)        
+						end
+						timer.performWithDelay(500, summonPlayer)
+						timer.performWithDelay(1000, spawnNewPkmn)
+					end
+				end
+				
+				returnAfterAttack()
+			else
+				returnAfterAttack()
+			end
 		end
-		
-        returnAfterAttack()
-    end
+	end
 end
 
 function attack2(event)
     if ( "ended" == event.phase ) then
         audio.play(menuClick, {loops = 0})
-        e_trainer.E_Pokemans[e_trainer.currentPokemon]:takeDamage(trainer.Pokemans[trainer.currentPokemon].pokemon.attack2Damage, trainer.Pokemans[trainer.currentPokemon].pokemon.attack2Type)
-		updatePokemonInfoBox()
-		
-		if(e_trainer.E_Pokemans[e_trainer.currentPokemon].pokemon.status == "fainted") then
+       if(trainer.Pokemans[trainer.currentPokemon].pokemon.speed >= e_trainer.E_Pokemans[e_trainer.currentPokemon].pokemon.speed) then
+			e_trainer.E_Pokemans[e_trainer.currentPokemon]:takeDamage(trainer.Pokemans[trainer.currentPokemon].pokemon.attack1Damage, trainer.Pokemans[trainer.currentPokemon].pokemon.attack1Type)
+			updatePokemonInfoBox()
 			
-			if(e_trainer.numPokemans == 0) then
+			if(e_trainer.E_Pokemans[e_trainer.currentPokemon].pokemon.status == "fainted") then
 				
-				playerWins()
-			
-			else
-				transition.to(e_trainer.E_Pokemans[e_trainer.currentPokemon].pokemon.selectView, {time = 1250, x = e_trainer.E_Pokemans[e_trainer.currentPokemon].pokemon.selectView.x+750})
-				local function spawnNewPkmn()
-					e_trainer.E_Pokemans[e_trainer.currentPokemon]:HidePokemon()
-					updatePokemonInfoBox()
-					e_trainer:pickNewPokemon()
-					e_trainer.E_Pokemans[e_trainer.currentPokemon]:setSelectionView()
-					e_trainer.E_Pokemans[e_trainer.currentPokemon]:setPos(542,350)
-				end
-				local playerSummon = summonPkmnAnimation(542,350)
-				local function summonPlayer()
-					playerSummon.isVisible = true
-					playerSummon:play()
-					audio.play(summonSound, {loops = 0})
-					local function hideAnimation()
-						playerSummon.isVisible = false
+				if(e_trainer.numPokemans == 0) then
+					
+					playerWins()
+				
+				else
+					transition.to(e_trainer.E_Pokemans[e_trainer.currentPokemon].pokemon.selectView, {time = 1250, x = e_trainer.E_Pokemans[e_trainer.currentPokemon].pokemon.selectView.x+750})
+					local function spawnNewPkmn()
+						e_trainer.E_Pokemans[e_trainer.currentPokemon]:HidePokemon()
+						updatePokemonInfoBox()
+						e_trainer:pickNewPokemon()
+						e_trainer.E_Pokemans[e_trainer.currentPokemon]:setSelectionView()
+						e_trainer.E_Pokemans[e_trainer.currentPokemon]:setPos(542,350)
 					end
-					timer.performWithDelay(500, hideAnimation)        
+					local playerSummon = summonPkmnAnimation(542,350)
+					local function summonPlayer()
+						playerSummon.isVisible = true
+						playerSummon:play()
+						audio.play(summonSound, {loops = 0})
+						local function hideAnimation()
+							playerSummon.isVisible = false
+						end
+						timer.performWithDelay(500, hideAnimation)        
+					end
+					timer.performWithDelay(500, summonPlayer)
+					timer.performWithDelay(1000, spawnNewPkmn)
 				end
-				timer.performWithDelay(500, summonPlayer)
-				timer.performWithDelay(1000, spawnNewPkmn)
+			else
+				
+				e_trainer:BattleTurn(trainer)
+				updatePokemonInfoBox()
 			end
-		else
+			
+			returnAfterAttack()
+			
+		elseif(trainer.Pokemans[trainer.currentPokemon].pokemon.speed < e_trainer.E_Pokemans[e_trainer.currentPokemon].pokemon.speed) then
 			
 			e_trainer:BattleTurn(trainer)
+			updatePokemonInfoBox()
+  
+			if(trainer.Pokemans[trainer.currentPokemon].pokemon.status ~= "fainted") then
+				e_trainer.E_Pokemans[e_trainer.currentPokemon]:takeDamage(trainer.Pokemans[trainer.currentPokemon].pokemon.attack1Damage, trainer.Pokemans[trainer.currentPokemon].pokemon.attack1Type)
+				updatePokemonInfoBox()
+				
+				if(e_trainer.E_Pokemans[e_trainer.currentPokemon].pokemon.status == "fainted") then
+				
+					if(e_trainer.numPokemans == 0) then
+						
+						playerWins()
+					
+					else
+						transition.to(e_trainer.E_Pokemans[e_trainer.currentPokemon].pokemon.selectView, {time = 1250, x = e_trainer.E_Pokemans[e_trainer.currentPokemon].pokemon.selectView.x+750})
+						local function spawnNewPkmn()
+							e_trainer.E_Pokemans[e_trainer.currentPokemon]:HidePokemon()
+							updatePokemonInfoBox()
+							e_trainer:pickNewPokemon()
+							e_trainer.E_Pokemans[e_trainer.currentPokemon]:setSelectionView()
+							e_trainer.E_Pokemans[e_trainer.currentPokemon]:setPos(542,350)
+						end
+						local playerSummon = summonPkmnAnimation(542,350)
+						local function summonPlayer()
+							playerSummon.isVisible = true
+							playerSummon:play()
+							audio.play(summonSound, {loops = 0})
+							local function hideAnimation()
+								playerSummon.isVisible = false
+							end
+							timer.performWithDelay(500, hideAnimation)        
+						end
+						timer.performWithDelay(500, summonPlayer)
+						timer.performWithDelay(1000, spawnNewPkmn)
+					end
+				end
+				
+				returnAfterAttack()
+			else
+				returnAfterAttack()
+			end
 		end
-		
-        returnAfterAttack()
     end
 end
 
 function attack3(event)
     if ( "ended" == event.phase ) then
         audio.play(menuClick, {loops = 0})
-        e_trainer.E_Pokemans[e_trainer.currentPokemon]:takeDamage(trainer.Pokemans[trainer.currentPokemon].pokemon.attack3Damage, trainer.Pokemans[trainer.currentPokemon].pokemon.attack3Type)
-		updatePokemonInfoBox()
-		
-		if(e_trainer.E_Pokemans[e_trainer.currentPokemon].pokemon.status == "fainted") then
+        if(trainer.Pokemans[trainer.currentPokemon].pokemon.speed >= e_trainer.E_Pokemans[e_trainer.currentPokemon].pokemon.speed) then
+			e_trainer.E_Pokemans[e_trainer.currentPokemon]:takeDamage(trainer.Pokemans[trainer.currentPokemon].pokemon.attack1Damage, trainer.Pokemans[trainer.currentPokemon].pokemon.attack1Type)
+			updatePokemonInfoBox()
 			
-			if(e_trainer.numPokemans == 0) then
+			if(e_trainer.E_Pokemans[e_trainer.currentPokemon].pokemon.status == "fainted") then
 				
-				playerWins()
-			
-			else
-				transition.to(e_trainer.E_Pokemans[e_trainer.currentPokemon].pokemon.selectView, {time = 1250, x = e_trainer.E_Pokemans[e_trainer.currentPokemon].pokemon.selectView.x+750})
-				local function spawnNewPkmn()
-					e_trainer.E_Pokemans[e_trainer.currentPokemon]:HidePokemon()
-					updatePokemonInfoBox()
-					e_trainer:pickNewPokemon()
-					e_trainer.E_Pokemans[e_trainer.currentPokemon]:setSelectionView()
-					e_trainer.E_Pokemans[e_trainer.currentPokemon]:setPos(542,350)
-				end
-				local playerSummon = summonPkmnAnimation(542,350)
-				local function summonPlayer()
-					playerSummon.isVisible = true
-					playerSummon:play()
-					audio.play(summonSound, {loops = 0})
-					local function hideAnimation()
-						playerSummon.isVisible = false
+				if(e_trainer.numPokemans == 0) then
+					
+					playerWins()
+				
+				else
+					transition.to(e_trainer.E_Pokemans[e_trainer.currentPokemon].pokemon.selectView, {time = 1250, x = e_trainer.E_Pokemans[e_trainer.currentPokemon].pokemon.selectView.x+750})
+					local function spawnNewPkmn()
+						e_trainer.E_Pokemans[e_trainer.currentPokemon]:HidePokemon()
+						updatePokemonInfoBox()
+						e_trainer:pickNewPokemon()
+						e_trainer.E_Pokemans[e_trainer.currentPokemon]:setSelectionView()
+						e_trainer.E_Pokemans[e_trainer.currentPokemon]:setPos(542,350)
 					end
-					timer.performWithDelay(500, hideAnimation)        
+					local playerSummon = summonPkmnAnimation(542,350)
+					local function summonPlayer()
+						playerSummon.isVisible = true
+						playerSummon:play()
+						audio.play(summonSound, {loops = 0})
+						local function hideAnimation()
+							playerSummon.isVisible = false
+						end
+						timer.performWithDelay(500, hideAnimation)        
+					end
+					timer.performWithDelay(500, summonPlayer)
+					timer.performWithDelay(1000, spawnNewPkmn)
 				end
-				timer.performWithDelay(500, summonPlayer)
-				timer.performWithDelay(1000, spawnNewPkmn)
+			else
+				
+				e_trainer:BattleTurn(trainer)
+				updatePokemonInfoBox()
 			end
-		else
+			
+			returnAfterAttack()
+			
+		elseif(trainer.Pokemans[trainer.currentPokemon].pokemon.speed < e_trainer.E_Pokemans[e_trainer.currentPokemon].pokemon.speed) then
 			
 			e_trainer:BattleTurn(trainer)
+			updatePokemonInfoBox()
+  
+			if(trainer.Pokemans[trainer.currentPokemon].pokemon.status ~= "fainted") then
+				e_trainer.E_Pokemans[e_trainer.currentPokemon]:takeDamage(trainer.Pokemans[trainer.currentPokemon].pokemon.attack1Damage, trainer.Pokemans[trainer.currentPokemon].pokemon.attack1Type)
+				updatePokemonInfoBox()
+				
+				if(e_trainer.E_Pokemans[e_trainer.currentPokemon].pokemon.status == "fainted") then
+				
+					if(e_trainer.numPokemans == 0) then
+						
+						playerWins()
+					
+					else
+						transition.to(e_trainer.E_Pokemans[e_trainer.currentPokemon].pokemon.selectView, {time = 1250, x = e_trainer.E_Pokemans[e_trainer.currentPokemon].pokemon.selectView.x+750})
+						local function spawnNewPkmn()
+							e_trainer.E_Pokemans[e_trainer.currentPokemon]:HidePokemon()
+							updatePokemonInfoBox()
+							e_trainer:pickNewPokemon()
+							e_trainer.E_Pokemans[e_trainer.currentPokemon]:setSelectionView()
+							e_trainer.E_Pokemans[e_trainer.currentPokemon]:setPos(542,350)
+						end
+						local playerSummon = summonPkmnAnimation(542,350)
+						local function summonPlayer()
+							playerSummon.isVisible = true
+							playerSummon:play()
+							audio.play(summonSound, {loops = 0})
+							local function hideAnimation()
+								playerSummon.isVisible = false
+							end
+							timer.performWithDelay(500, hideAnimation)        
+						end
+						timer.performWithDelay(500, summonPlayer)
+						timer.performWithDelay(1000, spawnNewPkmn)
+					end
+				end
+				
+				returnAfterAttack()
+			else
+				returnAfterAttack()
+			end
 		end
-		
-        returnAfterAttack()
     end
 end
 
 function attack4(event)
     if ( "ended" == event.phase ) then
         audio.play(menuClick, {loops = 0})
-        e_trainer.E_Pokemans[e_trainer.currentPokemon]:takeDamage(trainer.Pokemans[trainer.currentPokemon].pokemon.attack4Damage,trainer.Pokemans[trainer.currentPokemon].pokemon.attack4Type)
-		updatePokemonInfoBox()
-		
-		if(e_trainer.E_Pokemans[e_trainer.currentPokemon].pokemon.status == "fainted") then
+        if(trainer.Pokemans[trainer.currentPokemon].pokemon.speed >= e_trainer.E_Pokemans[e_trainer.currentPokemon].pokemon.speed) then
+			e_trainer.E_Pokemans[e_trainer.currentPokemon]:takeDamage(trainer.Pokemans[trainer.currentPokemon].pokemon.attack1Damage, trainer.Pokemans[trainer.currentPokemon].pokemon.attack1Type)
+			updatePokemonInfoBox()
 			
-			if(e_trainer.numPokemans == 0) then
+			if(e_trainer.E_Pokemans[e_trainer.currentPokemon].pokemon.status == "fainted") then
 				
-				playerWins()
-			
-			else
-				transition.to(e_trainer.E_Pokemans[e_trainer.currentPokemon].pokemon.selectView, {time = 1250, x = e_trainer.E_Pokemans[e_trainer.currentPokemon].pokemon.selectView.x+750})
-				local function spawnNewPkmn()
-					e_trainer.E_Pokemans[e_trainer.currentPokemon]:HidePokemon()
-					updatePokemonInfoBox()
-					e_trainer:pickNewPokemon()
-					e_trainer.E_Pokemans[e_trainer.currentPokemon]:setSelectionView()
-					e_trainer.E_Pokemans[e_trainer.currentPokemon]:setPos(542,350)
-				end
-				local playerSummon = summonPkmnAnimation(542,350)
-				local function summonPlayer()
-					playerSummon.isVisible = true
-					playerSummon:play()
-					audio.play(summonSound, {loops = 0})
-					local function hideAnimation()
-						playerSummon.isVisible = false
+				if(e_trainer.numPokemans == 0) then
+					
+					playerWins()
+				
+				else
+					transition.to(e_trainer.E_Pokemans[e_trainer.currentPokemon].pokemon.selectView, {time = 1250, x = e_trainer.E_Pokemans[e_trainer.currentPokemon].pokemon.selectView.x+750})
+					local function spawnNewPkmn()
+						e_trainer.E_Pokemans[e_trainer.currentPokemon]:HidePokemon()
+						updatePokemonInfoBox()
+						e_trainer:pickNewPokemon()
+						e_trainer.E_Pokemans[e_trainer.currentPokemon]:setSelectionView()
+						e_trainer.E_Pokemans[e_trainer.currentPokemon]:setPos(542,350)
 					end
-					timer.performWithDelay(500, hideAnimation)        
+					local playerSummon = summonPkmnAnimation(542,350)
+					local function summonPlayer()
+						playerSummon.isVisible = true
+						playerSummon:play()
+						audio.play(summonSound, {loops = 0})
+						local function hideAnimation()
+							playerSummon.isVisible = false
+						end
+						timer.performWithDelay(500, hideAnimation)        
+					end
+					timer.performWithDelay(500, summonPlayer)
+					timer.performWithDelay(1000, spawnNewPkmn)
 				end
-				timer.performWithDelay(500, summonPlayer)
-				timer.performWithDelay(1000, spawnNewPkmn)
+			else
+				
+				e_trainer:BattleTurn(trainer)
+				updatePokemonInfoBox()
 			end
-		else
+			
+			returnAfterAttack()
+			
+		elseif(trainer.Pokemans[trainer.currentPokemon].pokemon.speed < e_trainer.E_Pokemans[e_trainer.currentPokemon].pokemon.speed) then
 			
 			e_trainer:BattleTurn(trainer)
+			updatePokemonInfoBox()
+  
+			if(trainer.Pokemans[trainer.currentPokemon].pokemon.status ~= "fainted") then
+				e_trainer.E_Pokemans[e_trainer.currentPokemon]:takeDamage(trainer.Pokemans[trainer.currentPokemon].pokemon.attack1Damage, trainer.Pokemans[trainer.currentPokemon].pokemon.attack1Type)
+				updatePokemonInfoBox()
+				
+				if(e_trainer.E_Pokemans[e_trainer.currentPokemon].pokemon.status == "fainted") then
+				
+					if(e_trainer.numPokemans == 0) then
+						
+						playerWins()
+					
+					else
+						transition.to(e_trainer.E_Pokemans[e_trainer.currentPokemon].pokemon.selectView, {time = 1250, x = e_trainer.E_Pokemans[e_trainer.currentPokemon].pokemon.selectView.x+750})
+						local function spawnNewPkmn()
+							e_trainer.E_Pokemans[e_trainer.currentPokemon]:HidePokemon()
+							updatePokemonInfoBox()
+							e_trainer:pickNewPokemon()
+							e_trainer.E_Pokemans[e_trainer.currentPokemon]:setSelectionView()
+							e_trainer.E_Pokemans[e_trainer.currentPokemon]:setPos(542,350)
+						end
+						local playerSummon = summonPkmnAnimation(542,350)
+						local function summonPlayer()
+							playerSummon.isVisible = true
+							playerSummon:play()
+							audio.play(summonSound, {loops = 0})
+							local function hideAnimation()
+								playerSummon.isVisible = false
+							end
+							timer.performWithDelay(500, hideAnimation)        
+						end
+						timer.performWithDelay(500, summonPlayer)
+						timer.performWithDelay(1000, spawnNewPkmn)
+					end
+				end
+				
+				returnAfterAttack()
+			else
+				returnAfterAttack()
+			end
 		end
-		
-        returnAfterAttack()
     end
 end
 
