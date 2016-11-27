@@ -22,6 +22,7 @@ local cancelBtn
 local mainMenuBtn = {}
 local fightMenuBtn = {}
 local pkmnMenuBtn = {}
+local pkmnMenuItemBtn = {}
 local pkmnMenuBG
 local fightMenuBG
 local itemsMenuBG
@@ -829,6 +830,20 @@ function drawBackground()
     sceneGroup:insert( infoBoxText )
 end
 
+function returnAfterItem()
+    pkmnMenuBG.isVisible = false
+    for cnt = 0, #pkmnMenuItemBtn do
+        pkmnMenuItemBtn[cnt].isVisible = false
+    end
+
+    cancelBtn.isVisible = false
+
+    mainMenuBG.isVisible = true
+    for cnt = 0, 3 do
+        mainMenuBtn[cnt].isVisible = true
+    end
+end
+
 function returnAfterAttack()
     fightMenuBG.isVisible = false
     for cnt = 0, #fightMenuBtn do
@@ -940,7 +955,198 @@ function returnToMainMenu(event)
 end
 
 function openMainMenu ()
+    cancelBtn.isVisible = false
+
+    mainMenuBG.isVisible = true
+    for cnt = 0, #mainMenuBtn do
+        mainMenuBtn[cnt].isVisible = true
+    end  
+    
+end
+
+function openFightMenu (event)
+
+        if ( "ended" == event.phase ) then
+        audio.play(menuClick, {loops = 0})
+
+        cancelBtn.isVisible = true
+
+        mainMenuBG.isVisible = false
+        for cnt = 0, 3 do
+            mainMenuBtn[cnt].isVisible = false
+        end
+
+        fightMenuBG.isVisible = true
+        for cnt = 0, #fightMenuBtn do
+            fightMenuBtn[cnt].isVisible = true
+        end     
+    end
+end
+
+function openPokemonMenu(event)
+    if ( "ended" == event.phase ) then
+        audio.play(menuClick, {loops = 0})
+
+        cancelBtn.isVisible = true 
+
+        pkmnMenuBG.isVisible = true
+        for cnt = 0, #pkmnMenuBtn do
+            pkmnMenuBtn[cnt].isVisible = true
+        end 
+        for cnt = 1, #trainer.Pokemans do       
+            pokemonThumbNails[cnt].isVisible = true 
+            pokemonNames[cnt].isVisible = true
+            pkmnHB[cnt].isVisible = true
+            pkmnDB[cnt].isVisible = true
+        end
+
+        mainMenuBG.isVisible = false
+        for cnt = 0, 3 do
+            mainMenuBtn[cnt].isVisible = false
+        end
+
+        pkmnMenuBG.isVisible = true
+        for cnt = 0, #pkmnMenuBtn do
+            pkmnMenuBtn[cnt].isVisible = true
+        end 
+    end
+end
+
+function openPokemonMenuFromAlertBox()
+    audio.play(menuClick, {loops = 0})
+    
+    cancelBtn.isVisible = false
+
+    pkmnMenuBG.isVisible = true
+    for cnt = 0, #pkmnMenuBtn do
+        pkmnMenuBtn[cnt].isVisible = true
+    end 
+    for cnt = 1, #trainer.Pokemans do       
+        pokemonThumbNails[cnt].isVisible = true 
+        pokemonNames[cnt].isVisible = true
+        pkmnHB[cnt].isVisible = true
+        pkmnDB[cnt].isVisible = true
+    end
+
+
+    mainMenuBG.isVisible = false
+    for cnt = 0, 3 do
+        mainMenuBtn[cnt].isVisible = false
+    end
+
+    pkmnMenuBG.isVisible = true
+    for cnt = 0, #pkmnMenuBtn do
+        pkmnMenuBtn[cnt].isVisible = true
+    end 
+end
+
+function useItem(event)
+    if ( "ended" == event.phase ) then
+        audio.play(potionUse)
+        local i = event.target.id
+        local itemValue = 0
+
+        if (i == "select1ItemBtn") then
+            i = 1
+        elseif (i == "select2ItemBtn") then
+            i = 2
+        elseif (i == "select3ItemBtn") then
+            i = 3
+        elseif (i == "select4ItemBtn") then
+            i = 4
+        elseif (i == "select5ItemBtn") then
+            i = 5
+        elseif (i == "select6ItemBtn") then
+            i = 6
+        else
+            i = trainer.currentPokemon
+        end
+
+        if (item == "healthPotion") then
+            itemValue = 50    
+        elseif(item == "bigHealthPotion") then
+            itemValue = 100
+        elseif(item == "fullPotion") then
+            itemValue = 99999
+        end
+        trainer.Pokemans[i]:useItem(itemValue)
+        itemsMenuBG.isVisible = false
+        for cnt = 0, #itemList do
+            itemList[cnt].isVisible = false
+        end
+        returnAfterSwap()
+		
+		e_trainer:BattleTurn(trainer)
+		updatePokemonInfoBox()
+		returnAfterItem()
+    end
+end
+
+function openPokemonMenuFromItemSelect()
+    audio.play(menuClick, {loops = 0})
+
+    pkmnMenuBG.isVisible = true
+    for cnt = 0, #pkmnMenuBtn do
+        pkmnMenuItemBtn[cnt].isVisible = true
+    end 
+    for cnt = 1, #trainer.Pokemans do       
+        pokemonThumbNails[cnt].isVisible = true 
+        pokemonNames[cnt].isVisible = true
+        pkmnHB[cnt].isVisible = true
+        pkmnDB[cnt].isVisible = true
+    end
+
+    cancelBtn.isVisible = true
+
+    mainMenuBG.isVisible = false
+    for cnt = 0, 3 do
+        mainMenuBtn[cnt].isVisible = false
+    end
+
+    pkmnMenuBG.isVisible = true
+    for cnt = 0, #pkmnMenuBtn do
+        pkmnMenuBtn[cnt].isVisible = true
+    end 
+end
+
+function openItemsMenu (event)
+    if ( "ended" == event.phase ) then
+        audio.play(menuClick, {loops = 0})
+
+        mainMenuBG.isVisible = false
+        for cnt = 0, 3 do
+            mainMenuBtn[cnt].isVisible = false
+        end   
+
+        cancelBtn.isVisible = true
+
+        itemsMenuBG.isVisible = true
+        for cnt = 0, #itemList do
+            itemList[cnt].isVisible = true
+        end
+
+    end
+end
+
+function openingAnimations()
+    local sheetName = require("images.fightScene.animations.battleIntro")
+    local spriteSheetData = sheetName:getSheet()
+    --Creating the image sheet
+    local battleSheet = graphics.newImageSheet( "images/fightScene/animations/battleIntro.png", spriteSheetData)
+    --Getting the sequence data from the sprite sheet file
+    local sequenceData = sheetName:getSequence()
+
+    animation = display.newSprite( battleSheet, sequenceData)
+    animation.x = display.contentCenterX
+    animation.y = display.contentCenterY
+    animation:scale(2,2)
+    sceneGroup:insert( animation )
+end
+
+function createObjects()
     mainMenuBG = display.newImage("images/fightScene/menu/main/mainMenuBG.png")
+    mainMenuBG.x = display.contentWidth - (display.contentWidth/2)
+    mainMenuBG.y = display.contentHeight - (display.contentHeight/4) 
     mainMenuBG.width = display.contentWidth
     mainMenuBG.height = display.contentHeight/2
 
@@ -1001,231 +1207,149 @@ function openMainMenu ()
     mainMenuBtn[3].x = 475
     mainMenuBtn[3].y = 1105    
 
-    cancelBtn.isVisible = false
-
-    mainMenuBG.x = display.contentWidth - (display.contentWidth/2)
-    mainMenuBG.y = display.contentHeight - (display.contentHeight/4) 
-
     sceneGroup:insert( mainMenuBG )
     sceneGroup:insert( mainMenuBtn[0] )
     sceneGroup:insert( mainMenuBtn[1] )
     sceneGroup:insert( mainMenuBtn[2] )
     sceneGroup:insert( mainMenuBtn[3] )
-end
 
-function openFightMenu (event)
+    mainMenuBG.isVisible = false
+    for cnt = 0, #mainMenuBtn do
+        mainMenuBtn[cnt].isVisible = false
+    end  
 
-        if ( "ended" == event.phase ) then
-        audio.play(menuClick, {loops = 0})
-        fightMenuBG = display.newImage("images/fightScene/menu/fight/fightMenuBG.png")
-        fightMenuBG.width = display.contentWidth
-        fightMenuBG.height = display.contentHeight/2
-        fightMenuBG.x = display.contentWidth - (display.contentWidth/2)
-        fightMenuBG.y = display.contentHeight - (display.contentHeight/4) 
-
-        fightMenuBtn[0] = widget.newButton({    
-            id = "attack1Btn",
-            label = trainer.Pokemans[trainer.currentPokemon].pokemon.attack1,
-            fontSize = fSize,
-            width = 333,
-            height = 206,
-            defaultFile = "images/fightScene/menu/fight/fightMenuBtn.png",
-            overFile  = "images/fightScene/menu/fight/fightMenuBtnOnClick.png",
-            onEvent = attack1 
-        } )        
-        fightMenuBtn[0].x = 184
-        fightMenuBtn[0].y = 842        
-
-        fightMenuBtn[1] = widget.newButton({    
-            id = "attack2Btn",
-            label = trainer.Pokemans[trainer.currentPokemon].pokemon.attack2,
-            fontSize = fSize,
-            width = 333,
-            height = 206,
-            defaultFile = "images/fightScene/menu/fight/fightMenuBtn.png",
-            overFile  = "images/fightScene/menu/fight/fightMenuBtnOnClick.png",
-            onEvent = attack2 
-        } )        
-        fightMenuBtn[1].x = 536
-        fightMenuBtn[1].y = 842
-
-        fightMenuBtn[2] = widget.newButton({    
-            id = "attack3Btn",
-            label = trainer.Pokemans[trainer.currentPokemon].pokemon.attack3,
-            fontSize = fSize,
-            width = 333,
-            height = 206,
-            defaultFile = "images/fightScene/menu/fight/fightMenuBtn.png",
-            overFile  = "images/fightScene/menu/fight/fightMenuBtnOnClick.png",
-            onEvent = attack3 
-        } )        
-        fightMenuBtn[2].x = 184
-        fightMenuBtn[2].y = 1074    
-
-        fightMenuBtn[3] = widget.newButton({    
-            id = "attack4Btn",
-            label = trainer.Pokemans[trainer.currentPokemon].pokemon.attack4,
-            fontSize = fSize,
-            width = 333,
-            height = 206,
-            defaultFile = "images/fightScene/menu/fight/fightMenuBtn.png",
-            overFile  = "images/fightScene/menu/fight/fightMenuBtnOnClick.png",
-            onEvent = attack4 
-        } )      
-        fightMenuBtn[3].x = 536
-        fightMenuBtn[3].y = 1074        
-
-        cancelBtn.isVisible = true
-
-        mainMenuBG.isVisible = false
-        for cnt = 0, 3 do
-            mainMenuBtn[cnt].isVisible = false
-        end
-
-        sceneGroup:insert( fightMenuBG )
-        for cnt = 0, #fightMenuBtn do
-            sceneGroup:insert(fightMenuBtn[cnt])
-        end
-    end
-end
-
-function openPokemonMenu(event)
-        if ( "ended" == event.phase ) then
-        audio.play(menuClick, {loops = 0})
-        pkmnMenuBG = display.newImage("images/fightScene/menu/pkmn/pkmnMenuBG.png")
-        pkmnMenuBG.width = display.contentWidth
-        pkmnMenuBG.height = display.contentHeight/2 
-        pkmnMenuBG.x = display.contentWidth - (display.contentWidth/2)
-        pkmnMenuBG.y = display.contentHeight - (display.contentHeight/4)    
-
-
-        pkmnMenuBtn[0] = widget.newButton({    
-            id = "select1Btn",
-            width = 355,
-            height = 150,
-            defaultFile = "images/fightScene/menu/pkmn/pkmnMenuBtn.png",
-            overFile  = "images/fightScene/menu/pkmn/pkmnMenuBtnOnClick.png",
-            onEvent = select1 
-        } )        
-        pkmnMenuBtn[0].x = 180
-        pkmnMenuBtn[0].y = 716  
-
-        pkmnMenuBtn[1] = widget.newButton({    
-            id = "select2Btn",
-            width = 355,
-            height = 150,
-            defaultFile = "images/fightScene/menu/pkmn/pkmnMenuBtn.png",
-            overFile  = "images/fightScene/menu/pkmn/pkmnMenuBtnOnClick.png",
-            onEvent = select2 
-        } )        
-        pkmnMenuBtn[1].x = 540
-        pkmnMenuBtn[1].y = 752 
-
-        pkmnMenuBtn[2] = widget.newButton({    
-            id = "select3Btn",
-            width = 355,
-            height = 150,
-            defaultFile = "images/fightScene/menu/pkmn/pkmnMenuBtn.png",
-            overFile  = "images/fightScene/menu/pkmn/pkmnMenuBtnOnClick.png",
-            onEvent = select3 
-        } )        
-        pkmnMenuBtn[2].x = 180
-        pkmnMenuBtn[2].y = 887     
-
-        pkmnMenuBtn[3] = widget.newButton({    
-            id = "select4Btn",
-            width = 355,
-            height = 150,
-            defaultFile = "images/fightScene/menu/pkmn/pkmnMenuBtn.png",
-            overFile  = "images/fightScene/menu/pkmn/pkmnMenuBtnOnClick.png",
-            onEvent = select4 
-        } )        
-        pkmnMenuBtn[3].x = 540
-        pkmnMenuBtn[3].y = 914 
-
-        pkmnMenuBtn[4] = widget.newButton({    
-            id = "select5Btn",
-            width = 355,
-            height = 150,
-            defaultFile = "images/fightScene/menu/pkmn/pkmnMenuBtn.png",
-            overFile  = "images/fightScene/menu/pkmn/pkmnMenuBtnOnClick.png",
-            onEvent = select5 
-        } )        
-        pkmnMenuBtn[4].x = 180
-        pkmnMenuBtn[4].y = 1047   
-
-        pkmnMenuBtn[5] = widget.newButton({    
-            id = "select6Btn",
-            width = 355,
-            height = 150,
-            defaultFile = "images/fightScene/menu/pkmn/pkmnMenuBtn.png",
-            overFile  = "images/fightScene/menu/pkmn/pkmnMenuBtnOnClick.png",
-            onEvent = select6 
-        } )        
-        pkmnMenuBtn[5].x = 540
-        pkmnMenuBtn[5].y = 1074        
-
-        -- Drawing pokemon thumbnails
-        local y1Offset = 0
-        local y2Offset = 0
-        for cnt = 1, #trainer.Pokemans do
-            pokemonThumbNails[cnt] = trainer.Pokemans[cnt]:returnSelectImage()
-            pokemonThumbNails[cnt].isVisible = true
-            if (cnt % 2 == 0) then
-                pokemonThumbNails[cnt].x = 470
-                pokemonThumbNails[cnt].y = 725+y1Offset
-                y1Offset = y1Offset+160
-            else                
-                pokemonThumbNails[cnt].x = 100
-                pokemonThumbNails[cnt].y = 685+y2Offset
-                y2Offset = y2Offset + 170
-            end
-        end
-
-        -- Drawing pokemon names
-        local y1Offset = 0
-        local y2Offset = 0
-        for cnt = 1, #trainer.Pokemans do
-            pokemonNames[cnt] = display.newText(trainer.Pokemans[cnt].pokemon.tag, 0, 0, native.systemFont, 30)
-            if (cnt % 2 == 0) then
-                pokemonNames[cnt].x = 600
-                pokemonNames[cnt].y = 725+y1Offset
-                y1Offset = y1Offset+160
-            else                
-                pokemonNames[cnt].x = 200
-                pokemonNames[cnt].y = 685+y2Offset
-                y2Offset = y2Offset + 170
-            end
-        end        
-        
-        -- Drawing pokemon hp bars
-        for cnt = 1, #trainer.Pokemans do
-            pkmnHB[cnt], pkmnDB[cnt] = trainer.Pokemans[cnt]:returnHealthStatus()
-            pkmnHB[cnt].isVisible = true
-            pkmnDB[cnt].isVisible = true
-        end    
-
-        cancelBtn.isVisible = true 
-
-        mainMenuBG.isVisible = false
-        for cnt = 0, 3 do
-            mainMenuBtn[cnt].isVisible = false
-        end
-
-        sceneGroup:insert( pkmnMenuBG )
-        for cnt = 0, #pkmnMenuBtn do
-            sceneGroup:insert(pkmnMenuBtn[cnt])
-        end 
-    end
-end
-
-function openPokemonMenuFromAlertBox()
-    audio.play(menuClick, {loops = 0})
     pkmnMenuBG = display.newImage("images/fightScene/menu/pkmn/pkmnMenuBG.png")
     pkmnMenuBG.width = display.contentWidth
     pkmnMenuBG.height = display.contentHeight/2 
     pkmnMenuBG.x = display.contentWidth - (display.contentWidth/2)
     pkmnMenuBG.y = display.contentHeight - (display.contentHeight/4)    
+
+    itemsMenuBG = display.newImage("images/fightScene/menu/item/itemMenuBG.png")
+    itemsMenuBG.width = display.contentWidth
+    itemsMenuBG.height = display.contentHeight/2
+    itemsMenuBG.x = display.contentWidth - (display.contentWidth/2)
+    itemsMenuBG.y = display.contentHeight - (display.contentHeight/4)    
+
+    fightMenuBG = display.newImage("images/fightScene/menu/fight/fightMenuBG.png")
+    fightMenuBG.width = display.contentWidth
+    fightMenuBG.height = display.contentHeight/2
+    fightMenuBG.x = display.contentWidth - (display.contentWidth/2)
+    fightMenuBG.y = display.contentHeight - (display.contentHeight/4) 
+
+    fightMenuBtn[0] = widget.newButton({    
+        id = "attack1Btn",
+        label = trainer.Pokemans[trainer.currentPokemon].pokemon.attack1,
+        fontSize = fSize,
+        width = 333,
+        height = 206,
+        defaultFile = "images/fightScene/menu/fight/fightMenuBtn.png",
+        overFile  = "images/fightScene/menu/fight/fightMenuBtnOnClick.png",
+        onEvent = attack1 
+    } )        
+    fightMenuBtn[0].x = 184
+    fightMenuBtn[0].y = 842        
+
+    fightMenuBtn[1] = widget.newButton({    
+        id = "attack2Btn",
+        label = trainer.Pokemans[trainer.currentPokemon].pokemon.attack2,
+        fontSize = fSize,
+        width = 333,
+        height = 206,
+        defaultFile = "images/fightScene/menu/fight/fightMenuBtn.png",
+        overFile  = "images/fightScene/menu/fight/fightMenuBtnOnClick.png",
+        onEvent = attack2 
+    } )        
+    fightMenuBtn[1].x = 536
+    fightMenuBtn[1].y = 842
+
+    fightMenuBtn[2] = widget.newButton({    
+        id = "attack3Btn",
+        label = trainer.Pokemans[trainer.currentPokemon].pokemon.attack3,
+        fontSize = fSize,
+        width = 333,
+        height = 206,
+        defaultFile = "images/fightScene/menu/fight/fightMenuBtn.png",
+        overFile  = "images/fightScene/menu/fight/fightMenuBtnOnClick.png",
+        onEvent = attack3 
+    } )        
+    fightMenuBtn[2].x = 184
+    fightMenuBtn[2].y = 1074    
+
+    fightMenuBtn[3] = widget.newButton({    
+        id = "attack4Btn",
+        label = trainer.Pokemans[trainer.currentPokemon].pokemon.attack4,
+        fontSize = fSize,
+        width = 333,
+        height = 206,
+        defaultFile = "images/fightScene/menu/fight/fightMenuBtn.png",
+        overFile  = "images/fightScene/menu/fight/fightMenuBtnOnClick.png",
+        onEvent = attack4 
+    } )      
+    fightMenuBtn[3].x = 536
+    fightMenuBtn[3].y = 1074        
+
+    sceneGroup:insert( fightMenuBG )
+    for cnt = 0, #fightMenuBtn do
+        sceneGroup:insert(fightMenuBtn[cnt])
+    end     
+
+    fightMenuBG.isVisible = false
+    for cnt = 0, #fightMenuBtn do
+        fightMenuBtn[cnt].isVisible = false
+    end  
+
+    itemList = {}
+    itemList[0] = widget.newButton({    
+        id = "item1",
+        width = 350,
+        height = 40,
+        label = "Health Potion (+50)",    
+        labelColor = { default={ 1, 1, 0 }, over={ 0, 1, 1, 0.5 } },
+        fontSize = 30,
+        defaultFile = "images/menuScene/menuBtn.png",
+        overFile  = "images/menuScene/menuBtnOnClick.png",
+        onEvent = item1 
+    } )        
+    itemList[0].x = 515
+    itemList[0].y = 750 
+    
+    itemList[1] = widget.newButton({    
+        id = "item2",
+        width = 350,
+        height = 40,
+        label = "Big Health Potion (+100)",    
+        labelColor = { default={ 1, 1, 0 }, over={ 0, 1, 1, 0.5 } },
+        fontSize = 30,
+        defaultFile = "images/menuScene/menuBtn.png",
+        overFile  = "images/menuScene/menuBtnOnClick.png",
+        onEvent = item2 
+    } )        
+    itemList[1].x = 515
+    itemList[1].y = 800 
+
+    itemList[2] = widget.newButton({    
+        id = "item3",
+        width = 350,
+        height = 40,
+        label = "Full Health Potion (+max)",    
+        labelColor = { default={ 1, 1, 0 }, over={ 0, 1, 1, 0.5 } },
+        fontSize = 30,
+        defaultFile = "images/menuScene/menuBtn.png",
+        overFile  = "images/menuScene/menuBtnOnClick.png",
+        onEvent = item3 
+    } )        
+    itemList[2].x = 515
+    itemList[2].y = 850   
+
+    sceneGroup:insert( itemsMenuBG )
+    for cnt = 0, #itemList do
+        sceneGroup:insert( itemList[cnt] )
+    end
+
+    itemsMenuBG.isVisible = false
+    for cnt = 0, #itemList do
+        itemList[cnt].isVisible = false
+    end
 
 
     pkmnMenuBtn[0] = widget.newButton({    
@@ -1292,7 +1416,7 @@ function openPokemonMenuFromAlertBox()
         onEvent = select6 
     } )        
     pkmnMenuBtn[5].x = 540
-    pkmnMenuBtn[5].y = 1074        
+    pkmnMenuBtn[5].y = 1074   
 
     -- Drawing pokemon thumbnails
     local y1Offset = 0
@@ -1333,272 +1457,115 @@ function openPokemonMenuFromAlertBox()
         pkmnHB[cnt].isVisible = true
         pkmnDB[cnt].isVisible = true
     end    
+
+    pkmnMenuBG.isVisible = false
+    for cnt = 0, #pkmnMenuBtn do
+        pkmnMenuBtn[cnt].isVisible = false
+    end 
+    for cnt = 1, #trainer.Pokemans do       
+        pokemonThumbNails[cnt].isVisible = false 
+        pokemonNames[cnt].isVisible = false
+        pkmnHB[cnt].isVisible = false
+        pkmnDB[cnt].isVisible = false
+    end    
+
+    sceneGroup:insert( pkmnMenuBG )
+    for cnt = 0, #pkmnMenuBtn do
+        sceneGroup:insert(pkmnMenuBtn[cnt])
+    end 
+
+    pkmnMenuBG.isVisible = false
+    for cnt = 0, #pkmnMenuBtn do
+        pkmnMenuBtn[cnt].isVisible = false
+    end     
+
+    pkmnMenuItemBtn[0] = widget.newButton({    
+        id = "select1ItemBtn",
+        width = 355,
+        height = 150,
+        defaultFile = "images/fightScene/menu/pkmn/pkmnMenuBtn.png",
+        overFile  = "images/fightScene/menu/pkmn/pkmnMenuBtnOnClick.png",
+        onEvent = useItem 
+    } )        
+    pkmnMenuItemBtn[0].x = 180
+    pkmnMenuItemBtn[0].y = 716  
+
+    pkmnMenuItemBtn[1] = widget.newButton({    
+        id = "select2ItemBtn",
+        width = 355,
+        height = 150,
+        defaultFile = "images/fightScene/menu/pkmn/pkmnMenuBtn.png",
+        overFile  = "images/fightScene/menu/pkmn/pkmnMenuBtnOnClick.png",
+        onEvent = useItem 
+    } )        
+    pkmnMenuItemBtn[1].x = 540
+    pkmnMenuItemBtn[1].y = 752 
+
+    pkmnMenuItemBtn[2] = widget.newButton({    
+        id = "select3ItemBtn",
+        width = 355,
+        height = 150,
+        defaultFile = "images/fightScene/menu/pkmn/pkmnMenuBtn.png",
+        overFile  = "images/fightScene/menu/pkmn/pkmnMenuBtnOnClick.png",
+        onEvent = useItem 
+    } )        
+    pkmnMenuItemBtn[2].x = 180
+    pkmnMenuItemBtn[2].y = 887     
+
+    pkmnMenuItemBtn[3] = widget.newButton({    
+        id = "select4ItemBtn",
+        width = 355,
+        height = 150,
+        defaultFile = "images/fightScene/menu/pkmn/pkmnMenuBtn.png",
+        overFile  = "images/fightScene/menu/pkmn/pkmnMenuBtnOnClick.png",
+        onEvent = useItem 
+    } )        
+    pkmnMenuItemBtn[3].x = 540
+    pkmnMenuItemBtn[3].y = 914 
+
+    pkmnMenuItemBtn[4] = widget.newButton({    
+        id = "select5ItemBtn",
+        width = 355,
+        height = 150,
+        defaultFile = "images/fightScene/menu/pkmn/pkmnMenuBtn.png",
+        overFile  = "images/fightScene/menu/pkmn/pkmnMenuBtnOnClick.png",
+        onEvent = useItem 
+    } )        
+    pkmnMenuItemBtn[4].x = 180
+    pkmnMenuItemBtn[4].y = 1047   
+
+    pkmnMenuItemBtn[5] = widget.newButton({    
+        id = "select6ItemBtn",
+        width = 355,
+        height = 150,
+        defaultFile = "images/fightScene/menu/pkmn/pkmnMenuBtn.png",
+        overFile  = "images/fightScene/menu/pkmn/pkmnMenuBtnOnClick.png",
+        onEvent = useItem 
+    } )        
+    pkmnMenuItemBtn[5].x = 540
+    pkmnMenuItemBtn[5].y = 1074   
+
+    for cnt = 0, #pkmnMenuItemBtn do
+        sceneGroup:insert(pkmnMenuItemBtn[cnt])
+    end 
+
+    for cnt = 0, #pkmnMenuItemBtn do
+        pkmnMenuItemBtn[cnt].isVisible = false
+    end     
+
+    cancelBtn =  widget.newButton({    
+            id = "cancelBtn",
+            width = 150,
+            height = 75,
+            defaultFile = "images/fightScene/menu/cancelBtn.png",
+            overFile  = "images/fightScene/menu/cancelBtnOnClick.png",
+            onEvent = returnToMainMenu 
+        } )
+    cancelBtn.x = 638
+    cancelBtn.y = 1226  
 
     cancelBtn.isVisible = false
 
-    mainMenuBG.isVisible = false
-    for cnt = 0, 3 do
-        mainMenuBtn[cnt].isVisible = false
-    end
-
-    sceneGroup:insert( pkmnMenuBG )
-    for cnt = 0, #pkmnMenuBtn do
-        sceneGroup:insert(pkmnMenuBtn[cnt])
-    end 
-end
-
-function useItem(event)
-    if ( "ended" == event.phase ) then
-        audio.play(potionUse)
-        local i = event.target.id
-        local itemValue = 0
-
-        if (i == "selectBtn1") then
-            i = 1
-        elseif (i == "selectBtn2") then
-            i = 2
-        elseif (i == "selectBtn3") then
-            i = 3
-        elseif (i == "selectBtn4") then
-            i = 4
-        elseif (i == "selectBtn5") then
-            i = 5
-        elseif (i == "selectBtn6") then
-            i = 6
-        end
-
-        if (item == "healthPotion") then
-            itemValue = 50    
-        elseif(item == "bigHealthPotion") then
-            itemValue = 100
-        elseif(item == "fullPotion") then
-            itemValue = 99999
-        end
-        trainer.Pokemans[i]:useItem(itemValue)
-        itemsMenuBG.isVisible = false
-        for cnt = 0, #itemList do
-            itemList[cnt].isVisible = false
-        end
-        returnAfterSwap()
-		
-		e_trainer:BattleTurn(trainer)
-		updatePokemonInfoBox()
-		returnAfterAttack()
-    end
-end
-
-function openPokemonMenuFromItemSelect()
-    audio.play(menuClick, {loops = 0})
-    pkmnMenuBG = display.newImage("images/fightScene/menu/pkmn/pkmnMenuBG.png")
-    pkmnMenuBG.width = display.contentWidth
-    pkmnMenuBG.height = display.contentHeight/2 
-    pkmnMenuBG.x = display.contentWidth - (display.contentWidth/2)
-    pkmnMenuBG.y = display.contentHeight - (display.contentHeight/4)    
-
-
-
-    pkmnMenuBtn[0] = widget.newButton({    
-        id = "selectBtn1",
-        width = 355,
-        height = 150,
-        defaultFile = "images/fightScene/menu/pkmn/pkmnMenuBtn.png",
-        overFile  = "images/fightScene/menu/pkmn/pkmnMenuBtnOnClick.png",
-        onEvent = useItem 
-    } )        
-    pkmnMenuBtn[0].x = 180
-    pkmnMenuBtn[0].y = 716  
-
-    pkmnMenuBtn[1] = widget.newButton({    
-        id = "selectBtn2",
-        width = 355,
-        height = 150,
-        defaultFile = "images/fightScene/menu/pkmn/pkmnMenuBtn.png",
-        overFile  = "images/fightScene/menu/pkmn/pkmnMenuBtnOnClick.png",
-        onEvent = useItem 
-    } )        
-    pkmnMenuBtn[1].x = 540
-    pkmnMenuBtn[1].y = 752 
-
-    pkmnMenuBtn[2] = widget.newButton({    
-        id = "selectBtn3",
-        width = 355,
-        height = 150,
-        defaultFile = "images/fightScene/menu/pkmn/pkmnMenuBtn.png",
-        overFile  = "images/fightScene/menu/pkmn/pkmnMenuBtnOnClick.png",
-        onEvent = useItem 
-    } )        
-    pkmnMenuBtn[2].x = 180
-    pkmnMenuBtn[2].y = 887     
-
-    pkmnMenuBtn[3] = widget.newButton({    
-        id = "selectBtn4",
-        width = 355,
-        height = 150,
-        defaultFile = "images/fightScene/menu/pkmn/pkmnMenuBtn.png",
-        overFile  = "images/fightScene/menu/pkmn/pkmnMenuBtnOnClick.png",
-        onEvent = useItem 
-    } )        
-    pkmnMenuBtn[3].x = 540
-    pkmnMenuBtn[3].y = 914 
-
-    pkmnMenuBtn[4] = widget.newButton({    
-        id = "selectBtn5",
-        width = 355,
-        height = 150,
-        defaultFile = "images/fightScene/menu/pkmn/pkmnMenuBtn.png",
-        overFile  = "images/fightScene/menu/pkmn/pkmnMenuBtnOnClick.png",
-        onEvent = useItem 
-    } )        
-    pkmnMenuBtn[4].x = 180
-    pkmnMenuBtn[4].y = 1047   
-
-    pkmnMenuBtn[5] = widget.newButton({    
-        id = "selectBtn6",
-        width = 355,
-        height = 150,
-        defaultFile = "images/fightScene/menu/pkmn/pkmnMenuBtn.png",
-        overFile  = "images/fightScene/menu/pkmn/pkmnMenuBtnOnClick.png",
-        onEvent = useItem 
-    } )        
-    pkmnMenuBtn[5].x = 540
-    pkmnMenuBtn[5].y = 1074        
-
-    -- Drawing pokemon thumbnails
-    local y1Offset = 0
-    local y2Offset = 0
-    for cnt = 1, #trainer.Pokemans do
-        pokemonThumbNails[cnt] = trainer.Pokemans[cnt]:returnSelectImage()
-        pokemonThumbNails[cnt].isVisible = true
-        if (cnt % 2 == 0) then
-            pokemonThumbNails[cnt].x = 470
-            pokemonThumbNails[cnt].y = 725+y1Offset
-            y1Offset = y1Offset+160
-        else                
-            pokemonThumbNails[cnt].x = 100
-            pokemonThumbNails[cnt].y = 685+y2Offset
-            y2Offset = y2Offset + 170
-        end
-        --sceneGroup:insert(pokemonThumbNails[cnt])
-    end
-
-    -- Drawing pokemon names
-    local y1Offset = 0
-    local y2Offset = 0
-    for cnt = 1, #trainer.Pokemans do
-        pokemonNames[cnt] = display.newText(trainer.Pokemans[cnt].pokemon.tag, 0, 0, native.systemFont, 30)
-        if (cnt % 2 == 0) then
-            pokemonNames[cnt].x = 600
-            pokemonNames[cnt].y = 725+y1Offset
-            y1Offset = y1Offset+160
-        else                
-            pokemonNames[cnt].x = 200
-            pokemonNames[cnt].y = 685+y2Offset
-            y2Offset = y2Offset + 170
-        end
-        --sceneGroup:insert(pokemonNames[cnt])
-    end        
-    
-    -- Drawing pokemon hp bars
-    for cnt = 1, #trainer.Pokemans do
-        pkmnHB[cnt], pkmnDB[cnt] = trainer.Pokemans[cnt]:returnHealthStatus()
-        pkmnHB[cnt].isVisible = true
-        pkmnDB[cnt].isVisible = true
-    end    
-
-    cancelBtn.isVisible = true
-
-    mainMenuBG.isVisible = false
-    for cnt = 0, 3 do
-        mainMenuBtn[cnt].isVisible = false
-    end
-
-    sceneGroup:insert( pkmnMenuBG )
-    for cnt = 0, #pkmnMenuBtn do
-        sceneGroup:insert(pkmnMenuBtn[cnt])
-    end 
-end
-
-function openItemsMenu (event)
-        if ( "ended" == event.phase ) then
-        audio.play(menuClick, {loops = 0})
-        itemsMenuBG = display.newImage("images/fightScene/menu/item/itemMenuBG.png")
-        itemsMenuBG.width = display.contentWidth
-        itemsMenuBG.height = display.contentHeight/2
-        itemsMenuBG.x = display.contentWidth - (display.contentWidth/2)
-        itemsMenuBG.y = display.contentHeight - (display.contentHeight/4)    
-
-
-        itemList = {}
-        itemList[0] = widget.newButton({    
-            id = "item1",
-            width = 350,
-            height = 40,
-            label = "Health Potion (+50)",    
-            labelColor = { default={ 1, 1, 0 }, over={ 0, 1, 1, 0.5 } },
-            fontSize = 30,
-            defaultFile = "images/menuScene/menuBtn.png",
-            overFile  = "images/menuScene/menuBtnOnClick.png",
-            onEvent = item1 
-        } )        
-        itemList[0].x = 515
-        itemList[0].y = 750 
-        
-        itemList[1] = widget.newButton({    
-            id = "item2",
-            width = 350,
-            height = 40,
-            label = "Big Health Potion (+100)",    
-            labelColor = { default={ 1, 1, 0 }, over={ 0, 1, 1, 0.5 } },
-            fontSize = 30,
-            defaultFile = "images/menuScene/menuBtn.png",
-            overFile  = "images/menuScene/menuBtnOnClick.png",
-            onEvent = item2 
-        } )        
-        itemList[1].x = 515
-        itemList[1].y = 800 
-
-        itemList[2] = widget.newButton({    
-            id = "item3",
-            width = 350,
-            height = 40,
-            label = "Full Health Potion (+max)",    
-            labelColor = { default={ 1, 1, 0 }, over={ 0, 1, 1, 0.5 } },
-            fontSize = 30,
-            defaultFile = "images/menuScene/menuBtn.png",
-            overFile  = "images/menuScene/menuBtnOnClick.png",
-            onEvent = item3 
-        } )        
-        itemList[2].x = 515
-        itemList[2].y = 850         
-
-        mainMenuBG.isVisible = false
-        for cnt = 0, 3 do
-            mainMenuBtn[cnt].isVisible = false
-        end   
-
-        cancelBtn.isVisible = true
-
-        sceneGroup:insert( itemsMenuBG )
-        for cnt = 0, #itemList do
-            sceneGroup:insert( itemList[cnt] )
-        end
-    end
-end
-
-function openingAnimations()
-    local sheetName = require("images.fightScene.animations.battleIntro")
-    local spriteSheetData = sheetName:getSheet()
-    --Creating the image sheet
-    local battleSheet = graphics.newImageSheet( "images/fightScene/animations/battleIntro.png", spriteSheetData)
-    --Getting the sequence data from the sprite sheet file
-    local sequenceData = sheetName:getSequence()
-
-    animation = display.newSprite( battleSheet, sequenceData)
-    animation.x = display.contentCenterX
-    animation.y = display.contentCenterY
-    animation:scale(2,2)
-    --animation:play()
-    sceneGroup:insert( animation )
 end
 
 -- -----------------------------------------------------------------------------------
@@ -1614,20 +1581,10 @@ end
 function scene:create( event )
     sceneGroup = self.view
 
-    cancelBtn =  widget.newButton({    
-            id = "cancelBtn",
-            width = 150,
-            height = 75,
-            defaultFile = "images/fightScene/menu/cancelBtn.png",
-            overFile  = "images/fightScene/menu/cancelBtnOnClick.png",
-            onEvent = returnToMainMenu 
-        } )
-    cancelBtn.x = 638
-    cancelBtn.y = 1226  
-
     openingAnimations()
     timer.performWithDelay(2500, openMainMenu)
     timer.performWithDelay(1, drawBackground)
+    timer.performWithDelay(1000, createObjects)
 end
 
 -- show()
