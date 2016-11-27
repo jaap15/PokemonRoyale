@@ -35,10 +35,12 @@ local fSize = 45; --font size
 local trainer = composer.getVariable("trainer")
 local infoBoxText = display.newText("", 0, 0, native.systemFont, 28)
 local trainersAvailable
+local item
 
 -- Local Sounds
 local menuClick = audio.loadStream("sounds/menuButtonClick.mp3")
 local summonSound = audio.loadStream("sounds/summon.wav")
+local potionUse = audio.loadStream("sounds/onPotionUse.mp3")
 
 local function updatePokemonInfoBox()
     infoBoxText.pName.text = string.format("%s Lv:100", trainer.Pokemans[trainer.currentPokemon].pokemon.tag)
@@ -486,21 +488,24 @@ end
 function item1(event)
         if ( "ended" == event.phase ) then
         audio.play(menuClick, {loops = 0})
-        print("item 1")
+        openPokemonMenuFromItemSelect()
+        item = "healthPotion"
     end
 end
 
 function item2(event)
         if ( "ended" == event.phase ) then
         audio.play(menuClick, {loops = 0})
-        print("item 2")
+        openPokemonMenuFromItemSelect()
+        item = "bigHealthPotion"
     end
 end
 
 function item3(event)
         if ( "ended" == event.phase ) then
         audio.play(menuClick, {loops = 0})
-        print("item 3")
+        openPokemonMenuFromItemSelect()
+        item = "fullPotion"
     end
 end
 
@@ -1183,6 +1188,182 @@ function openPokemonMenuFromAlertBox()
     sceneGroup:insert( cancelBtn )
 end
 
+function useItem(event)
+    if ( "ended" == event.phase ) then
+        audio.play(potionUse)
+        local i = event.target.id
+        local itemValue = 0
+
+        if (i == "selectBtn1") then
+            i = 1
+        elseif (i == "selectBtn2") then
+            i = 2
+        elseif (i == "selectBtn3") then
+            i = 3
+        elseif (i == "selectBtn4") then
+            i = 4
+        elseif (i == "selectBtn5") then
+            i = 5
+        elseif (i == "selectBtn6") then
+            i = 6
+        end
+
+        if (item == "healthPotion") then
+            itemValue = 50    
+        elseif(item == "bigHealthPotion") then
+            itemValue = 100
+        elseif(item == "fullPotion") then
+            itemValue = 99999
+        end
+        trainer.Pokemans[i]:useItem(itemValue)
+        itemsMenuBG.isVisible = false
+        for cnt = 0, #itemList do
+            itemList[cnt].isVisible = false
+        end
+        returnAfterSwap()
+    end
+end
+
+function openPokemonMenuFromItemSelect()
+    audio.play(menuClick, {loops = 0})
+    pkmnMenuBG = display.newImage("images/fightScene/menu/pkmn/pkmnMenuBG.png")
+    pkmnMenuBG.width = display.contentWidth
+    pkmnMenuBG.height = display.contentHeight/2 
+    pkmnMenuBG.x = display.contentWidth - (display.contentWidth/2)
+    pkmnMenuBG.y = display.contentHeight - (display.contentHeight/4)    
+
+
+    pkmnMenuBtn[0] = widget.newButton({    
+        id = "selectBtn1",
+        width = 355,
+        height = 150,
+        defaultFile = "images/fightScene/menu/pkmn/pkmnMenuBtn.png",
+        overFile  = "images/fightScene/menu/pkmn/pkmnMenuBtnOnClick.png",
+        onEvent = useItem 
+    } )        
+    pkmnMenuBtn[0].x = 180
+    pkmnMenuBtn[0].y = 716  
+
+    pkmnMenuBtn[1] = widget.newButton({    
+        id = "selectBtn2",
+        width = 355,
+        height = 150,
+        defaultFile = "images/fightScene/menu/pkmn/pkmnMenuBtn.png",
+        overFile  = "images/fightScene/menu/pkmn/pkmnMenuBtnOnClick.png",
+        onEvent = useItem 
+    } )        
+    pkmnMenuBtn[1].x = 540
+    pkmnMenuBtn[1].y = 752 
+
+    pkmnMenuBtn[2] = widget.newButton({    
+        id = "selectBtn3",
+        width = 355,
+        height = 150,
+        defaultFile = "images/fightScene/menu/pkmn/pkmnMenuBtn.png",
+        overFile  = "images/fightScene/menu/pkmn/pkmnMenuBtnOnClick.png",
+        onEvent = useItem 
+    } )        
+    pkmnMenuBtn[2].x = 180
+    pkmnMenuBtn[2].y = 887     
+
+    pkmnMenuBtn[3] = widget.newButton({    
+        id = "selectBtn4",
+        width = 355,
+        height = 150,
+        defaultFile = "images/fightScene/menu/pkmn/pkmnMenuBtn.png",
+        overFile  = "images/fightScene/menu/pkmn/pkmnMenuBtnOnClick.png",
+        onEvent = useItem 
+    } )        
+    pkmnMenuBtn[3].x = 540
+    pkmnMenuBtn[3].y = 914 
+
+    pkmnMenuBtn[4] = widget.newButton({    
+        id = "selectBtn5",
+        width = 355,
+        height = 150,
+        defaultFile = "images/fightScene/menu/pkmn/pkmnMenuBtn.png",
+        overFile  = "images/fightScene/menu/pkmn/pkmnMenuBtnOnClick.png",
+        onEvent = useItem 
+    } )        
+    pkmnMenuBtn[4].x = 180
+    pkmnMenuBtn[4].y = 1047   
+
+    pkmnMenuBtn[5] = widget.newButton({    
+        id = "selectBtn6",
+        width = 355,
+        height = 150,
+        defaultFile = "images/fightScene/menu/pkmn/pkmnMenuBtn.png",
+        overFile  = "images/fightScene/menu/pkmn/pkmnMenuBtnOnClick.png",
+        onEvent = useItem 
+    } )        
+    pkmnMenuBtn[5].x = 540
+    pkmnMenuBtn[5].y = 1074        
+
+    -- Drawing pokemon thumbnails
+    local y1Offset = 0
+    local y2Offset = 0
+    for cnt = 1, #trainer.Pokemans do
+        pokemonThumbNails[cnt] = trainer.Pokemans[cnt]:returnSelectImage()
+        pokemonThumbNails[cnt].isVisible = true
+        if (cnt % 2 == 0) then
+            pokemonThumbNails[cnt].x = 470
+            pokemonThumbNails[cnt].y = 725+y1Offset
+            y1Offset = y1Offset+160
+        else                
+            pokemonThumbNails[cnt].x = 100
+            pokemonThumbNails[cnt].y = 685+y2Offset
+            y2Offset = y2Offset + 170
+        end
+        --sceneGroup:insert(pokemonThumbNails[cnt])
+    end
+
+    -- Drawing pokemon names
+    local y1Offset = 0
+    local y2Offset = 0
+    for cnt = 1, #trainer.Pokemans do
+        pokemonNames[cnt] = display.newText(trainer.Pokemans[cnt].pokemon.tag, 0, 0, native.systemFont, 30)
+        if (cnt % 2 == 0) then
+            pokemonNames[cnt].x = 600
+            pokemonNames[cnt].y = 725+y1Offset
+            y1Offset = y1Offset+160
+        else                
+            pokemonNames[cnt].x = 200
+            pokemonNames[cnt].y = 685+y2Offset
+            y2Offset = y2Offset + 170
+        end
+        --sceneGroup:insert(pokemonNames[cnt])
+    end        
+    
+    -- Drawing pokemon hp bars
+    for cnt = 1, #trainer.Pokemans do
+        pkmnHB[cnt], pkmnDB[cnt] = trainer.Pokemans[cnt]:returnHealthStatus()
+        pkmnHB[cnt].isVisible = true
+        pkmnDB[cnt].isVisible = true
+    end    
+
+    cancelBtn = widget.newButton({    
+            id = "cancelBtn",
+            width = 150,
+            height = 75,
+            defaultFile = "images/fightScene/menu/cancelBtn.png",
+            overFile  = "images/fightScene/menu/cancelBtnOnClick.png",
+            onEvent = returnToMainMenu 
+        } )
+    cancelBtn.x = 638
+    cancelBtn.y = 1226  
+
+    mainMenuBG.isVisible = false
+    for cnt = 0, 3 do
+        mainMenuBtn[cnt].isVisible = false
+    end
+
+    sceneGroup:insert( pkmnMenuBG )
+    for cnt = 0, #pkmnMenuBtn do
+        sceneGroup:insert(pkmnMenuBtn[cnt])
+    end 
+    sceneGroup:insert( cancelBtn )
+end
+
 function openItemsMenu (event)
         if ( "ended" == event.phase ) then
         audio.play(menuClick, {loops = 0})
@@ -1198,7 +1379,7 @@ function openItemsMenu (event)
             id = "item1",
             width = 350,
             height = 40,
-            label = "Item 1",    
+            label = "Health Potion (+50)",    
             labelColor = { default={ 1, 1, 0 }, over={ 0, 1, 1, 0.5 } },
             fontSize = 30,
             defaultFile = "images/menuScene/menuBtn.png",
@@ -1212,7 +1393,7 @@ function openItemsMenu (event)
             id = "item2",
             width = 350,
             height = 40,
-            label = "Item 2",    
+            label = "Big Health Potion (+100)",    
             labelColor = { default={ 1, 1, 0 }, over={ 0, 1, 1, 0.5 } },
             fontSize = 30,
             defaultFile = "images/menuScene/menuBtn.png",
@@ -1226,7 +1407,7 @@ function openItemsMenu (event)
             id = "item3",
             width = 350,
             height = 40,
-            label = "Item 3",    
+            label = "Full Health Potion (+max)",    
             labelColor = { default={ 1, 1, 0 }, over={ 0, 1, 1, 0.5 } },
             fontSize = 30,
             defaultFile = "images/menuScene/menuBtn.png",

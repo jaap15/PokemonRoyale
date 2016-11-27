@@ -446,7 +446,7 @@ end
 function Pokemon:takeDamage(damageTaken, damageTakenType)
   local multiplier = self:attackEffectMultiplier(damageTakenType);
   damageTaken = damageTaken * multiplier;
-  self.pokemon.currentHP = self.pokemon.currentHP - damageTaken
+  self.pokemon.currentHP = self.pokemon.currentHP - (damageTaken*0.5)
   if (self.pokemon.currentHP < 0) then
     self.pokemon.currentHP = 0
     self.pokemon.status = "fainted"
@@ -463,6 +463,16 @@ function Pokemon:takeDamage(damageTaken, damageTakenType)
     audio.play(normalEffectiveSound, {loops = 0})
   end
 
+  self:updateDamageBar()
+end
+
+function Pokemon:useItem(healthValue)
+  if (self.pokemon.status ~= "fainted") then
+    self.pokemon.currentHP = self.pokemon.currentHP + healthValue
+    if (self.pokemon.currentHP > self.pokemon.maxHP) then
+      self.pokemon.currentHP =  self.pokemon.maxHP
+    end
+  end
   self:updateDamageBar()
 end
 

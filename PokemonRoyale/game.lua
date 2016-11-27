@@ -143,16 +143,19 @@ local function selectionListener(event)
     elseif (teamIndex == 7) then
         openingAnimations()
         audio.play(menuTransition, {loops = 0})
+        select1:removeEventListener("tap", selectionListener);
+        select2:removeEventListener("tap", selectionListener);
+        select3:removeEventListener("tap", selectionListener);
+        local function removeItems()
             selectText:removeSelf();
             teamText:removeSelf();
-            select1:removeEventListener("tap", selectionListener);
-            select2:removeEventListener("tap", selectionListener);
-            select3:removeEventListener("tap", selectionListener);
             select1:removeSelf();
             select2:removeSelf();
             select3:removeSelf();
             removeObjectList(thumbList, false);
             composer.setVariable("trainer", trainer)
+        end
+        timer.performWithDelay(4000, removeItems)
         local function moveToNextScene()
             composer.gotoScene("fight")
         end
