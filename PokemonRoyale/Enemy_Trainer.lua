@@ -216,6 +216,24 @@ function enemy_trainer:PokemonFainted(pokemonIndex)
 	self.E_Pokemans[pokemonIndex].pokeballFainted.isVisible = true;
 end
 
+function enemy_trainer:removePokeballs()
+
+	self.E_Pokemans[1].pokeball:removeSelf()
+	self.E_Pokemans[1].pokeballFainted:removeSelf()
+	self.E_Pokemans[2].pokeball:removeSelf()
+	self.E_Pokemans[2].pokeballFainted:removeSelf()
+	self.E_Pokemans[3].pokeball:removeSelf()
+	self.E_Pokemans[3].pokeballFainted:removeSelf()
+	self.E_Pokemans[4].pokeball:removeSelf()
+	self.E_Pokemans[4].pokeballFainted:removeSelf()
+	self.E_Pokemans[5].pokeball:removeSelf()
+	self.E_Pokemans[5].pokeballFainted:removeSelf()
+	self.E_Pokemans[6].pokeball:removeSelf()
+	self.E_Pokemans[6].pokeballFainted:removeSelf()
+
+
+end
+
 function enemy_trainer:generateAttack(pokemonIndex)
 	atkChoice = math.random(1, 4)
 	

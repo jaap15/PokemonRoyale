@@ -174,19 +174,213 @@ local function result()
     
 end
 
-local function moveMade()
-    if pSelected then
+local function moveMade(tInfo, choiceType)
 
+    local nextButton;
+    local nextButton2;
+    local trainerWentFirst = false;
+    local showButton2 = true;
+    local eFainted = false;
+    local tFainted = false;
+
+    enemyList[currentEnemy]:generateAttack(eCurrentPokemon);
+
+
+    local ePname = enemyList[currentEnemy].E_Pokemans[eCurrentPokemon].pokemon.tag
+    local eSpeed = enemyList[currentEnemy].E_Pokemans[eCurrentPokemon].pokemon.speed;
+    local eAttackType = enemyList[currentEnemy].cAttack.AttackType
+    local eAttackDamage = enemyList[currentEnemy].cAttack.AttackDamage
+    local eAttackName = enemyList[currentEnemy].cAttack.AttackName
+
+    local tPname = tInfo.tPname;
+    local tSpeed = tInfo.tSpeed;
+    local tAttackType = tInfo.tAttackType;
+    local tAttackDamage = tInfo.tAttackDamage;
+    local tAttackName = tInfo.tAttackName;
+
+    print("trainer speed: ".. tSpeed)
+    print("enemy speed: " .. eSpeed)
+
+    fightMenuBG.isVisible = false
+    for cnt = 0, #fightMenuBtn do
+        fightMenuBtn[cnt].isVisible = false
     end
+
+    cancelBtn.isVisible = false
+
+    resultText = display.newText("", 0, 0, native.systemFont, 35)
+    resultText:setTextColor(1, 1, 1)
+    resultText.x = display.contentWidth/2
+    resultText.y = display.contentHeight/2  + 75
+
+    if tSpeed >= eSpeed then
+        trainerWentFirst = true;
+
+        resultText.text = string.format("%s attacked with %s\n%s", tPname, tAttackName, enemyList[currentEnemy].E_Pokemans[eCurrentPokemon]:getEffective(tAttackType))
+
+        enemyList[currentEnemy].E_Pokemans[eCurrentPokemon]:takeDamage(tAttackDamage, tAttackType)
+    
+    else
+        trainerWentFirst = false;
+
+        resultText.text = string.format("%s attacked with %s\n%s", ePname, eAttackName, trainer.Pokemans[currentPokemon]:getEffective(eAttackType))
+
+        trainer.Pokemans[currentPokemon]:takeDamage(eAttackDamage, eAttackType)
+    end
+    
+    updatePokemonInfoBox()
+
+    local function removeLocalObjects()
+        print("removing button")
+        nextButton:removeSelf()
+        nextButton = nil
+        nextButton2:removeSelf()
+        nextButton2 = nil
+        print("removing text")
+        resultText:removeSelf()
+        resultText = nil
+    end
+
+    local function nextButtonEvent(event)
+        if ("ended" == event.phase) then
+            print("clicked next")
+
+            audio.play(menuClick, {loops = 0})
+            nextButton.isVisible = false;
+            local function nextButton2Event(event)
+                if ("ended" == event.phase) then
+                    print("clicked next")
+                    audio.play(menuClick, {loops = 0})
+
+                    if eFainted then
+                        enemyList[currentEnemy]:PokemonFainted(eCurrentPokemon-1)
+                        transition.to(enemyList[currentEnemy].E_Pokemans[eCurrentPokemon-1].pokemon.selectView, {time = 1250, x = enemyList[currentEnemy].E_Pokemans[eCurrentPokemon-1].pokemon.selectView.x+750})
+                        local function spawnNewPkmn()
+                            enemyList[currentEnemy].E_Pokemans[eCurrentPokemon-1]:HidePokemon()
+                            updatePokemonInfoBox()
+                            enemyList[currentEnemy].E_Pokemans[eCurrentPokemon]:setSelectionView()
+                            enemyList[currentEnemy].E_Pokemans[eCurrentPokemon]:setPos(542,350)
+                        end
+                        local playerSummon = summonPkmnAnimation(542,350)
+                        local function summonPlayer()
+                            playerSummon.isVisible = true
+                            playerSummon:play()
+                            audio.play(summonSound, {loops = 0})
+                            local function hideAnimation()
+                                playerSummon.isVisible = false
+                            end
+                            timer.performWithDelay(500, hideAnimation)        
+                        end
+                        timer.performWithDelay(500, summonPlayer)
+                        timer.performWithDelay(1000, spawnNewPkmn)
+                        eFainted = false;
+                    elseif tFainted then
+                        tFainted = false;
+                    end
+
+                    timer.performWithDelay(10, removeLocalObjects)
+                    returnAfterAttack()
+                end
+            end
+
+            if trainerWentFirst then
+
+                if enemyList[currentEnemy].E_Pokemans[eCurrentPokemon].pokemon.status == "fainted" then
+                    eCurrentPokemon = eCurrentPokemon + 1;
+                    if eCurrentPokemon > 6 then
+                        NextEnemy()
+                    else
+                        resultText.text = string.format("%s fainted!!", ePname)
+                        eFainted = true;
+                    end
+
+                else
+                    resultText.text = string.format("%s attacked with %s\n%s", ePname, eAttackName, trainer.Pokemans[currentPokemon]:getEffective(eAttackType))
+
+                    trainer.Pokemans[currentPokemon]:takeDamage(eAttackDamage, eAttackType)
+                    updatePokemonInfoBox()
+
+                    if trainer.Pokemans[currentPokemon].pokemon.status == "fainted" then
+                        resultText.text = string.format("%s attacked with %s\n%s\n%s fainted!", ePname, eAttackName, trainer.Pokemans[currentPokemon]:getEffective(eAttackType), tPname)
+                        print(trainer.Pokemans[currentPokemon].pokemon.tag .. " has " .. trainer.Pokemans[currentPokemon].pokemon.status)
+                        tFainted = true; 
+                    end
+                end
+            else
+
+                if trainer.Pokemans[currentPokemon].pokemon.status == "fainted" then
+                    resultText.text = string.format("%s fainted!!", tPname)
+                    print(trainer.Pokemans[currentPokemon].pokemon.tag .. " has " .. trainer.Pokemans[currentPokemon].pokemon.status)
+                    tFainted = true;
+                else
+
+                    enemyList[currentEnemy].E_Pokemans[eCurrentPokemon]:takeDamage(tAttackDamage, tAttackType)
+
+                    if enemyList[currentEnemy].E_Pokemans[eCurrentPokemon].pokemon.status == "fainted" then
+                        eCurrentPokemon = eCurrentPokemon + 1;
+                        if eCurrentPokemon > 6 then
+                            NextEnemy()
+                        else
+                            resultText.text = string.format("%s attacked with %s\n%s\n%s fainted!!", tPname, tAttackName, enemyList[currentEnemy].E_Pokemans[eCurrentPokemon]:getEffective(tAttackType), ePname)
+                            eFainted = true;
+                        end
+                    else
+                        resultText.text = string.format("%s attacked with %s\n%s", tPname, tAttackName, enemyList[currentEnemy].E_Pokemans[eCurrentPokemon]:getEffective(tAttackType))
+                    end
+                end
+
+            end
+
+            nextButton2 = widget.newButton({    
+                id = "nextButton2",
+                label = "Next",    
+                labelColor = { default={ 1, 1, 0 }, over={ 0, 1, 1, 0.5 } },
+                width = 300,
+                height = 60,
+                fontSize = 30,
+                defaultFile = "images/menuScene/menuBtn.png",
+                overFile  = "images/menuScene/menuBtnOnClick.png",
+                onEvent = nextButton2Event 
+            } ) 
+
+            nextButton2.x = display.contentCenterX
+            nextButton2.y = display.contentCenterY+(display.contentCenterY/1.9)
+
+        end
+    end
+
+    nextButton = widget.newButton({    
+        id = "nextButton",
+        label = "Next",    
+        labelColor = { default={ 1, 1, 0 }, over={ 0, 1, 1, 0.5 } },
+        width = 300,
+        height = 60,
+        fontSize = 30,
+        defaultFile = "images/menuScene/menuBtn.png",
+        overFile  = "images/menuScene/menuBtnOnClick.png",
+        onEvent = nextButtonEvent 
+    } ) 
+
+    nextButton.x = display.contentCenterX
+    nextButton.y = display.contentCenterY+(display.contentCenterY/1.9)
+
+
 end
 
 function NextEnemy()
     print("next enemy")
-    composer.gotoScene("help")
+    enemyList[currentEnemy].E_Pokemans[eCurrentPokemon-1]:HidePokemon()
+    enemyList[currentEnemy]:removePokeballs()
+    trainer.Pokemans[currentPokemon]:HidePokemon()
+    -- updatePokemonInfoBox()
+    composer.gotoScene("NextEnemy")
 end
 
 function playerLoses()
-
+    print("player lost")
+    enemyList[currentEnemy].E_Pokemans[eCurrentPokemon-1]:HidePokemon()
+    enemyList[currentEnemy]:removePokeballs()
+    trainer.Pokemans[currentPokemon]:HidePokemon()
     composer.gotoScene("menu")
 end
 
@@ -194,219 +388,68 @@ end
 function attack1(event)
     if ( "ended" == event.phase ) then
         audio.play(menuClick, {loops = 0})
-        local nextButton;
-        local nextButton2;
-        local trainerWentFirst = false;
-        local showButton2 = true;
-        local eFainted = false;
-        local tFainted = false;
 
-        enemyList[currentEnemy]:generateAttack(eCurrentPokemon);
+        local tInfo = {}
+        local choiceType = "attack"
 
-        
-        local ePname = enemyList[currentEnemy].E_Pokemans[eCurrentPokemon].pokemon.tag
-        local eSpeed = enemyList[currentEnemy].E_Pokemans[eCurrentPokemon].pokemon.speed;
-        local eAttackType = enemyList[currentEnemy].cAttack.AttackType
-        local eAttackDamage = enemyList[currentEnemy].cAttack.AttackDamage
-        local eAttackName = enemyList[currentEnemy].cAttack.AttackName
+        tInfo.tPname = trainer.Pokemans[currentPokemon].pokemon.tag
+        tInfo.tSpeed = trainer.Pokemans[currentPokemon].pokemon.speed;
+        tInfo.tAttackType = trainer.Pokemans[currentPokemon].pokemon.attack1Type
+        tInfo.tAttackDamage = trainer.Pokemans[currentPokemon].pokemon.attack1Damage;
+        tInfo.tAttackName = trainer.Pokemans[currentPokemon].pokemon.attack1
 
-        local tPname = trainer.Pokemans[currentPokemon].pokemon.tag
-        local tSpeed = trainer.Pokemans[currentPokemon].pokemon.speed;
-        local tAttackType = trainer.Pokemans[currentPokemon].pokemon.attack1Type
-        local tAttackDamage = trainer.Pokemans[currentPokemon].pokemon.attack1Damage;
-        local tAttackName = trainer.Pokemans[currentPokemon].pokemon.attack1
-
-        print("trainer speed: ".. tSpeed)
-        print("enemy speed: " .. eSpeed)
-
-        fightMenuBG.isVisible = false
-        for cnt = 0, #fightMenuBtn do
-            fightMenuBtn[cnt].isVisible = false
-        end
-
-        cancelBtn.isVisible = false
-
-        resultText = display.newText("", 0, 0, native.systemFont, 35)
-        resultText:setTextColor(1, 1, 1)
-        resultText.x = display.contentWidth/2
-        resultText.y = display.contentHeight/2  + 75
-
-        if tSpeed >= eSpeed then
-            trainerWentFirst = true;
-
-            resultText.text = string.format("%s attacked with %s\n%s", tPname, tAttackName, enemyList[currentEnemy].E_Pokemans[eCurrentPokemon]:getEffective(tAttackType))
-
-            enemyList[currentEnemy].E_Pokemans[eCurrentPokemon]:takeDamage(tAttackDamage, tAttackType)
-        
-        else
-            trainerWentFirst = false;
-
-            resultText.text = string.format("%s attacked with %s\n%s", ePname, eAttackName, trainer.Pokemans[currentPokemon]:getEffective(eAttackType))
-
-            trainer.Pokemans[currentPokemon]:takeDamage(eAttackDamage, eAttackType)
-        end
-        
-        updatePokemonInfoBox()
-
-        local function removeLocalObjects()
-            print("removing button")
-            nextButton:removeSelf()
-            nextButton = nil
-            nextButton2:removeSelf()
-            nextButton2 = nil
-            print("removing text")
-            resultText:removeSelf()
-            resultText = nil
-        end
-
-        local function nextButtonEvent(event)
-            if ("ended" == event.phase) then
-                print("clicked next")
-
-                audio.play(menuClick, {loops = 0})
-                nextButton.isVisible = false;
-                local function nextButton2Event(event)
-                    if ("ended" == event.phase) then
-                        print("clicked next")
-                        audio.play(menuClick, {loops = 0})
-
-                        if eFainted then
-                            enemyList[currentEnemy]:PokemonFainted(eCurrentPokemon-1)
-                            transition.to(enemyList[currentEnemy].E_Pokemans[eCurrentPokemon-1].pokemon.selectView, {time = 1250, x = enemyList[currentEnemy].E_Pokemans[eCurrentPokemon-1].pokemon.selectView.x+750})
-                            local function spawnNewPkmn()
-                                enemyList[currentEnemy].E_Pokemans[eCurrentPokemon-1]:HidePokemon()
-                                updatePokemonInfoBox()
-                                enemyList[currentEnemy].E_Pokemans[eCurrentPokemon]:setSelectionView()
-                                enemyList[currentEnemy].E_Pokemans[eCurrentPokemon]:setPos(542,350)
-                            end
-                            local playerSummon = summonPkmnAnimation(542,350)
-                            local function summonPlayer()
-                                playerSummon.isVisible = true
-                                playerSummon:play()
-                                audio.play(summonSound, {loops = 0})
-                                local function hideAnimation()
-                                    playerSummon.isVisible = false
-                                end
-                                timer.performWithDelay(500, hideAnimation)        
-                            end
-                            timer.performWithDelay(500, summonPlayer)
-                            timer.performWithDelay(1000, spawnNewPkmn)
-                            eFainted = false;
-                        elseif tFainted then
-                            native.showAlert("Pokemon has fainted",  trainer.Pokemans[currentPokemon].pokemon.tag .. " has fainted \n Select your next pokemon ", {"Go"}, openPokemonMenuFromAlertBox)
-                            tFainted = false;
-                        end
-
-                        timer.performWithDelay(10, removeLocalObjects)
-                        returnAfterAttack()
-                    end
-                end
-
-                if trainerWentFirst then
-
-                    if enemyList[currentEnemy].E_Pokemans[eCurrentPokemon].pokemon.status == "fainted" then
-                        eCurrentPokemon = eCurrentPokemon + 1;
-                        if eCurrentPokemon > 6 then
-                            NextEnemy()
-                        else
-                            resultText.text = string.format("%s fainted!!", ePname)
-                            eFainted = true;
-                        end
-
-                    else
-                        resultText.text = string.format("%s attacked with %s\n%s", ePname, eAttackName, trainer.Pokemans[currentPokemon]:getEffective(eAttackType))
-
-                        trainer.Pokemans[currentPokemon]:takeDamage(eAttackDamage, eAttackType)
-                        updatePokemonInfoBox()
-
-                        if trainer.Pokemans[currentPokemon].pokemon.status == "fainted" then
-                            resultText.text = string.format("%s attacked with %s\n%s\n%s fainted!", ePname, eAttackName, trainer.Pokemans[currentPokemon]:getEffective(eAttackType), tPname)
-                            print(trainer.Pokemans[currentPokemon].pokemon.tag .. " has " .. trainer.Pokemans[currentPokemon].pokemon.status)
-                            tFainted = true; 
-                        end
-                    end
-                else
-
-                    if trainer.Pokemans[currentPokemon].pokemon.status == "fainted" then
-                        resultText.text = string.format("%s fainted!!", tPname)
-                        print(trainer.Pokemans[currentPokemon].pokemon.tag .. " has " .. trainer.Pokemans[currentPokemon].pokemon.status)
-                        tFainted = true;
-                    else
-
-                        enemyList[currentEnemy].E_Pokemans[eCurrentPokemon]:takeDamage(tAttackDamage, tAttackType)
-
-                        if enemyList[currentEnemy].E_Pokemans[eCurrentPokemon].pokemon.status == "fainted" then
-                            eCurrentPokemon = eCurrentPokemon + 1;
-                            if eCurrentPokemon > 6 then
-                                NextEnemy()
-                            else
-                                resultText.text = string.format("%s attacked with %s\n%s\n%s fainted!!", tPname, tAttackName, enemyList[currentEnemy].E_Pokemans[eCurrentPokemon]:getEffective(tAttackType), ePname)
-                                eFainted = true;
-                            end
-                        else
-                            resultText.text = string.format("%s attacked with %s\n%s", tPname, tAttackName, enemyList[currentEnemy].E_Pokemans[eCurrentPokemon]:getEffective(tAttackType))
-                        end
-                    end
-
-                end
-
-                nextButton2 = widget.newButton({    
-                    id = "nextButton2",
-                    label = "Next",    
-                    labelColor = { default={ 1, 1, 0 }, over={ 0, 1, 1, 0.5 } },
-                    width = 300,
-                    height = 60,
-                    fontSize = 30,
-                    defaultFile = "images/menuScene/menuBtn.png",
-                    overFile  = "images/menuScene/menuBtnOnClick.png",
-                    onEvent = nextButton2Event 
-                } ) 
-
-                nextButton2.x = display.contentCenterX
-                nextButton2.y = display.contentCenterY+(display.contentCenterY/1.9)
-
-            end
-        end
-
-        nextButton = widget.newButton({    
-            id = "nextButton",
-            label = "Next",    
-            labelColor = { default={ 1, 1, 0 }, over={ 0, 1, 1, 0.5 } },
-            width = 300,
-            height = 60,
-            fontSize = 30,
-            defaultFile = "images/menuScene/menuBtn.png",
-            overFile  = "images/menuScene/menuBtnOnClick.png",
-            onEvent = nextButtonEvent 
-        } ) 
-
-        nextButton.x = display.contentCenterX
-        nextButton.y = display.contentCenterY+(display.contentCenterY/1.9)
-
+        moveMade(tInfo, choiceType);
     end
 end
 
 function attack2(event)
     if ( "ended" == event.phase ) then
         audio.play(menuClick, {loops = 0})
-        enemyList[currentEnemy].E_Pokemans[enemyList[currentEnemy].currentPokemon]:takeDamage(trainer.Pokemans[currentPokemon].pokemon.attack2Damage, trainer.Pokemans[currentPokemon].pokemon.attack2Type)
-        returnAfterAttack()
+
+        local tInfo = {}
+        local choiceType = "attack"
+
+        tInfo.tPname = trainer.Pokemans[currentPokemon].pokemon.tag
+        tInfo.tSpeed = trainer.Pokemans[currentPokemon].pokemon.speed;
+        tInfo.tAttackType = trainer.Pokemans[currentPokemon].pokemon.attack2Type
+        tInfo.tAttackDamage = trainer.Pokemans[currentPokemon].pokemon.attack2Damage;
+        tInfo.tAttackName = trainer.Pokemans[currentPokemon].pokemon.attack2
+
+        moveMade(tInfo, choiceType);
     end
 end
 
 function attack3(event)
     if ( "ended" == event.phase ) then
         audio.play(menuClick, {loops = 0})
-        enemyList[currentEnemy].E_Pokemans[enemyList[currentEnemy].currentPokemon]:takeDamage(trainer.Pokemans[currentPokemon].pokemon.attack3Damage, trainer.Pokemans[currentPokemon].pokemon.attack3Type)
-        returnAfterAttack()
+
+        local tInfo = {}
+        local choiceType = "attack"
+
+        tInfo.tPname = trainer.Pokemans[currentPokemon].pokemon.tag
+        tInfo.tSpeed = trainer.Pokemans[currentPokemon].pokemon.speed;
+        tInfo.tAttackType = trainer.Pokemans[currentPokemon].pokemon.attack3Type
+        tInfo.tAttackDamage = trainer.Pokemans[currentPokemon].pokemon.attack3Damage;
+        tInfo.tAttackName = trainer.Pokemans[currentPokemon].pokemon.attack3
+
+        moveMade(tInfo, choiceType);
     end
 end
 
 function attack4(event)
     if ( "ended" == event.phase ) then
         audio.play(menuClick, {loops = 0})
-        enemyList[currentEnemy].E_Pokemans[enemyList[currentEnemy].currentPokemon]:takeDamage(trainer.Pokemans[currentPokemon].pokemon.attack4Damage,trainer.Pokemans[currentPokemon].pokemon.attack4Type)
-        returnAfterAttack()
+
+        local tInfo = {}
+        local choiceType = "attack"
+
+        tInfo.tPname = trainer.Pokemans[currentPokemon].pokemon.tag
+        tInfo.tSpeed = trainer.Pokemans[currentPokemon].pokemon.speed;
+        tInfo.tAttackType = trainer.Pokemans[currentPokemon].pokemon.attack4Type
+        tInfo.tAttackDamage = trainer.Pokemans[currentPokemon].pokemon.attack4Damage;
+        tInfo.tAttackName = trainer.Pokemans[currentPokemon].pokemon.attack4
+
+        moveMade(tInfo, choiceType);
     end
 end
 
