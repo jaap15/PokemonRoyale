@@ -53,13 +53,6 @@ function enemy_trainer:create(trainerChoice)
 	self.arena.isVisible = false;
 	self.trainer.isVisible = false;
 
-	-- self.pokeball.isVisible = false;
-	-- self.pokeball2.isVisible = false;
-	-- self.pokeball3.isVisible = false;
-	-- self.pokeball4.isVisible = false;
-	-- self.pokeball5.isVisible = false;
-	-- self.pokeball6.isVisible = false;
-
 end
 
 function enemy_trainer:moveTrainerIn()
@@ -250,6 +243,18 @@ function enemy_trainer:generateAttack(pokemonIndex)
 
 	print("Enemy Attack generated: "..self.cAttack.AttackName..", "..self.cAttack.AttackDamage..", "..self.cAttack.AttackType)
 end
+
+function enemy_trainer:pickNewPokemon()
+  	
+  	table.remove(self.E_Pokemans, self.currentPokemon)
+  	self.numPokemans = self.numPokemans - 1
+  	print(self.numPokemans)
+  	
+  	pokeChoice = math.random(1, #self.E_Pokemans)
+  	
+  	self.currentPokemon = pokeChoice
+ end
+
 
 function enemy_trainer:BattleTurn(pTrainer)
 	

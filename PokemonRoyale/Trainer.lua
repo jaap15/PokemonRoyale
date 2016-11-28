@@ -23,6 +23,7 @@ function trainer:create()
 	self.player.y = 530
 	self.player:scale(2,2)
 	self.player.isVisible = false;
+	self.currentPokemon = 1;
 
 end
 

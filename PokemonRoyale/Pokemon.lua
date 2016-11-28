@@ -462,7 +462,7 @@ function Pokemon:takeDamage(damageTaken, damageTakenType)
   local multiplier = self:attackEffectMultiplier(damageTakenType);
   damageTaken = damageTaken * multiplier;
   self.pokemon.currentHP = self.pokemon.currentHP - damageTaken
-  if (self.pokemon.currentHP < 0) then
+  if (self.pokemon.currentHP <= 0) then
     self.pokemon.currentHP = 0
     self.pokemon.status = "fainted"
     --print(self.pokemon.tag .. " has " .. self.pokemon.status)
