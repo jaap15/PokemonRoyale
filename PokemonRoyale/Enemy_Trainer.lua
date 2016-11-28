@@ -90,7 +90,7 @@ function enemy_trainer:beginBattle()
 
 	self:moveTrainerOut()
 	audio.setVolume(0.5)
-	audio.play(self.music)
+	audio.play(self.music, {loops = -1})
 end
 
 function enemy_trainer:populatePokemon(trainerInfo)

@@ -481,6 +481,16 @@ function Pokemon:takeDamage(damageTaken, damageTakenType)
   self:updateDamageBar()
 end
 
+function Pokemon:useItem(healthValue)
+  if (self.pokemon.status ~= "fainted") then
+    self.pokemon.currentHP = self.pokemon.currentHP + healthValue
+    if (self.pokemon.currentHP > self.pokemon.maxHP) then
+      self.pokemon.currentHP =  self.pokemon.maxHP
+    end
+  end
+  self:updateDamageBar()
+end
+
 function Pokemon:drawHealthBar(index)
   if (index == "player") then
     self.pokemon.healthBar.x = display.contentWidth - 200
