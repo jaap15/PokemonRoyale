@@ -281,9 +281,7 @@ function attack1(event)
 
                 end
 
-                -- timer.performWithDelay(10, removeLocalObjects)
                 updatePokemonInfoBox()
-                -- returnAfterAttack()
             end
         end
 
@@ -302,8 +300,6 @@ function attack1(event)
         nextButton.x = display.contentCenterX
         nextButton.y = display.contentCenterY+(display.contentCenterY/1.9)
 
-
-        -- -- trainer.Pokemans[currentPokemon]:takeDamage(25, "grass")
         -- enemyList[currentEnemy]:PokemonFainted(3)
 
     end
