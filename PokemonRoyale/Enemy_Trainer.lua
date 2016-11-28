@@ -262,6 +262,24 @@ function enemy_trainer:PokemonFainted(pokemonNumber)
 	self.trainer.E_Pokemans[pokemonNumber].pokeballFainted.isVisible = true;
 end
 
+function enemy_trainer:BattleTurn(pTrainer)
+	
+	atkChoice = math.random(1, 4)
+	
+	if(atkChoice == 1) then
+		pTrainer.Pokemans[pTrainer.currentPokemon]:takeDamage(self.E_Pokemans[self.currentPokemon].pokemon.attack1Damage, self.E_Pokemans[self.currentPokemon].pokemon.attack1Type)
+	
+	elseif(atkChoice == 2) then
+		pTrainer.Pokemans[pTrainer.currentPokemon]:takeDamage(self.E_Pokemans[self.currentPokemon].pokemon.attack2Damage, self.E_Pokemans[self.currentPokemon].pokemon.attack2Type)
+	
+	elseif(atkChoice == 3) then
+		pTrainer.Pokemans[pTrainer.currentPokemon]:takeDamage(self.E_Pokemans[self.currentPokemon].pokemon.attack3Damage, self.E_Pokemans[self.currentPokemon].pokemon.attack3Type)
+	
+	elseif(atkChoice == 4) then
+		pTrainer.Pokemans[pTrainer.currentPokemon]:takeDamage(self.E_Pokemans[self.currentPokemon].pokemon.attack4Damage, self.E_Pokemans[self.currentPokemon].pokemon.attack4Type)
+	
+	end
+end
 
 function enemy_trainer:audioStop()
 	

@@ -39,6 +39,7 @@ local trainersAvailable = composer.getVariable("trainersAvailable")
 local pSelected = false;
 local eSelected = false;
 local moveMadeTimer;
+local resultText;
 
 -- Local Sounds
 local menuClick = audio.loadStream("sounds/menuButtonClick.mp3")
@@ -178,11 +179,62 @@ end
 function attack1(event)
     if ( "ended" == event.phase ) then
         audio.play(menuClick, {loops = 0})
+        local nextButton;
+
+        fightMenuBG.isVisible = false
+        for cnt = 0, #fightMenuBtn do
+            fightMenuBtn[cnt].isVisible = false
+        end
+
+        cancelBtn.isVisible = false
+
+        resultText = display.newText("", 0, 0, native.systemFont, 35)
+        resultText:setTextColor(1, 1, 1)
+        resultText.x = display.contentWidth/2
+        resultText.y = display.contentHeight/2  + 75
+
+        resultText.text = string.format("%s attacked with %s", trainer.Pokemans[currentPokemon].pokemon.tag, trainer.Pokemans[currentPokemon].pokemon.attack1)
+
         enemyList[currentEnemy].trainer.E_Pokemans[enemyList[currentEnemy].currentPokemon]:takeDamage(trainer.Pokemans[currentPokemon].pokemon.attack1Damage, trainer.Pokemans[currentPokemon].pokemon.attack1Type)
-        trainer.Pokemans[currentPokemon]:takeDamage(25, "grass")
-        enemyList[currentEnemy]:PokemonFainted(3)
-        updatePokemonInfoBox()
-        returnAfterAttack()
+        
+        local function removeLocalObjects()
+            print("removing button")
+            nextButton:removeSelf()
+            nextButton = nil
+            print("removing text")
+            resultText:removeSelf()
+            resultText = nil
+        end
+
+        local function nextButtonEvent(event)
+            if ("ended" == event.phase) then
+                print("clicked next")
+                audio.play(menuClick, {loops = 0})
+                timer.performWithDelay(10, removeLocalObjects)
+                updatePokemonInfoBox()
+                returnAfterAttack()
+            end
+        end
+
+        nextButton = widget.newButton({    
+            id = "nextButton",
+            label = "Next",    
+            labelColor = { default={ 1, 1, 0 }, over={ 0, 1, 1, 0.5 } },
+            width = 300,
+            height = 60,
+            fontSize = 30,
+            defaultFile = "images/menuScene/menuBtn.png",
+            overFile  = "images/menuScene/menuBtnOnClick.png",
+            onEvent = nextButtonEvent 
+        } ) 
+
+        nextButton.x = display.contentCenterX
+        nextButton.y = display.contentCenterY+(display.contentCenterY/1.9)
+
+
+        -- -- trainer.Pokemans[currentPokemon]:takeDamage(25, "grass")
+        -- enemyList[currentEnemy]:PokemonFainted(3)
+
     end
 end
 
