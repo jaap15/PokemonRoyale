@@ -443,6 +443,21 @@ function Pokemon:attackEffectMultiplier(attackedType)
 
 end
 
+function Pokemon:getEffective(damageTakenType)
+  local multiplier = self:attackEffectMultiplier(damageTakenType);
+
+  if multiplier == superEffective then
+    return "it was super effective!"
+  elseif multiplier == notVeryEffective then
+    return "it was not very effective!"
+  elseif multiplier == noEffect then
+    return "it is not effective!"
+  else 
+    return " ";
+  end
+
+end
+
 function Pokemon:takeDamage(damageTaken, damageTakenType)
   local multiplier = self:attackEffectMultiplier(damageTakenType);
   damageTaken = damageTaken * multiplier;

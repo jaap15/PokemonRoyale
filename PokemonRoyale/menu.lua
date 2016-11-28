@@ -31,10 +31,10 @@ enemyList = {} --holds all of the enemy objects that the player will battle
 local function startButtonEvent(event)
 	if ("ended" == event.phase) then
         enemyList[1] = e_trainer:new()
-        enemyList[1]:create(3)
+        enemyList[1]:create(2)
 
         enemyList[2] = e_trainer:new()
-        enemyList[2]:create(2)
+        enemyList[2]:create(3)
         
 		composer.gotoScene("game")
 	end
