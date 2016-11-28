@@ -44,6 +44,111 @@ local moveMadeTimer;
 local menuClick = audio.loadStream("sounds/menuButtonClick.mp3")
 local summonSound = audio.loadStream("sounds/summon.wav")
 
+local function updatePokemonInfoBox()
+    infoBoxText.pName.text = string.format("%s Lv:100", trainer.Pokemans[currentPokemon].pokemon.tag)
+    infoBoxText.eName.text = string.format("%s Lv:100", enemyList[currentEnemy].trainer.E_Pokemans[enemyList[currentEnemy].currentPokemon].pokemon.tag)
+    infoBoxText.pHpText.text = string.format("%03d/%03d", trainer.Pokemans[currentPokemon].pokemon.currentHP, trainer.Pokemans[currentPokemon].pokemon.maxHP)
+ end
+
+function drawBackground()
+    
+    trainer:throwAnimation()
+    enemyList[currentEnemy]:beginBattle()
+
+    enemyInfoBox = display.newImage("images/fightScene/enemyInfoBox.png")
+    enemyInfoBox.width = display.contentWidth/2
+    enemyInfoBox.height = display.contentHeight /10
+    enemyInfoBox.x = (display.contentWidth + 200) - display.contentWidth
+    enemyInfoBox.y = (display.contentHeight  + 100) - display.contentHeight
+
+    infoBoxText.eName = display.newText(" ", 0, 0, native.systemFont, 28)
+    infoBoxText.eName:setTextColor(0, 0, 0)
+    infoBoxText.eName.x = (display.contentWidth + 200) - display.contentWidth
+    infoBoxText.eName.y = (display.contentHeight  + 75) - display.contentHeight
+
+    sceneGroup:insert( animation )
+
+    playerInfoBox = display.newImage("images/fightScene/playerInfoBox.png")
+    playerInfoBox.width = display.contentWidth/2
+    playerInfoBox.height = display.contentHeight/10  
+    playerInfoBox.x = display.contentWidth - 200
+    playerInfoBox.y = display.contentHeight/2 - 100
+
+    infoBoxText.pName = display.newText(" ", 0, 0, native.systemFont, 28)
+    infoBoxText.pName:setTextColor(0, 0, 0)
+    infoBoxText.pName.x = display.contentWidth - 200
+    infoBoxText.pName.y = display.contentHeight/2 - 125
+
+    infoBoxText.pHpText = display.newText(" ", 0, 0, native.systemFont, 28)
+    infoBoxText.pHpText:setTextColor(0, 0, 0)
+    infoBoxText.pHpText.x = display.contentWidth - 200
+    infoBoxText.pHpText.y = display.contentHeight/2 - 75
+
+    for i = 1, #trainer.Pokemans do
+        trainer.Pokemans[i]:drawHealthBar("player")
+        enemyList[currentEnemy].trainer.E_Pokemans[i]:drawHealthBar("enemy")
+    end
+
+    local y1Offset = 0
+    local y2Offset = 0
+    for cnt = 1, #trainer.Pokemans do
+        pkmnHB[cnt], pkmnDB[cnt] = trainer.Pokemans[cnt]:returnHealthStatus()
+        if (cnt % 2 == 0) then
+            pkmnHB[cnt].x = 550
+            pkmnHB[cnt].y = 775+y1Offset
+            pkmnDB[cnt].x = 550
+            pkmnDB[cnt].y = 775+y1Offset                
+            y1Offset = y1Offset+160
+        else                
+            pkmnHB[cnt].x = 200
+            pkmnHB[cnt].y = 735+y2Offset
+            pkmnDB[cnt].x = 200
+            pkmnDB[cnt].y = 735+y2Offset                
+            y2Offset = y2Offset + 170
+        end
+    end    
+
+    local function drawEnemyPokemon()
+        enemyList[currentEnemy].trainer.E_Pokemans[enemyList[currentEnemy].currentPokemon]:setSelectionView();
+    end
+    local enemySummon = summonPkmnAnimation(542,350)
+    local function summonEnemy()
+        enemySummon.isVisible = true
+        enemySummon:play()
+        local function hideAnimation()
+            enemySummon.isVisible = false
+        end
+        timer.performWithDelay(500, hideAnimation)
+    end
+    timer.performWithDelay(2500, summonEnemy)
+    timer.performWithDelay(3000, drawEnemyPokemon)
+    
+    local function drawPlayerPokemon()
+        trainer.Pokemans[currentPokemon]:setBattleView()
+        trainer.Pokemans[currentPokemon]:setPos(190,530)
+        updatePokemonInfoBox()
+    end
+    local playerSummon = summonPkmnAnimation(190,530)
+    local function summonPlayer()
+        playerSummon.isVisible = true
+        playerSummon:play()
+        audio.play(summonSound, {loops = 0})
+        local function hideAnimation()
+            playerSummon.isVisible = false
+        end
+        timer.performWithDelay(500, hideAnimation)        
+    end
+    timer.performWithDelay(2500, summonPlayer)
+    timer.performWithDelay(3000, drawPlayerPokemon)
+
+    -- moveMadeTimer = timer.performWithDelay(100, moveMade)
+    sceneGroup:insert( enemyList[currentEnemy].arena )
+    sceneGroup:insert( enemyInfoBox )
+    sceneGroup:insert( playerInfoBox )
+    sceneGroup:insert( infoBoxText )
+end
+
+
 local function startBattle()
     timer.performWithDelay(2500, openMainMenu)
     timer.performWithDelay(1, drawBackground)
@@ -69,20 +174,13 @@ local function moveMade()
     end
 end
 
-
-
-local function updatePokemonInfoBox()
-    infoBoxText.pName.text = string.format("%s Lv:100", trainer.Pokemans[currentPokemon].pokemon.tag)
-    infoBoxText.eName.text = string.format("%s Lv:100", enemyList[currentEnemy].trainer.E_Pokemans[enemyList[currentEnemy].currentPokemon].pokemon.tag)
-    infoBoxText.pHpText.text = string.format("%03d/%03d", trainer.Pokemans[currentPokemon].pokemon.currentHP, trainer.Pokemans[currentPokemon].pokemon.maxHP)
- end
-
 -- Fight Menu Functions
 function attack1(event)
     if ( "ended" == event.phase ) then
         audio.play(menuClick, {loops = 0})
         enemyList[currentEnemy].trainer.E_Pokemans[enemyList[currentEnemy].currentPokemon]:takeDamage(trainer.Pokemans[currentPokemon].pokemon.attack1Damage, trainer.Pokemans[currentPokemon].pokemon.attack1Type)
         trainer.Pokemans[currentPokemon]:takeDamage(25, "grass")
+        enemyList[currentEnemy]:PokemonFainted(3)
         updatePokemonInfoBox()
         returnAfterAttack()
     end
@@ -407,104 +505,6 @@ function exitButtonEvent(event)
 		enemyList[currentEnemy]:audioStop()
         composer.gotoScene("menu")
     end
-end
-
-function drawBackground()
-	
-    trainer:throwAnimation()
-    enemyList[currentEnemy]:beginBattle()
-
-    enemyInfoBox = display.newImage("images/fightScene/enemyInfoBox.png")
-    enemyInfoBox.width = display.contentWidth/2
-    enemyInfoBox.height = display.contentHeight /10
-    enemyInfoBox.x = (display.contentWidth + 200) - display.contentWidth
-    enemyInfoBox.y = (display.contentHeight  + 100) - display.contentHeight
-
-    infoBoxText.eName = display.newText(" ", 0, 0, native.systemFont, 28)
-    infoBoxText.eName:setTextColor(0, 0, 0)
-    infoBoxText.eName.x = (display.contentWidth + 200) - display.contentWidth
-    infoBoxText.eName.y = (display.contentHeight  + 75) - display.contentHeight
-
-    sceneGroup:insert( animation )
-
-    playerInfoBox = display.newImage("images/fightScene/playerInfoBox.png")
-    playerInfoBox.width = display.contentWidth/2
-    playerInfoBox.height = display.contentHeight/10  
-    playerInfoBox.x = display.contentWidth - 200
-    playerInfoBox.y = display.contentHeight/2 - 100
-
-    infoBoxText.pName = display.newText(" ", 0, 0, native.systemFont, 28)
-    infoBoxText.pName:setTextColor(0, 0, 0)
-    infoBoxText.pName.x = display.contentWidth - 200
-    infoBoxText.pName.y = display.contentHeight/2 - 125
-
-    infoBoxText.pHpText = display.newText(" ", 0, 0, native.systemFont, 28)
-    infoBoxText.pHpText:setTextColor(0, 0, 0)
-    infoBoxText.pHpText.x = display.contentWidth - 200
-    infoBoxText.pHpText.y = display.contentHeight/2 - 75
-
-    for i = 1, #trainer.Pokemans do
-        trainer.Pokemans[i]:drawHealthBar("player")
-        enemyList[currentEnemy].trainer.E_Pokemans[i]:drawHealthBar("enemy")
-    end
-
-    local y1Offset = 0
-    local y2Offset = 0
-    for cnt = 1, #trainer.Pokemans do
-        pkmnHB[cnt], pkmnDB[cnt] = trainer.Pokemans[cnt]:returnHealthStatus()
-        if (cnt % 2 == 0) then
-            pkmnHB[cnt].x = 550
-            pkmnHB[cnt].y = 775+y1Offset
-            pkmnDB[cnt].x = 550
-            pkmnDB[cnt].y = 775+y1Offset                
-            y1Offset = y1Offset+160
-        else                
-            pkmnHB[cnt].x = 200
-            pkmnHB[cnt].y = 735+y2Offset
-            pkmnDB[cnt].x = 200
-            pkmnDB[cnt].y = 735+y2Offset                
-            y2Offset = y2Offset + 170
-        end
-    end    
-
-    local function drawEnemyPokemon()
-        enemyList[currentEnemy].trainer.E_Pokemans[enemyList[currentEnemy].currentPokemon]:setSelectionView();
-    end
-    local enemySummon = summonPkmnAnimation(542,350)
-    local function summonEnemy()
-        enemySummon.isVisible = true
-        enemySummon:play()
-        local function hideAnimation()
-            enemySummon.isVisible = false
-        end
-        timer.performWithDelay(500, hideAnimation)
-    end
-    timer.performWithDelay(2500, summonEnemy)
-    timer.performWithDelay(3000, drawEnemyPokemon)
-    
-    local function drawPlayerPokemon()
-        trainer.Pokemans[currentPokemon]:setBattleView()
-        trainer.Pokemans[currentPokemon]:setPos(190,530)
-        updatePokemonInfoBox()
-    end
-    local playerSummon = summonPkmnAnimation(190,530)
-    local function summonPlayer()
-        playerSummon.isVisible = true
-        playerSummon:play()
-        audio.play(summonSound, {loops = 0})
-        local function hideAnimation()
-            playerSummon.isVisible = false
-        end
-        timer.performWithDelay(500, hideAnimation)        
-    end
-    timer.performWithDelay(2500, summonPlayer)
-    timer.performWithDelay(3000, drawPlayerPokemon)
-
-    moveMadeTimer = timer.performWithDelay(100, moveMade)
-    sceneGroup:insert( enemyList[currentEnemy].arena )
-    sceneGroup:insert( enemyInfoBox )
-    sceneGroup:insert( playerInfoBox )
-    sceneGroup:insert( infoBoxText )
 end
 
 function returnAfterAttack()
@@ -1179,6 +1179,7 @@ function scene:create( event )
 	
     openingAnimations()
     trainer:create()
+
 end
 
 -- show()
@@ -1196,6 +1197,8 @@ function scene:show( event )
     elseif ( phase == "did" ) then
         -- Code here runs when the scene is entirely on screen
         startBattle();
+
+
         -- timer.performWithDelay(2000, endBattle)
 
     end
