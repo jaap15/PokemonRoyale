@@ -629,7 +629,7 @@ end
 function returnAfterAttack()
     fightMenuBG.isVisible = false
     for cnt = 0, #fightMenuBtn do
-        fightMenuBtn[cnt].isVisible = false
+        fightMenuBtn[cnt].isVisible = fals
     end
 
     cancelBtn.isVisible = false
@@ -789,7 +789,9 @@ function openMainMenu ()
             onEvent = exitButtonEvent 
         } )
     mainMenuBtn[3].x = 475
-    mainMenuBtn[3].y = 1105    
+    mainMenuBtn[3].y = 1105
+
+    cancelBtn.isVisible = false;
 
     mainMenuBG.x = display.contentWidth - (display.contentWidth/2)
     mainMenuBG.y = display.contentHeight - (display.contentHeight/4) 
@@ -861,18 +863,9 @@ function openFightMenu (event)
             onEvent = attack4 
         } )      
         fightMenuBtn[3].x = 536
-        fightMenuBtn[3].y = 1074        
+        fightMenuBtn[3].y = 1074   
 
-        cancelBtn = widget.newButton({    
-                id = "cancelBtn",
-                width = 150,
-                height = 75,
-                defaultFile = "images/fightScene/menu/cancelBtn.png",
-                overFile  = "images/fightScene/menu/cancelBtnOnClick.png",
-                onEvent = returnToMainMenu 
-            } )
-        cancelBtn.x = 638
-        cancelBtn.y = 1226    
+        cancelBtn.isVisible = true;  
 
         mainMenuBG.isVisible = false
         for cnt = 0, 3 do
@@ -883,7 +876,6 @@ function openFightMenu (event)
         for cnt = 0, #fightMenuBtn do
             sceneGroup:insert(fightMenuBtn[cnt])
         end
-        sceneGroup:insert( cancelBtn )
     end
 end
 
@@ -1003,16 +995,7 @@ function openPokemonMenu(event)
             pkmnDB[cnt].isVisible = true
         end    
 
-        cancelBtn = widget.newButton({    
-                id = "cancelBtn",
-                width = 150,
-                height = 75,
-                defaultFile = "images/fightScene/menu/cancelBtn.png",
-                overFile  = "images/fightScene/menu/cancelBtnOnClick.png",
-                onEvent = returnToMainMenu 
-            } )
-        cancelBtn.x = 638
-        cancelBtn.y = 1226  
+        cancelBtn.isVisible = true;  
 
         mainMenuBG.isVisible = false
         for cnt = 0, 3 do
@@ -1023,7 +1006,6 @@ function openPokemonMenu(event)
         for cnt = 0, #pkmnMenuBtn do
             sceneGroup:insert(pkmnMenuBtn[cnt])
         end 
-        sceneGroup:insert( cancelBtn )
     end
 end
 
@@ -1117,7 +1099,6 @@ function openPokemonMenuFromAlertBox()
             pokemonThumbNails[cnt].y = 685+y2Offset
             y2Offset = y2Offset + 170
         end
-        --sceneGroup:insert(pokemonThumbNails[cnt])
     end
 
     -- Drawing pokemon names
@@ -1134,7 +1115,6 @@ function openPokemonMenuFromAlertBox()
             pokemonNames[cnt].y = 685+y2Offset
             y2Offset = y2Offset + 170
         end
-        --sceneGroup:insert(pokemonNames[cnt])
     end        
     
     -- Drawing pokemon hp bars
@@ -1144,16 +1124,7 @@ function openPokemonMenuFromAlertBox()
         pkmnDB[cnt].isVisible = true
     end    
 
-    cancelBtn = widget.newButton({    
-            id = "cancelBtn",
-            width = 150,
-            height = 75,
-            defaultFile = "images/fightScene/menu/cancelBtn.png",
-            overFile  = "images/fightScene/menu/cancelBtnOnClick.png",
-            onEvent = returnToMainMenu 
-        } )
-    cancelBtn.x = 638
-    cancelBtn.y = 1226  
+    cancelBtn.isVisible = false; 
 
     mainMenuBG.isVisible = false
     for cnt = 0, 3 do
@@ -1164,7 +1135,6 @@ function openPokemonMenuFromAlertBox()
     for cnt = 0, #pkmnMenuBtn do
         sceneGroup:insert(pkmnMenuBtn[cnt])
     end 
-    sceneGroup:insert( cancelBtn )
 end
 
 function openItemsMenu (event)
@@ -1220,16 +1190,7 @@ function openItemsMenu (event)
         itemList[2].x = 515
         itemList[2].y = 850         
 
-        cancelBtn = widget.newButton({    
-                id = "cancelBtn",
-                width = 150,
-                height = 75,
-                defaultFile = "images/fightScene/menu/cancelBtn.png",
-                overFile  = "images/fightScene/menu/cancelBtnOnClick.png",
-                onEvent = returnToMainMenu 
-            } )
-        cancelBtn.x = 638
-        cancelBtn.y = 1226  
+        cancelBtn.isVisible = true; 
 
         mainMenuBG.isVisible = false
         for cnt = 0, 3 do
@@ -1240,30 +1201,6 @@ function openItemsMenu (event)
         for cnt = 0, #itemList do
             sceneGroup:insert( itemList[cnt] )
         end
-        sceneGroup:insert( cancelBtn ) 
-    end
-end
-
-function openRunMenu (event)
-        if ( "ended" == event.phase ) then
-        audio.play(menuClick, {loops = 0})
-        cancelBtn = widget.newButton({    
-                id = "cancelBtn",
-                width = 150,
-                height = 75,
-                defaultFile = "images/fightScene/menu/cancelBtn.png",
-                overFile  = "images/fightScene/menu/cancelBtnOnClick.png",
-                onEvent = returnToMainMenu 
-            } )
-        cancelBtn.x = 638
-        cancelBtn.y = 1226  
-
-        mainMenuBG.isVisible = false
-        for cnt = 0, 3 do
-            mainMenuBtn[cnt].isVisible = false
-        end      
-
-        sceneGroup:insert( cancelBtn ) 
     end
 end
 
@@ -1295,6 +1232,18 @@ end
 --      them to the scene group. It also loads all the sound files that we will be using.
 function scene:create( event )
     sceneGroup = self.view
+
+    cancelBtn =  widget.newButton({    
+            id = "cancelBtn",
+            width = 150,
+            height = 75,
+            defaultFile = "images/fightScene/menu/cancelBtn.png",
+            overFile  = "images/fightScene/menu/cancelBtnOnClick.png",
+            onEvent = returnToMainMenu 
+        } )
+    cancelBtn.x = 638
+    cancelBtn.y = 1226
+    cancelBtn.isVisible = false;
 	
     openingAnimations()
     trainer:create()
