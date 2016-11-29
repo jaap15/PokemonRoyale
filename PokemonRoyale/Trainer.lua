@@ -47,21 +47,5 @@ function trainer:moveTrainerIn()
     timer.performWithDelay(500, appear)	
 end
 
-function trainer:createPokemonTable(pokemon, numChoice)
-	
-	self.Pokemans[numChoice] = pokemon
-	
-	print(self.Pokemans[numChoice])
-end
-
-function trainer:switchPokemon(numChoice)
-	
-	
-end
-
-function trainer:addItemtoInventory(item, quantity)
-
-	
-end
 
 return trainer

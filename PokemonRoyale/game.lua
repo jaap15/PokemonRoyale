@@ -19,9 +19,9 @@ require("sqlController");
 local pokemonsAvailable = getIdListOfPokemons()
 local trainersAvailable = getIdListofTrainers()
 local pokemon = Pokemon:new( {HP=150} );
-teamIndex = 1
-thumbX = 173;
-thumbY = 900;
+local teamIndex = 1
+local thumbX = 173;
+local thumbY = 900;
 local thumbList = {}
 local select1;
 local select2;
@@ -215,18 +215,6 @@ end
 function scene:create( event )
 
     sceneGroup = self.view
-
-    -- trainer = Trainer:new()
-    -- trainer:create()
-    -- Code here runs when the scene is first created but has not yet appeared on screen
-
-    -- Game Background
-
-    -- Positioning menuBG object on the screen
-
-    -- Positioning all objects on the scene
-
-    -- Adding all objects to the scene group
 
 end
 

@@ -33,12 +33,7 @@ local pokemon = Pokemon:new( {HP=150} )
 local sceneGroup
 local eCurrentPokemon = 1;
 local fSize = 45; --font size
--- local trainer = composer.getVariable("trainer")
 local infoBoxText = display.newText("", 0, 0, native.systemFont, 28)
--- local trainersAvailable = composer.getVariable("trainersAvailable")
-local pSelected = false;
-local eSelected = false;
-local moveMadeTimer;
 local resultText;
 local item;
 
@@ -90,7 +85,6 @@ function drawBackground()
     infoBoxText.pHpText.y = display.contentHeight/2 - 75
 
     for i = 1, #trainer.Pokemans do
-        -- trainer.Pokemans[i]:drawHealthBar("player")
         enemyList[currentEnemy].E_Pokemans[i]:drawHealthBar("enemy")
     end
 
@@ -149,7 +143,6 @@ function drawBackground()
     timer.performWithDelay(2500, summonPlayer)
     timer.performWithDelay(3000, drawPlayerPokemon)
 
-    -- moveMadeTimer = timer.performWithDelay(100, moveMade)
     sceneGroup:insert( enemyList[currentEnemy].arena )
     sceneGroup:insert( enemyInfoBox )
     sceneGroup:insert( playerInfoBox )
@@ -161,13 +154,6 @@ local function startBattle()
     timer.performWithDelay(2500, openMainMenu)
     timer.performWithDelay(1, drawBackground)
 end
-
-local function endBattle()
-    timer.cancel(moveMadeTimer)
-    enemyList[currentEnemy]:moveTrainerIn()
-    trainer:moveTrainerIn()
-end
-
 
 local function moveMade(tInfo, choiceType)
 
@@ -254,7 +240,6 @@ local function moveMade(tInfo, choiceType)
         removeObject(infoBoxText.pHpText)
         removeObject(infoBoxText)
         enemyList[currentEnemy]:hidePokeballs()
-        -- enemyList[currentEnemy]:removePokeballs()
         removeLocalObjects()
         local function waitToHide()
             enemyList[currentEnemy].E_Pokemans[eCurrentPokemon]:HidePokemon()
@@ -453,7 +438,6 @@ end
 
 function NextEnemy()
     print("next enemy")
-    -- removeObjectList(enemyList[currentEnemy].E_Pokemans, true);
     currentEnemy = currentEnemy + 1
 
     if currentEnemy > #enemyList then
@@ -1601,7 +1585,6 @@ function openingAnimations()
     animation.x = display.contentCenterX
     animation.y = display.contentCenterY
     animation:scale(2,2)
-    --animation:play()
     sceneGroup:insert( animation )
 end
 
@@ -1632,13 +1615,6 @@ function scene:create( event )
 	
     openingAnimations()
 
-    for i = 1, #trainer.Pokemans do
-        trainer.Pokemans[i]:updateDamageBar()
-    end
-
-    -- trainer.Pokemans[currentPokemon]:updateDamageBar()
-    -- trainer:create()
-
 end
 
 -- show()
@@ -1656,9 +1632,6 @@ function scene:show( event )
     elseif ( phase == "did" ) then
         -- Code here runs when the scene is entirely on screen
         startBattle();
-
-
-        -- timer.performWithDelay(2000, endBattle)
 
     end
 end

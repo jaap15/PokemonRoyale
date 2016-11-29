@@ -43,7 +43,6 @@ function enemy_trainer:create(trainerChoice)
 	
 	self:populatePokemon(trainerInfo)
 	
-	-- self.currentPokemon = math.random(1, #self.E_Pokemans)
 	self.currentPokemon = 1
 
 	self.music = audio.loadStream(musLocation)
@@ -278,37 +277,6 @@ function enemy_trainer:generateAttack(pokemonIndex)
 	end
 
 	print("Enemy Attack generated: "..self.cAttack.AttackName..", "..self.cAttack.AttackDamage..", "..self.cAttack.AttackType)
-end
-
-function enemy_trainer:pickNewPokemon()
-  	
-  	table.remove(self.E_Pokemans, self.currentPokemon)
-  	self.numPokemans = self.numPokemans - 1
-  	print(self.numPokemans)
-  	
-  	pokeChoice = math.random(1, #self.E_Pokemans)
-  	
-  	self.currentPokemon = pokeChoice
- end
-
-
-function enemy_trainer:BattleTurn(pTrainer)
-	
-	atkChoice = math.random(1, 4)
-	
-	if(atkChoice == 1) then
-		pTrainer.Pokemans[pTrainer.currentPokemon]:takeDamage(self.E_Pokemans[self.currentPokemon].pokemon.attack1Damage, self.E_Pokemans[self.currentPokemon].pokemon.attack1Type)
-	
-	elseif(atkChoice == 2) then
-		pTrainer.Pokemans[pTrainer.currentPokemon]:takeDamage(self.E_Pokemans[self.currentPokemon].pokemon.attack2Damage, self.E_Pokemans[self.currentPokemon].pokemon.attack2Type)
-	
-	elseif(atkChoice == 3) then
-		pTrainer.Pokemans[pTrainer.currentPokemon]:takeDamage(self.E_Pokemans[self.currentPokemon].pokemon.attack3Damage, self.E_Pokemans[self.currentPokemon].pokemon.attack3Type)
-	
-	elseif(atkChoice == 4) then
-		pTrainer.Pokemans[pTrainer.currentPokemon]:takeDamage(self.E_Pokemans[self.currentPokemon].pokemon.attack4Damage, self.E_Pokemans[self.currentPokemon].pokemon.attack4Type)
-	
-	end
 end
 
 function enemy_trainer:destroyTrainer()

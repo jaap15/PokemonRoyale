@@ -465,7 +465,6 @@ function Pokemon:takeDamage(damageTaken, damageTakenType)
   if (self.pokemon.currentHP <= 0) then
     self.pokemon.currentHP = 0
     self.pokemon.status = "fainted"
-    --print(self.pokemon.tag .. " has " .. self.pokemon.status)
   end
 
   if multiplier == superEffective then

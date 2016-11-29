@@ -50,17 +50,6 @@ local function helpButtonEvent(event)
     end
 end
 
--- gameButtonEvent()
---      input: none
---      output: none
---      
---      This function just switches from the menu scene to the help scene
-local function gameButtonEvent(event)
-    if ("ended" == event.phase) then
-        composer.gotoScene("fight")
-    end
-end
-
 local function animationIntro()
     local function slashAnimation()
         local sheetName = require("images.menuScene.animations.slash")
