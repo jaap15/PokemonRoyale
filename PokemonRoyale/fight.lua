@@ -275,7 +275,7 @@ local function moveMade(tInfo, choiceType)
         resultText.y = display.contentHeight/2  + 75
 
         if trainerWon then
-            resultText.text = string.format("You bet Trainer %s!!", enemyList[currentEnemy].trainer.tag)
+            resultText.text = string.format("You beat Trainer %s!!", enemyList[currentEnemy].trainer.tag)
         else
             resultText.text = string.format("You lost to Trainer %s!!", enemyList[currentEnemy].trainer.tag)
         end

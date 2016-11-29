@@ -68,7 +68,6 @@ function openingAnimations()
         animation:scale(4,4)
         animation:play()
         local function removeAnimationSecond()
-            print("TEST")
             animation:pause()
             animation.x = 5000
             animation.isVisible = false
@@ -143,15 +142,19 @@ local function selectionListener(event)
     elseif (teamIndex == 7) then
         openingAnimations()
         audio.play(menuTransition, {loops = 0})
-        selectText:removeSelf();
-        teamText:removeSelf();
         select1:removeEventListener("tap", selectionListener);
         select2:removeEventListener("tap", selectionListener);
         select3:removeEventListener("tap", selectionListener);
-        select1:removeSelf();
-        select2:removeSelf();
-        select3:removeSelf();
-        removeObjectList(thumbList, false);
+        local function removeItems()
+            selectText:removeSelf();
+            teamText:removeSelf();
+            select1:removeSelf();
+            select2:removeSelf();
+            select3:removeSelf();
+            removeObjectList(thumbList, false);
+            composer.setVariable("trainer", trainer)
+        end
+        timer.performWithDelay(4000, removeItems)
         trainer:create()
         for i = 1, #trainer.Pokemans do
             trainer.Pokemans[i]:drawHealthBar("player")
