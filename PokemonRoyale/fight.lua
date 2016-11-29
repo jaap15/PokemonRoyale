@@ -96,22 +96,25 @@ function drawBackground()
 
     local y1Offset = 0
     local y2Offset = 0
-    for cnt = 1, #trainer.Pokemans do
-        pkmnHB[cnt], pkmnDB[cnt] = trainer.Pokemans[cnt]:returnHealthStatus()
-        if (cnt % 2 == 0) then
-            pkmnHB[cnt].x = 550
-            pkmnHB[cnt].y = 775+y1Offset
-            pkmnDB[cnt].x = 550
-            pkmnDB[cnt].y = 775+y1Offset                
-            y1Offset = y1Offset+160
-        else                
-            pkmnHB[cnt].x = 200
-            pkmnHB[cnt].y = 735+y2Offset
-            pkmnDB[cnt].x = 200
-            pkmnDB[cnt].y = 735+y2Offset                
-            y2Offset = y2Offset + 170
+    if newGame then
+        for cnt = 1, #trainer.Pokemans do
+            pkmnHB[cnt], pkmnDB[cnt] = trainer.Pokemans[cnt]:returnHealthStatus()
+            if (cnt % 2 == 0) then
+                pkmnHB[cnt].x = 550
+                pkmnHB[cnt].y = 775+y1Offset
+                pkmnDB[cnt].x = 550
+                pkmnDB[cnt].y = 775+y1Offset                
+                y1Offset = y1Offset+160
+            else                
+                pkmnHB[cnt].x = 200
+                pkmnHB[cnt].y = 735+y2Offset
+                pkmnDB[cnt].x = 200
+                pkmnDB[cnt].y = 735+y2Offset                
+                y2Offset = y2Offset + 170
+            end
         end
-    end    
+        newGame = false;
+    end
 
     local function drawEnemyPokemon()
         enemyList[currentEnemy].E_Pokemans[enemyList[currentEnemy].currentPokemon]:setSelectionView();
@@ -235,7 +238,7 @@ local function moveMade(tInfo, choiceType)
         resultText = nil
     end
 
-    local function betEnemyAnimation()
+    local function afterBattleAnimation()
 
         if trainerWon then
             eCurrentPokemon = eCurrentPokemon - 1;
@@ -250,7 +253,8 @@ local function moveMade(tInfo, choiceType)
         removeObject(infoBoxText.eName)
         removeObject(infoBoxText.pHpText)
         removeObject(infoBoxText)
-        enemyList[currentEnemy]:removePokeballs()
+        enemyList[currentEnemy]:hidePokeballs()
+        -- enemyList[currentEnemy]:removePokeballs()
         removeLocalObjects()
         local function waitToHide()
             enemyList[currentEnemy].E_Pokemans[eCurrentPokemon]:HidePokemon()
@@ -271,6 +275,7 @@ local function moveMade(tInfo, choiceType)
                 nextButton3 = nil
                 resultText:removeSelf()
                 resultText = nil
+                enemyList[currentEnemy]:audioStop()
                 if trainerWon then
                     NextEnemy()
                 else
@@ -322,25 +327,7 @@ local function moveMade(tInfo, choiceType)
                         eCurrentPokemon = eCurrentPokemon + 1;
                         if eCurrentPokemon > 6 then
                             trainerWon = true;
-                            -- enemyList[currentEnemy]:PokemonFainted(eCurrentPokemon-1)
-                            -- transition.to(enemyList[currentEnemy].E_Pokemans[eCurrentPokemon-1].pokemon.selectView, {time = 1250, x = enemyList[currentEnemy].E_Pokemans[eCurrentPokemon-1].pokemon.selectView.x+750})
-                            -- transition.to(trainer.Pokemans[currentPokemon].pokemon.battleView, {time = 1250, x = trainer.Pokemans[currentPokemon].pokemon.battleView.x-750})
-
-                            -- removeObject(infoBoxText.pName)
-                            -- removeObject(infoBoxText.eName)
-                            -- removeObject(infoBoxText.pHpText)
-                            -- removeObject(infoBoxText)
-                            -- enemyList[currentEnemy]:removePokeballs()
-                            -- removeLocalObjects()
-                            -- local function waitToHide()
-                            --     enemyList[currentEnemy].E_Pokemans[eCurrentPokemon-1]:HidePokemon()
-                            --     trainer.Pokemans[currentPokemon]:HidePokemon()
-                            --     trainer:moveTrainerIn()
-                            --     enemyList[currentEnemy]:moveTrainerIn()
-                            -- end
-
-                            -- timer.performWithDelay(1250, waitToHide)
-                            betEnemyAnimation()
+                            afterBattleAnimation()
                         else
                             enemyList[currentEnemy]:PokemonFainted(eCurrentPokemon-1)
                             transition.to(enemyList[currentEnemy].E_Pokemans[eCurrentPokemon-1].pokemon.selectView, {time = 1250, x = enemyList[currentEnemy].E_Pokemans[eCurrentPokemon-1].pokemon.selectView.x+750})
@@ -378,8 +365,7 @@ local function moveMade(tInfo, choiceType)
 
                         if numFainted == #trainer.Pokemans then
                             trainerWon = false;
-                            betEnemyAnimation()
-                            -- playerLoses()
+                            afterBattleAnimation()
                         else
                             timer.performWithDelay(10, removeLocalObjects)
                             returnAfterAttack()
@@ -467,22 +453,20 @@ end
 
 function NextEnemy()
     print("next enemy")
-    removeObjectList(enemyList[currentEnemy].E_Pokemans, true);
-    enemyList[currentEnemy]:audioStop()
+    -- removeObjectList(enemyList[currentEnemy].E_Pokemans, true);
     currentEnemy = currentEnemy + 1
 
     if currentEnemy > #enemyList then
+        print("next enemy if statement")
         composer.gotoScene("Winner")
     else
+        print("next enemy else statement")
         composer.gotoScene("NextEnemy")
     end
 end
 
 function playerLoses()
     print("player lost")
-    -- enemyList[currentEnemy].E_Pokemans[eCurrentPokemon-1]:HidePokemon()
-    -- enemyList[currentEnemy]:removePokeballs()
-    -- trainer.Pokemans[currentPokemon]:HidePokemon()
     composer.gotoScene("Loser")
 end
 
@@ -1647,6 +1631,12 @@ function scene:create( event )
     cancelBtn.isVisible = false;
 	
     openingAnimations()
+
+    for i = 1, #trainer.Pokemans do
+        trainer.Pokemans[i]:updateDamageBar()
+    end
+
+    -- trainer.Pokemans[currentPokemon]:updateDamageBar()
     -- trainer:create()
 
 end

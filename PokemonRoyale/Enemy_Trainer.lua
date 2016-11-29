@@ -234,6 +234,24 @@ function enemy_trainer:removePokeballs()
 
 end
 
+function enemy_trainer:hidePokeballs()
+
+	self.E_Pokemans[1].pokeball.isVisible = false;
+	self.E_Pokemans[1].pokeballFainted.isVisible = false;
+	self.E_Pokemans[2].pokeball.isVisible = false;
+	self.E_Pokemans[2].pokeballFainted.isVisible = false;
+	self.E_Pokemans[3].pokeball.isVisible = false;
+	self.E_Pokemans[3].pokeballFainted.isVisible = false;
+	self.E_Pokemans[4].pokeball.isVisible = false;
+	self.E_Pokemans[4].pokeballFainted.isVisible = false;
+	self.E_Pokemans[5].pokeball.isVisible = false;
+	self.E_Pokemans[5].pokeballFainted.isVisible = false;
+	self.E_Pokemans[6].pokeball.isVisible = false;
+	self.E_Pokemans[6].pokeballFainted.isVisible = false;
+
+
+end
+
 function enemy_trainer:generateAttack(pokemonIndex)
 	atkChoice = math.random(1, 4)
 	
@@ -290,6 +308,43 @@ function enemy_trainer:BattleTurn(pTrainer)
 	elseif(atkChoice == 4) then
 		pTrainer.Pokemans[pTrainer.currentPokemon]:takeDamage(self.E_Pokemans[self.currentPokemon].pokemon.attack4Damage, self.E_Pokemans[self.currentPokemon].pokemon.attack4Type)
 	
+	end
+end
+
+function enemy_trainer:destroyTrainer()
+
+	if  self.E_Pokemans[1].pokeball ~= nil then
+		self:removePokeballs()
+	end
+
+	local function removeObjectList(objectList)
+	    for i = 1, #objectList do
+            if(objectList[i] ~= nil) then
+		        objectList[i].pokemon.healthBar:removeSelf();
+                objectList[i].pokemon.damageBar:removeSelf();
+                objectList[i].pokemon.selectViewTN:removeSelf();
+                objectList[i].pokemon.battleView:removeSelf();
+                objectList[i].pokemon.selectView:removeSelf();
+                objectList[i].pokemon:removeSelf();
+                objectList[i] = nil;
+            end
+	    end
+	end
+
+	removeObjectList(self.E_Pokemans)
+
+	if self.trainer ~= nil then
+		self.trainer:removeSelf();
+		self.trainer = nil;
+	end
+
+	if self.arena ~= nil then
+		self.arena:removeSelf();
+		self.arena = nil;
+	end
+	print("trying to remove self")
+	if self ~= nil then
+		self = nil;
 	end
 end
 

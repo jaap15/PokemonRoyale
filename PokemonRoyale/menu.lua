@@ -21,9 +21,6 @@ local e_trainer = require("enemy_trainer")
 -- -----------------------------------------------------------------------------------
 
 local sceneGroup
-enemyList = {} --holds all of the enemy objects that the player will battle
-currentPokemon = 1;
-currentEnemy = 1;
 
 -- startButtonEvent()
 --      input: none
@@ -125,7 +122,10 @@ function scene:create( event )
 
     sceneGroup = self.view
     -- Code here runs when the scene is first created but has not yet appeared on screen
-
+    enemyList = {} --holds all of the enemy objects that the player will battle
+    currentPokemon = 1;
+    currentEnemy = 1;
+    newGame = true;
     -- Game Title / Image 
 
     -- Creating the start button, sends us from the menu scene to the game scene

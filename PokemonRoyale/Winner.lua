@@ -84,6 +84,22 @@ function scene:show( event )
 
     if ( phase == "will" ) then
         -- Code here runs when the scene is still off screen (but is about to come on screen)
+        print("Inside winner.lua phase will of show")
+
+        for i = 1, #enemyList do
+            print("Deleting enemy".. i)
+            enemyList[i]:destroyTrainer()
+        end
+        
+        if trainer.Pokemans ~= nil then
+            print("Deleting Player")
+            removeObjectList(trainer.Pokemans, true);
+        else
+            print("Player already deleted")
+        end
+
+        print("leaving winner.lua phase will of show")
+
         composer.removeScene("fight")
         composer.removeScene("game")
         composer.removeScene("menu")

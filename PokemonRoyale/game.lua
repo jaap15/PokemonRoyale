@@ -156,8 +156,6 @@ local function selectionListener(event)
         for i = 1, #trainer.Pokemans do
             trainer.Pokemans[i]:drawHealthBar("player")
         end
-        print("# trainer's pokemons: " .. #trainer.Pokemans)   
-            -- composer.setVariable("trainer", trainer)
         local function moveToNextScene()
             composer.gotoScene("fight")
         end
