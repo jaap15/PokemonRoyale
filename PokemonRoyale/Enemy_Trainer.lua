@@ -90,7 +90,7 @@ function enemy_trainer:populatePokemon(trainerInfo)
 	self.E_Pokemans[1] = pokemon:new({xPos = 542, yPos = 350})
 	self.E_Pokemans[1]:create(trainerInfo.Pokemon1)
 	print(trainerInfo.Pokemon1)
-	self.E_Pokemans[1].pokeball = display.newImage("images/pokeball.png")
+	self.E_Pokemans[1].pokeball = display.newImage("images/Pokeball.png")
 	self.E_Pokemans[1].pokeball.width = 48
     self.E_Pokemans[1].pokeball.height = 48
     self.E_Pokemans[1].pokeball.x = (display.contentWidth + 300) - display.contentWidth
@@ -98,7 +98,7 @@ function enemy_trainer:populatePokemon(trainerInfo)
     self.E_Pokemans[1].pokeball:scale(0.8,0.8)
     self.E_Pokemans[1].pokeball.isVisible = false;
 
-    self.E_Pokemans[1].pokeballFainted = display.newImage("images/pokeballFainted.png")
+    self.E_Pokemans[1].pokeballFainted = display.newImage("images/PokeballFainted.png")
 	self.E_Pokemans[1].pokeballFainted.width = 48
     self.E_Pokemans[1].pokeballFainted.height = 48
     self.E_Pokemans[1].pokeballFainted.x = (display.contentWidth + 300) - display.contentWidth
@@ -110,7 +110,7 @@ function enemy_trainer:populatePokemon(trainerInfo)
 	self.E_Pokemans[2] = pokemon:new({xPos = 542, yPos = 350})
 	self.E_Pokemans[2]:create(trainerInfo.Pokemon2)
 	print(trainerInfo.Pokemon2)
-	self.E_Pokemans[2].pokeball = display.newImage("images/pokeball.png")
+	self.E_Pokemans[2].pokeball = display.newImage("images/Pokeball.png")
 	self.E_Pokemans[2].pokeball.width = 48
     self.E_Pokemans[2].pokeball.height = 48
     self.E_Pokemans[2].pokeball.x = (display.contentWidth + 260) - display.contentWidth
@@ -118,7 +118,7 @@ function enemy_trainer:populatePokemon(trainerInfo)
     self.E_Pokemans[2].pokeball:scale(0.8,0.8)
     self.E_Pokemans[2].pokeball.isVisible = false;
 
-    self.E_Pokemans[2].pokeballFainted = display.newImage("images/pokeballFainted.png")
+    self.E_Pokemans[2].pokeballFainted = display.newImage("images/PokeballFainted.png")
 	self.E_Pokemans[2].pokeballFainted.width = 48
     self.E_Pokemans[2].pokeballFainted.height = 48
     self.E_Pokemans[2].pokeballFainted.x = (display.contentWidth + 260) - display.contentWidth
@@ -131,7 +131,7 @@ function enemy_trainer:populatePokemon(trainerInfo)
 	self.E_Pokemans[3] = pokemon:new({xPos = 542, yPos = 350})
 	self.E_Pokemans[3]:create(trainerInfo.Pokemon3)
 	print(trainerInfo.Pokemon3)
-	self.E_Pokemans[3].pokeball = display.newImage("images/pokeball.png")
+	self.E_Pokemans[3].pokeball = display.newImage("images/Pokeball.png")
 	self.E_Pokemans[3].pokeball.width = 48
     self.E_Pokemans[3].pokeball.height = 48
     self.E_Pokemans[3].pokeball.x = (display.contentWidth + 220) - display.contentWidth
@@ -139,7 +139,7 @@ function enemy_trainer:populatePokemon(trainerInfo)
     self.E_Pokemans[3].pokeball:scale(0.8,0.8)
     self.E_Pokemans[3].pokeball.isVisible = false;
 
-    self.E_Pokemans[3].pokeballFainted = display.newImage("images/pokeballFainted.png")
+    self.E_Pokemans[3].pokeballFainted = display.newImage("images/PokeballFainted.png")
 	self.E_Pokemans[3].pokeballFainted.width = 48
     self.E_Pokemans[3].pokeballFainted.height = 48
     self.E_Pokemans[3].pokeballFainted.x = (display.contentWidth + 220) - display.contentWidth
@@ -152,7 +152,7 @@ function enemy_trainer:populatePokemon(trainerInfo)
 	self.E_Pokemans[4] = pokemon:new({xPos = 542, yPos = 350})
 	self.E_Pokemans[4]:create(trainerInfo.Pokemon4)
 	print(trainerInfo.Pokemon4)
-	self.E_Pokemans[4].pokeball = display.newImage("images/pokeball.png")
+	self.E_Pokemans[4].pokeball = display.newImage("images/Pokeball.png")
 	self.E_Pokemans[4].pokeball.width = 48
     self.E_Pokemans[4].pokeball.height = 48
     self.E_Pokemans[4].pokeball.x = (display.contentWidth + 180) - display.contentWidth
@@ -160,7 +160,7 @@ function enemy_trainer:populatePokemon(trainerInfo)
     self.E_Pokemans[4].pokeball:scale(0.8,0.8)
     self.E_Pokemans[4].pokeball.isVisible = false;
 
-    self.E_Pokemans[4].pokeballFainted = display.newImage("images/pokeballFainted.png")
+    self.E_Pokemans[4].pokeballFainted = display.newImage("images/PokeballFainted.png")
 	self.E_Pokemans[4].pokeballFainted.width = 48
     self.E_Pokemans[4].pokeballFainted.height = 48
     self.E_Pokemans[4].pokeballFainted.x = (display.contentWidth + 180) - display.contentWidth
@@ -172,7 +172,7 @@ function enemy_trainer:populatePokemon(trainerInfo)
 	self.E_Pokemans[5] = pokemon:new({xPos = 542, yPos = 350})
 	self.E_Pokemans[5]:create(trainerInfo.Pokemon5)
 	print(trainerInfo.Pokemon5)
-	self.E_Pokemans[5].pokeball = display.newImage("images/pokeball.png")
+	self.E_Pokemans[5].pokeball = display.newImage("images/Pokeball.png")
 	self.E_Pokemans[5].pokeball.width = 48
     self.E_Pokemans[5].pokeball.height = 48
     self.E_Pokemans[5].pokeball.x = (display.contentWidth + 140) - display.contentWidth
@@ -180,7 +180,7 @@ function enemy_trainer:populatePokemon(trainerInfo)
     self.E_Pokemans[5].pokeball:scale(0.8,0.8)
     self.E_Pokemans[5].pokeball.isVisible = false;
 
-    self.E_Pokemans[5].pokeballFainted = display.newImage("images/pokeballFainted.png")
+    self.E_Pokemans[5].pokeballFainted = display.newImage("images/PokeballFainted.png")
 	self.E_Pokemans[5].pokeballFainted.width = 48
     self.E_Pokemans[5].pokeballFainted.height = 48
     self.E_Pokemans[5].pokeballFainted.x = (display.contentWidth + 140) - display.contentWidth
@@ -192,7 +192,7 @@ function enemy_trainer:populatePokemon(trainerInfo)
 	self.E_Pokemans[6] = pokemon:new({xPos = 542, yPos = 350})
 	self.E_Pokemans[6]:create(trainerInfo.Pokemon6)
 	print(trainerInfo.Pokemon6)
-	self.E_Pokemans[6].pokeball = display.newImage("images/pokeball.png")
+	self.E_Pokemans[6].pokeball = display.newImage("images/Pokeball.png")
 	self.E_Pokemans[6].pokeball.width = 48
     self.E_Pokemans[6].pokeball.height = 48
     self.E_Pokemans[6].pokeball.x = (display.contentWidth + 100) - display.contentWidth
@@ -200,7 +200,7 @@ function enemy_trainer:populatePokemon(trainerInfo)
     self.E_Pokemans[6].pokeball:scale(0.8,0.8)
     self.E_Pokemans[6].pokeball.isVisible = false;
 
-    self.E_Pokemans[6].pokeballFainted = display.newImage("images/pokeballFainted.png")
+    self.E_Pokemans[6].pokeballFainted = display.newImage("images/PokeballFainted.png")
 	self.E_Pokemans[6].pokeballFainted.width = 48
     self.E_Pokemans[6].pokeballFainted.height = 48
     self.E_Pokemans[6].pokeballFainted.x = (display.contentWidth + 100) - display.contentWidth
