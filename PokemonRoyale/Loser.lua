@@ -43,7 +43,7 @@ function scene:create( event )
     -- Code here runs when the scene is first created but has not yet appeared on screen
 
     -- Displaying game instructions
-    local instructionText = display.newText("You bet all of the enemies!\n\nCONGRATULATION!!", display.contentCenterX, display.contentCenterY-150)
+    local instructionText = display.newText("You Lost!\n\nTry Again!!", display.contentCenterX, display.contentCenterY-150)
 
     -- Game Background
 

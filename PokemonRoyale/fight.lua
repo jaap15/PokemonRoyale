@@ -90,7 +90,7 @@ function drawBackground()
     infoBoxText.pHpText.y = display.contentHeight/2 - 75
 
     for i = 1, #trainer.Pokemans do
-        trainer.Pokemans[i]:drawHealthBar("player")
+        -- trainer.Pokemans[i]:drawHealthBar("player")
         enemyList[currentEnemy].E_Pokemans[i]:drawHealthBar("enemy")
     end
 
@@ -175,6 +175,7 @@ local function moveMade(tInfo, choiceType)
     local showButton2 = true;
     local eFainted = false;
     local tFainted = false;
+    local trainerWon = false;
 
     enemyList[currentEnemy]:generateAttack(eCurrentPokemon);
 
@@ -236,6 +237,30 @@ local function moveMade(tInfo, choiceType)
 
     local function betEnemyAnimation()
 
+        if trainerWon then
+            eCurrentPokemon = eCurrentPokemon - 1;
+            enemyList[currentEnemy]:PokemonFainted(eCurrentPokemon)
+        else
+            eCurrentPokemon = eCurrentPokemon;
+        end
+        transition.to(enemyList[currentEnemy].E_Pokemans[eCurrentPokemon].pokemon.selectView, {time = 1250, x = enemyList[currentEnemy].E_Pokemans[eCurrentPokemon].pokemon.selectView.x+750})
+        transition.to(trainer.Pokemans[currentPokemon].pokemon.battleView, {time = 1250, x = trainer.Pokemans[currentPokemon].pokemon.battleView.x-750})
+
+        removeObject(infoBoxText.pName)
+        removeObject(infoBoxText.eName)
+        removeObject(infoBoxText.pHpText)
+        removeObject(infoBoxText)
+        enemyList[currentEnemy]:removePokeballs()
+        removeLocalObjects()
+        local function waitToHide()
+            enemyList[currentEnemy].E_Pokemans[eCurrentPokemon]:HidePokemon()
+            trainer.Pokemans[currentPokemon]:HidePokemon()
+            trainer:moveTrainerIn()
+            enemyList[currentEnemy]:moveTrainerIn()
+        end
+
+        timer.performWithDelay(1250, waitToHide)
+
         local function nextButton3Event(event)
             if ("ended" == event.phase) then
                 print("clicked next3")
@@ -246,7 +271,11 @@ local function moveMade(tInfo, choiceType)
                 nextButton3 = nil
                 resultText:removeSelf()
                 resultText = nil
-                NextEnemy()
+                if trainerWon then
+                    NextEnemy()
+                else
+                    playerLoses()
+                end
             end
         end
 
@@ -255,7 +284,11 @@ local function moveMade(tInfo, choiceType)
         resultText.x = display.contentWidth/2
         resultText.y = display.contentHeight/2  + 75
 
-        resultText.text = string.format("You bet Trainer %s!!", enemyList[currentEnemy].trainer.tag)
+        if trainerWon then
+            resultText.text = string.format("You bet Trainer %s!!", enemyList[currentEnemy].trainer.tag)
+        else
+            resultText.text = string.format("You lost to Trainer %s!!", enemyList[currentEnemy].trainer.tag)
+        end
 
         nextButton3 = widget.newButton({    
             id = "nextButton3",
@@ -288,26 +321,26 @@ local function moveMade(tInfo, choiceType)
                     if eFainted then
                         eCurrentPokemon = eCurrentPokemon + 1;
                         if eCurrentPokemon > 6 then
-                            enemyList[currentEnemy]:PokemonFainted(eCurrentPokemon-1)
-                            transition.to(enemyList[currentEnemy].E_Pokemans[eCurrentPokemon-1].pokemon.selectView, {time = 1250, x = enemyList[currentEnemy].E_Pokemans[eCurrentPokemon-1].pokemon.selectView.x+750})
-                            transition.to(trainer.Pokemans[currentPokemon].pokemon.battleView, {time = 1250, x = trainer.Pokemans[currentPokemon].pokemon.battleView.x-750})
+                            trainerWon = true;
+                            -- enemyList[currentEnemy]:PokemonFainted(eCurrentPokemon-1)
+                            -- transition.to(enemyList[currentEnemy].E_Pokemans[eCurrentPokemon-1].pokemon.selectView, {time = 1250, x = enemyList[currentEnemy].E_Pokemans[eCurrentPokemon-1].pokemon.selectView.x+750})
+                            -- transition.to(trainer.Pokemans[currentPokemon].pokemon.battleView, {time = 1250, x = trainer.Pokemans[currentPokemon].pokemon.battleView.x-750})
 
-                            removeObject(infoBoxText.pName)
-                            removeObject(infoBoxText.eName)
-                            removeObject(infoBoxText.pHpText)
-                            removeObject(infoBoxText)
-                            enemyList[currentEnemy]:removePokeballs()
-                            removeLocalObjects()
-                            local function waitToHide()
-                                enemyList[currentEnemy].E_Pokemans[eCurrentPokemon-1]:HidePokemon()
-                                trainer.Pokemans[currentPokemon]:HidePokemon()
-                                trainer:moveTrainerIn()
-                                enemyList[currentEnemy]:moveTrainerIn()
-                            end
+                            -- removeObject(infoBoxText.pName)
+                            -- removeObject(infoBoxText.eName)
+                            -- removeObject(infoBoxText.pHpText)
+                            -- removeObject(infoBoxText)
+                            -- enemyList[currentEnemy]:removePokeballs()
+                            -- removeLocalObjects()
+                            -- local function waitToHide()
+                            --     enemyList[currentEnemy].E_Pokemans[eCurrentPokemon-1]:HidePokemon()
+                            --     trainer.Pokemans[currentPokemon]:HidePokemon()
+                            --     trainer:moveTrainerIn()
+                            --     enemyList[currentEnemy]:moveTrainerIn()
+                            -- end
 
-                            timer.performWithDelay(1250, waitToHide)
+                            -- timer.performWithDelay(1250, waitToHide)
                             betEnemyAnimation()
-                            -- NextEnemy()
                         else
                             enemyList[currentEnemy]:PokemonFainted(eCurrentPokemon-1)
                             transition.to(enemyList[currentEnemy].E_Pokemans[eCurrentPokemon-1].pokemon.selectView, {time = 1250, x = enemyList[currentEnemy].E_Pokemans[eCurrentPokemon-1].pokemon.selectView.x+750})
@@ -336,29 +369,34 @@ local function moveMade(tInfo, choiceType)
                         end
                     elseif tFainted then
                         tFainted = false;
-                        timer.performWithDelay(10, removeLocalObjects)
-                        returnAfterAttack()
+                        local numFainted = 0;
+                        for i = 1, #trainer.Pokemans do
+                            if trainer.Pokemans[i].pokemon.status == "fainted" then
+                                numFainted = numFainted + 1;
+                            end
+                        end
+
+                        if numFainted == #trainer.Pokemans then
+                            trainerWon = false;
+                            betEnemyAnimation()
+                            -- playerLoses()
+                        else
+                            timer.performWithDelay(10, removeLocalObjects)
+                            returnAfterAttack()
+                        end
                     else
                         timer.performWithDelay(10, removeLocalObjects)
                         returnAfterAttack()
                     end
 
-                    -- timer.performWithDelay(10, removeLocalObjects)
-                    -- returnAfterAttack()
                 end
             end
 
             if trainerWentFirst then
 
                 if enemyList[currentEnemy].E_Pokemans[eCurrentPokemon].pokemon.status == "fainted" then
-                    -- eCurrentPokemon = eCurrentPokemon + 1;
-                    -- if eCurrentPokemon > 6 then
-                        -- NextEnemy()
-                    -- else
                     resultText.text = string.format("%s fainted!!", ePname)
                     eFainted = true;
-                    -- end
-
                 else
                     resultText.text = string.format("%s attacked with %s\n%s", ePname, eAttackName, trainer.Pokemans[currentPokemon]:getEffective(eAttackType))
 
@@ -382,13 +420,8 @@ local function moveMade(tInfo, choiceType)
                     enemyList[currentEnemy].E_Pokemans[eCurrentPokemon]:takeDamage(tAttackDamage, tAttackType)
 
                     if enemyList[currentEnemy].E_Pokemans[eCurrentPokemon].pokemon.status == "fainted" then
-                        -- eCurrentPokemon = eCurrentPokemon + 1;
-                        -- if eCurrentPokemon > 6 then
-                            -- NextEnemy()
-                        -- else
-                            resultText.text = string.format("%s attacked with %s\n%s\n%s fainted!!", tPname, tAttackName, enemyList[currentEnemy].E_Pokemans[eCurrentPokemon]:getEffective(tAttackType), ePname)
-                            eFainted = true;
-                        -- end
+                        resultText.text = string.format("%s attacked with %s\n%s\n%s fainted!!", tPname, tAttackName, enemyList[currentEnemy].E_Pokemans[eCurrentPokemon]:getEffective(tAttackType), ePname)
+                        eFainted = true;
                     else
                         resultText.text = string.format("%s attacked with %s\n%s", tPname, tAttackName, enemyList[currentEnemy].E_Pokemans[eCurrentPokemon]:getEffective(tAttackType))
                     end
@@ -447,10 +480,10 @@ end
 
 function playerLoses()
     print("player lost")
-    enemyList[currentEnemy].E_Pokemans[eCurrentPokemon-1]:HidePokemon()
-    enemyList[currentEnemy]:removePokeballs()
-    trainer.Pokemans[currentPokemon]:HidePokemon()
-    composer.gotoScene("menu")
+    -- enemyList[currentEnemy].E_Pokemans[eCurrentPokemon-1]:HidePokemon()
+    -- enemyList[currentEnemy]:removePokeballs()
+    -- trainer.Pokemans[currentPokemon]:HidePokemon()
+    composer.gotoScene("Loser")
 end
 
 -- Fight Menu Functions

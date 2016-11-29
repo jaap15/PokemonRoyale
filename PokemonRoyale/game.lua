@@ -152,12 +152,11 @@ local function selectionListener(event)
         select2:removeSelf();
         select3:removeSelf();
         removeObjectList(thumbList, false);
-        print("debug")
         trainer:create()
         for i = 1, #trainer.Pokemans do
             trainer.Pokemans[i]:drawHealthBar("player")
         end
-        print("debug2")   
+        print("# trainer's pokemons: " .. #trainer.Pokemans)   
             -- composer.setVariable("trainer", trainer)
         local function moveToNextScene()
             composer.gotoScene("fight")
