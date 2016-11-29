@@ -9,7 +9,7 @@ local composer = require("composer")
 local scene = composer.newScene()
 local widget = require("widget")
 local Pokemon = require ("Pokemon");
-local trainer = require("Trainer")
+trainer = require("Trainer")
 require("sqlController");
 
 -- -----------------------------------------------------------------------------------
@@ -33,7 +33,7 @@ local random1;
 local random2;
 local random3;
 
-composer.setVariable("trainersAvailable", trainersAvailable)
+-- composer.setVariable("trainersAvailable", trainersAvailable)
 
 -- Local Sounds
 local menuClick = audio.loadStream("sounds/pokemonSelectSound.mp3")
@@ -143,16 +143,22 @@ local function selectionListener(event)
     elseif (teamIndex == 7) then
         openingAnimations()
         audio.play(menuTransition, {loops = 0})
-            selectText:removeSelf();
-            teamText:removeSelf();
-            select1:removeEventListener("tap", selectionListener);
-            select2:removeEventListener("tap", selectionListener);
-            select3:removeEventListener("tap", selectionListener);
-            select1:removeSelf();
-            select2:removeSelf();
-            select3:removeSelf();
-            removeObjectList(thumbList, false);
-            composer.setVariable("trainer", trainer)
+        selectText:removeSelf();
+        teamText:removeSelf();
+        select1:removeEventListener("tap", selectionListener);
+        select2:removeEventListener("tap", selectionListener);
+        select3:removeEventListener("tap", selectionListener);
+        select1:removeSelf();
+        select2:removeSelf();
+        select3:removeSelf();
+        removeObjectList(thumbList, false);
+        print("debug")
+        trainer:create()
+        for i = 1, #trainer.Pokemans do
+            trainer.Pokemans[i]:drawHealthBar("player")
+        end
+        print("debug2")   
+            -- composer.setVariable("trainer", trainer)
         local function moveToNextScene()
             composer.gotoScene("fight")
         end
@@ -212,6 +218,9 @@ end
 function scene:create( event )
 
     sceneGroup = self.view
+
+    -- trainer = Trainer:new()
+    -- trainer:create()
     -- Code here runs when the scene is first created but has not yet appeared on screen
 
     -- Game Background

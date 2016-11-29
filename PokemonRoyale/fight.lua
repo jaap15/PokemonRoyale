@@ -9,6 +9,7 @@ local composer = require("composer")
 local scene = composer.newScene()
 local widget = require("widget")
 local Pokemon = require ("Pokemon")
+trainer = require("Trainer")
 
 -- -----------------------------------------------------------------------------------
 -- Code outside of the scene event functions below will only be executed ONCE unless
@@ -30,13 +31,11 @@ local pokemonThumbNails = {}
 local pokemonNames = {}
 local pokemon = Pokemon:new( {HP=150} )
 local sceneGroup
-local currentPokemon = 1;
 local eCurrentPokemon = 1;
-local currentEnemy = 1;
 local fSize = 45; --font size
-local trainer = composer.getVariable("trainer")
+-- local trainer = composer.getVariable("trainer")
 local infoBoxText = display.newText("", 0, 0, native.systemFont, 28)
-local trainersAvailable = composer.getVariable("trainersAvailable")
+-- local trainersAvailable = composer.getVariable("trainersAvailable")
 local pSelected = false;
 local eSelected = false;
 local moveMadeTimer;
@@ -166,18 +165,12 @@ local function endBattle()
     trainer:moveTrainerIn()
 end
 
-local function enemyAttack(attackNumber)
-
-end
-
-local function result()
-    
-end
 
 local function moveMade(tInfo, choiceType)
 
     local nextButton;
     local nextButton2;
+    local nextButton3;
     local trainerWentFirst = false;
     local showButton2 = true;
     local eFainted = false;
@@ -241,58 +234,130 @@ local function moveMade(tInfo, choiceType)
         resultText = nil
     end
 
+    local function betEnemyAnimation()
+
+        local function nextButton3Event(event)
+            if ("ended" == event.phase) then
+                print("clicked next3")
+                audio.play(menuClick, {loops = 0})
+                trainer.player.isVisible = false;
+                enemyList[currentEnemy].trainer.isVisible = false;
+                nextButton3:removeSelf()
+                nextButton3 = nil
+                resultText:removeSelf()
+                resultText = nil
+                NextEnemy()
+            end
+        end
+
+        resultText = display.newText("", 0, 0, native.systemFont, 35)
+        resultText:setTextColor(1, 1, 1)
+        resultText.x = display.contentWidth/2
+        resultText.y = display.contentHeight/2  + 75
+
+        resultText.text = string.format("You bet Trainer %s!!", enemyList[currentEnemy].trainer.tag)
+
+        nextButton3 = widget.newButton({    
+            id = "nextButton3",
+            label = "Next",    
+            labelColor = { default={ 1, 1, 0 }, over={ 0, 1, 1, 0.5 } },
+            width = 300,
+            height = 60,
+            fontSize = 30,
+            defaultFile = "images/menuScene/menuBtn.png",
+            overFile  = "images/menuScene/menuBtnOnClick.png",
+            onEvent = nextButton3Event 
+        } ) 
+
+        nextButton3.x = display.contentCenterX
+        nextButton3.y = display.contentCenterY+(display.contentCenterY/1.9)
+
+    end
+
     local function nextButtonEvent(event)
         if ("ended" == event.phase) then
-            print("clicked next")
+            print("clicked next1")
 
             audio.play(menuClick, {loops = 0})
             nextButton.isVisible = false;
             local function nextButton2Event(event)
                 if ("ended" == event.phase) then
-                    print("clicked next")
+                    print("clicked next2")
                     audio.play(menuClick, {loops = 0})
 
                     if eFainted then
-                        enemyList[currentEnemy]:PokemonFainted(eCurrentPokemon-1)
-                        transition.to(enemyList[currentEnemy].E_Pokemans[eCurrentPokemon-1].pokemon.selectView, {time = 1250, x = enemyList[currentEnemy].E_Pokemans[eCurrentPokemon-1].pokemon.selectView.x+750})
-                        local function spawnNewPkmn()
-                            enemyList[currentEnemy].E_Pokemans[eCurrentPokemon-1]:HidePokemon()
-                            updatePokemonInfoBox()
-                            enemyList[currentEnemy].E_Pokemans[eCurrentPokemon]:setSelectionView()
-                            enemyList[currentEnemy].E_Pokemans[eCurrentPokemon]:setPos(542,350)
-                        end
-                        local playerSummon = summonPkmnAnimation(542,350)
-                        local function summonPlayer()
-                            playerSummon.isVisible = true
-                            playerSummon:play()
-                            audio.play(summonSound, {loops = 0})
-                            local function hideAnimation()
-                                playerSummon.isVisible = false
+                        eCurrentPokemon = eCurrentPokemon + 1;
+                        if eCurrentPokemon > 6 then
+                            enemyList[currentEnemy]:PokemonFainted(eCurrentPokemon-1)
+                            transition.to(enemyList[currentEnemy].E_Pokemans[eCurrentPokemon-1].pokemon.selectView, {time = 1250, x = enemyList[currentEnemy].E_Pokemans[eCurrentPokemon-1].pokemon.selectView.x+750})
+                            transition.to(trainer.Pokemans[currentPokemon].pokemon.battleView, {time = 1250, x = trainer.Pokemans[currentPokemon].pokemon.battleView.x-750})
+
+                            removeObject(infoBoxText.pName)
+                            removeObject(infoBoxText.eName)
+                            removeObject(infoBoxText.pHpText)
+                            removeObject(infoBoxText)
+                            enemyList[currentEnemy]:removePokeballs()
+                            removeLocalObjects()
+                            local function waitToHide()
+                                enemyList[currentEnemy].E_Pokemans[eCurrentPokemon-1]:HidePokemon()
+                                trainer.Pokemans[currentPokemon]:HidePokemon()
+                                trainer:moveTrainerIn()
+                                enemyList[currentEnemy]:moveTrainerIn()
                             end
-                            timer.performWithDelay(500, hideAnimation)        
+
+                            timer.performWithDelay(1250, waitToHide)
+                            betEnemyAnimation()
+                            -- NextEnemy()
+                        else
+                            enemyList[currentEnemy]:PokemonFainted(eCurrentPokemon-1)
+                            transition.to(enemyList[currentEnemy].E_Pokemans[eCurrentPokemon-1].pokemon.selectView, {time = 1250, x = enemyList[currentEnemy].E_Pokemans[eCurrentPokemon-1].pokemon.selectView.x+750})
+                            local function spawnNewPkmn()
+                                enemyList[currentEnemy].E_Pokemans[eCurrentPokemon-1]:HidePokemon()
+                                updatePokemonInfoBox()
+                                enemyList[currentEnemy].E_Pokemans[eCurrentPokemon]:setSelectionView()
+                                enemyList[currentEnemy].E_Pokemans[eCurrentPokemon]:setPos(542,350)
+                            end
+                            local playerSummon = summonPkmnAnimation(542,350)
+                            local function summonPlayer()
+                                playerSummon.isVisible = true
+                                playerSummon:play()
+                                audio.play(summonSound, {loops = 0})
+                                local function hideAnimation()
+                                    playerSummon.isVisible = false
+                                end
+                                timer.performWithDelay(500, hideAnimation)        
+                            end
+                            timer.performWithDelay(500, summonPlayer)
+                            timer.performWithDelay(1000, spawnNewPkmn)
+                            eFainted = false;
+
+                            timer.performWithDelay(10, removeLocalObjects)
+                            returnAfterAttack()
                         end
-                        timer.performWithDelay(500, summonPlayer)
-                        timer.performWithDelay(1000, spawnNewPkmn)
-                        eFainted = false;
                     elseif tFainted then
                         tFainted = false;
+                        timer.performWithDelay(10, removeLocalObjects)
+                        returnAfterAttack()
+                    else
+                        timer.performWithDelay(10, removeLocalObjects)
+                        returnAfterAttack()
                     end
 
-                    timer.performWithDelay(10, removeLocalObjects)
-                    returnAfterAttack()
+                    -- timer.performWithDelay(10, removeLocalObjects)
+                    -- returnAfterAttack()
                 end
             end
 
             if trainerWentFirst then
 
                 if enemyList[currentEnemy].E_Pokemans[eCurrentPokemon].pokemon.status == "fainted" then
-                    eCurrentPokemon = eCurrentPokemon + 1;
-                    if eCurrentPokemon > 6 then
-                        NextEnemy()
-                    else
-                        resultText.text = string.format("%s fainted!!", ePname)
-                        eFainted = true;
-                    end
+                    -- eCurrentPokemon = eCurrentPokemon + 1;
+                    -- if eCurrentPokemon > 6 then
+                        -- NextEnemy()
+                    -- else
+                    resultText.text = string.format("%s fainted!!", ePname)
+                    eFainted = true;
+                    -- end
 
                 else
                     resultText.text = string.format("%s attacked with %s\n%s", ePname, eAttackName, trainer.Pokemans[currentPokemon]:getEffective(eAttackType))
@@ -317,13 +382,13 @@ local function moveMade(tInfo, choiceType)
                     enemyList[currentEnemy].E_Pokemans[eCurrentPokemon]:takeDamage(tAttackDamage, tAttackType)
 
                     if enemyList[currentEnemy].E_Pokemans[eCurrentPokemon].pokemon.status == "fainted" then
-                        eCurrentPokemon = eCurrentPokemon + 1;
-                        if eCurrentPokemon > 6 then
-                            NextEnemy()
-                        else
+                        -- eCurrentPokemon = eCurrentPokemon + 1;
+                        -- if eCurrentPokemon > 6 then
+                            -- NextEnemy()
+                        -- else
                             resultText.text = string.format("%s attacked with %s\n%s\n%s fainted!!", tPname, tAttackName, enemyList[currentEnemy].E_Pokemans[eCurrentPokemon]:getEffective(tAttackType), ePname)
                             eFainted = true;
-                        end
+                        -- end
                     else
                         resultText.text = string.format("%s attacked with %s\n%s", tPname, tAttackName, enemyList[currentEnemy].E_Pokemans[eCurrentPokemon]:getEffective(tAttackType))
                     end
@@ -369,11 +434,15 @@ end
 
 function NextEnemy()
     print("next enemy")
-    enemyList[currentEnemy].E_Pokemans[eCurrentPokemon-1]:HidePokemon()
-    enemyList[currentEnemy]:removePokeballs()
-    trainer.Pokemans[currentPokemon]:HidePokemon()
-    -- updatePokemonInfoBox()
-    composer.gotoScene("NextEnemy")
+    removeObjectList(enemyList[currentEnemy].E_Pokemans, true);
+    enemyList[currentEnemy]:audioStop()
+    currentEnemy = currentEnemy + 1
+
+    if currentEnemy > #enemyList then
+        composer.gotoScene("Winner")
+    else
+        composer.gotoScene("NextEnemy")
+    end
 end
 
 function playerLoses()
@@ -1545,7 +1614,7 @@ function scene:create( event )
     cancelBtn.isVisible = false;
 	
     openingAnimations()
-    trainer:create()
+    -- trainer:create()
 
 end
 

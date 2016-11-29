@@ -26,13 +26,6 @@ local function exitButtonEvent(event)
     end
 end
 
-local function readyButtonEvent(event)
-    if ("ended" == event.phase) then
-        print("clicked next")
-        audio.play(menuClick, {loops = 0})
-        composer.gotoScene("fight")
-    end
-end
 
 -- -----------------------------------------------------------------------------------
 -- Scene event functions
@@ -50,24 +43,9 @@ function scene:create( event )
     -- Code here runs when the scene is first created but has not yet appeared on screen
 
     -- Displaying game instructions
-    local instructionText = display.newText("The next enemy is Ready!\n\nPress Ready when you are ready!", display.contentCenterX, display.contentCenterY-150)
+    local instructionText = display.newText("You bet all of the enemies!\n\nCONGRATULATION!!", display.contentCenterX, display.contentCenterY-150)
 
     -- Game Background
-
-    local readyButton = widget.newButton({    
-        id = "readyButton",
-        label = "Ready",    
-        labelColor = { default={ 1, 1, 0 }, over={ 0, 1, 1, 0.5 } },
-        width = 300,
-        height = 60,
-        fontSize = 30,
-        defaultFile = "images/menuScene/menuBtn.png",
-        overFile  = "images/menuScene/menuBtnOnClick.png",
-        onEvent = readyButtonEvent 
-    } ) 
-
-    readyButton.x = display.contentCenterX
-    readyButton.y = display.contentCenterY+(display.contentCenterY/2.5)
 
 
     -- Creating a button widget, this button returns us to the menu
@@ -90,7 +68,6 @@ function scene:create( event )
 
     -- Adding all objects to the scene group
     sceneGroup:insert(instructionText)
-    sceneGroup:insert(readyButton)
     sceneGroup:insert(exitButton)
 end
 

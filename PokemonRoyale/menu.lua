@@ -22,6 +22,8 @@ local e_trainer = require("enemy_trainer")
 
 local sceneGroup
 enemyList = {} --holds all of the enemy objects that the player will battle
+currentPokemon = 1;
+currentEnemy = 1;
 
 -- startButtonEvent()
 --      input: none
