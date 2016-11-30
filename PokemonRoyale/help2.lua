@@ -3,6 +3,8 @@
 -- help2.lua
 --
 -- Authors: Daniel Burris, Jairo Arreola, John Mullen, and Zachary Johnson
+-- 
+-- The help scene instructs the user on how to play the game.
 -----------------------------------------------------------------------------------------
 
 local composer = require("composer")
@@ -25,12 +27,22 @@ local function returnButtonEvent(event)
     end
 end
 
+-- backButtonEvent()
+--      input: none
+--      output: none
+--      
+--      This function just switches from the help scene to the help scene
 local function backButtonEvent(event)
     if ("ended" == event.phase) then
         composer.gotoScene("help")
     end
 end
 
+-- nextButtonEvent()
+--      input: none
+--      output: none
+--      
+--      This function just switches from the help scene to the help3 scene
 local function nextButtonEvent(event)
     if ("ended" == event.phase) then
         composer.gotoScene("help3")
@@ -55,10 +67,6 @@ function scene:create( event )
     -- Displaying game instructions
     local instructionText1 = display.newText("First, you must assemble your team of\nPokemon. You will pick one at a time from\na random selection of 3, until you have a\nfull team of 6.", display.contentCenterX, display.contentCenterY-150)
 
-    -- Game Background
-
-    -- Display X image over the voltorb
-
     -- Creating a button widget, this button returns us to the menu
     local returnButton = widget.newButton({    
         id = "returnButton",
@@ -70,6 +78,7 @@ function scene:create( event )
         onEvent = returnButtonEvent 
     } )
 
+    -- Creating a button widget, this button returns us to the help scene
     local backButton = widget.newButton({    
         id = "backButton",
         label = "Back",    
@@ -80,6 +89,7 @@ function scene:create( event )
         onEvent = backButtonEvent 
     } )
 
+    -- Creating a button widget, this button moves us to the help3 scene
     local nextButton = widget.newButton({    
         id = "nextButton",
         label = "Next",    
@@ -93,10 +103,8 @@ function scene:create( event )
     -- Positioning all objects on the scene
     returnButton.x = display.contentCenterX
     returnButton.y = display.contentCenterY+(display.contentCenterY/1.5)
-
     backButton.x = display.contentCenterX
     backButton.y = display.contentCenterY+300
-
     nextButton.x = display.contentCenterX
     nextButton.y = display.contentCenterY+200
 

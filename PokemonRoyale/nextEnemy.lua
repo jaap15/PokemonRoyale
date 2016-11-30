@@ -1,8 +1,10 @@
 -----------------------------------------------------------------------------------------
 --
--- help.lua
+-- nextEnemy.lua
 --
 -- Authors: Daniel Burris, Jairo Arreola, John Mullen, and Zachary Johnson
+--
+-- This scene is a transition scene used when the player beats a trainer.
 -----------------------------------------------------------------------------------------
 
 local composer = require("composer")
@@ -14,11 +16,11 @@ local widget = require("widget")
 -- the scene is removed entirely (not recycled) via "composer.removeScene()"
 -- -----------------------------------------------------------------------------------
 
--- returnButtonEvent()
+-- exitButtonEvent()
 --      input: none
 --      output: none
 --      
---      This function just switches from the help scene to the menu scene
+--      This function just switches from the nextEnemy scene to the menu scene
 local function exitButtonEvent(event)
     if ("ended" == event.phase) then
         audio.play(menuClick, {loops = 0})
@@ -26,9 +28,13 @@ local function exitButtonEvent(event)
     end
 end
 
+-- readyButtonEvent()
+--      input: none
+--      output: none
+--      
+--      This function just switches from the nextEnemy scene to the fight scene
 local function readyButtonEvent(event)
     if ("ended" == event.phase) then
-        print("clicked next")
         audio.play(menuClick, {loops = 0})
         composer.gotoScene("fight")
     end
@@ -49,11 +55,10 @@ function scene:create( event )
     local sceneGroup = self.view
     -- Code here runs when the scene is first created but has not yet appeared on screen
 
-    -- Displaying game instructions
+    -- Displaying text
     local instructionText = display.newText("The next enemy is Ready!\n\nPress Ready when you are ready!", display.contentCenterX, display.contentCenterY-150)
 
-    -- Game Background
-
+    -- Creating a button widget, this button moves us to the fight scene
     local readyButton = widget.newButton({    
         id = "readyButton",
         label = "Ready",    
@@ -66,8 +71,6 @@ function scene:create( event )
         onEvent = readyButtonEvent 
     } ) 
 
-    readyButton.x = display.contentCenterX
-    readyButton.y = display.contentCenterY+(display.contentCenterY/2.5)
 
 
     -- Creating a button widget, this button returns us to the menu
@@ -83,10 +86,11 @@ function scene:create( event )
         onEvent = exitButtonEvent
     } ) 
 
+    -- Positioning all objects
+    readyButton.x = display.contentCenterX
+    readyButton.y = display.contentCenterY+(display.contentCenterY/2.5)
     exitButton.x = display.contentCenterX
     exitButton.y = display.contentCenterY+(display.contentCenterY/1.9)
-
-
 
     -- Adding all objects to the scene group
     sceneGroup:insert(instructionText)

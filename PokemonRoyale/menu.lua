@@ -3,6 +3,9 @@
 -- menu.lua
 --
 -- Authors: Daniel Burris, Jairo Arreola, John Mullen, and Zachary Johnson
+--
+-- This is the main menu. It has buttons that start the game and take us to the help
+-- scene. It also has an opening animation.
 -----------------------------------------------------------------------------------------
 
 local composer = require("composer")
@@ -13,9 +16,17 @@ local scene = composer.newScene()
 -- Widget Creation / Manipulation
 -- Used for buttons, sliders, radio buttons
 local widget = require("widget")
+
+-- Pokemon Class, creates a Pokemon object
 local Pokemon = require ("Pokemon")
+
+-- Trainer Class, creates an Enemy Trainer object
 local e_trainer = require("enemy_trainer")
+
+-- SQLController class. All our pokemon values and trainer pokemon are saved into SQL-Lite
+-- files so we created an SQLController to grab all the information.
 require("sqlController");
+
 -- -----------------------------------------------------------------------------------
 -- Code outside of the scene event functions below will only be executed ONCE unless
 -- the scene is removed entirely (not recycled) via "composer.removeScene()"
@@ -27,24 +38,20 @@ local sceneGroup
 --      input: none
 --      output: none
 --      
---      This function just switches from the menu scene to the game scene
+--      This function just switches from the menu scene to the game scene.
+--      It will create the trainers you are going to fight against and place them
+--      in a random order. 
 local function startButtonEvent(event)
 	if ("ended" == event.phase) then
         local enemiesAvailable = getIdListofTrainers()
 
-        print("#of enemies Available: " .. #enemiesAvailable)
-
         for i = 1, #enemiesAvailable do
-
             local rChoice = math.random(#enemiesAvailable)
             enemyList[i] = e_trainer:new()
             enemyList[i]:create(enemiesAvailable[rChoice])
-            print("Enemy ".. i.. " name: "..enemyList[i].trainer.tag)
-
             table.remove(enemiesAvailable, rChoice)
-
         end
-        
+
 		composer.gotoScene("game")
 	end
 end
@@ -60,7 +67,21 @@ local function helpButtonEvent(event)
     end
 end
 
+-- animationIntro()
+--      input: none
+--      output: none
+--      
+--      This function loads and plays the animation that will take us into the game scene.
+--      It has two internal local functions that physically draw / play the animation and 
+--      Erase the menu. It uses timers to call these functions so that they appear one after
+--      the other and don't execute at the same time.
 local function animationIntro()
+
+    -- slashAnimation()
+    --      input: none
+    --      output: none
+    --      
+    --      This function loads and plays the animation that will take us into the game scene.
     local function slashAnimation()
         local sheetName = require("images.menuScene.animations.slash")
         local spriteSheetData = sheetName:getSheet()
@@ -92,6 +113,11 @@ local function animationIntro()
         sceneGroup:insert( animation )        
     end
 
+    -- menuTitle()
+    --      input: none
+    --      output: none
+    --      
+    --      This function loads and draws the menuTitle.
     local function menuTitle()
         -- Game Background
         menuBG = display.newImage("images/menuScene/menuTitle.png")
@@ -101,10 +127,9 @@ local function animationIntro()
         sceneGroup:insert( menuBG )
     end
 
+    -- Making the animation smooth
     timer.performWithDelay(500, slashAnimation)
     timer.performWithDelay(1250, menuTitle)
-
-
 end
 
 -- -----------------------------------------------------------------------------------
@@ -121,11 +146,12 @@ function scene:create( event )
 
     sceneGroup = self.view
     -- Code here runs when the scene is first created but has not yet appeared on screen
-    enemyList = {} --holds all of the enemy objects that the player will battle
+
+    -- holds all of the enemy objects that the player will battle
+    enemyList = {} 
     currentPokemon = 1;
     currentEnemy = 1;
     newGame = true;
-    -- Game Title / Image 
 
     -- Creating the start button, sends us from the menu scene to the game scene
     local startButton = widget.newButton({    
@@ -153,6 +179,7 @@ function scene:create( event )
             onEvent = helpButtonEvent 
         } )  
 
+    -- Playing the startup animation
     animationIntro()
 
     -- Positioning all objects on the screen

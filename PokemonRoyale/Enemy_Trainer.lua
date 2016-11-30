@@ -3,6 +3,9 @@
 -- Enemy_Trainer.lua
 --
 -- Authors: Daniel Burris, Jairo Arreola, John Mullen, and Zachary Johnson
+--
+-- Enemy trainer class, keeps track of all his pokemon, has a sprite, a tag, and an
+-- X, Y position. 
 -----------------------------------------------------------------------------------------
 require("sqlController")
 local Pokemon = require("Pokemon")
@@ -10,6 +13,12 @@ local pokemon = Pokemon:new( {HP=150} );
 
 local enemy_trainer = {tag = "Enemy_Trainer", E_Items = {}, xpos = 542, ypos = 250}
 
+
+-- enemy_trainer:new()
+--      input: none
+--      output: none
+--      
+--      This function just switches from the winner scene to the menu scene
 function enemy_trainer:new(o)
 	
 	o = o or {}
@@ -19,6 +28,11 @@ function enemy_trainer:new(o)
 	return o
 end
 
+-- enemy_trainer:create()
+--      input: none
+--      output: none
+--      
+--      This function just switches from the winner scene to the menu scene
 function enemy_trainer:create(trainerChoice)
 	
 	local trainerInfo = getEtrainerInfo(trainerChoice)
@@ -54,6 +68,11 @@ function enemy_trainer:create(trainerChoice)
 
 end
 
+-- enemy_trainer:moveTrainerIn()
+--      input: none
+--      output: none
+--      
+--      This function just switches from the winner scene to the menu scene
 function enemy_trainer:moveTrainerIn()
 	local function translateTrainer1 ()
         transition.to(self.trainer, {time = 750, x=self.trainer.x-300})
@@ -61,6 +80,11 @@ function enemy_trainer:moveTrainerIn()
     timer.performWithDelay(500, translateTrainer1)
 end
 
+-- enemy_trainer:moveTrainerOut()
+--      input: none
+--      output: none
+--      
+--      This function just switches from the winner scene to the menu scene
 function enemy_trainer:moveTrainerOut()
 	local function translateTrainer1 ()
         transition.to(self.trainer, {time = 750, x=self.trainer.x+300})
@@ -68,6 +92,11 @@ function enemy_trainer:moveTrainerOut()
     timer.performWithDelay(500, translateTrainer1)
 end
 
+-- enemy_trainer:beginBattle()
+--      input: none
+--      output: none
+--      
+--      This function just switches from the winner scene to the menu scene
 function enemy_trainer:beginBattle()
 
 	self.arena.isVisible = true;
@@ -85,6 +114,11 @@ function enemy_trainer:beginBattle()
 	audio.play(self.music, {loops = -1})
 end
 
+-- enemy_trainer:populatePokemon()
+--      input: none
+--      output: none
+--      
+--      This function just switches from the winner scene to the menu scene
 function enemy_trainer:populatePokemon(trainerInfo)
 	
 	self.E_Pokemans[1] = pokemon:new({xPos = 542, yPos = 350})
@@ -210,11 +244,21 @@ function enemy_trainer:populatePokemon(trainerInfo)
 	
 end
 
+-- enemy_trainer:PokemonFainted()
+--      input: none
+--      output: none
+--      
+--      This function just switches from the winner scene to the menu scene
 function enemy_trainer:PokemonFainted(pokemonIndex)
 	self.E_Pokemans[pokemonIndex].pokeball.isVisible = false;
 	self.E_Pokemans[pokemonIndex].pokeballFainted.isVisible = true;
 end
 
+-- enemy_trainer:removePokeballs()
+--      input: none
+--      output: none
+--      
+--      This function just switches from the winner scene to the menu scene
 function enemy_trainer:removePokeballs()
 
 	self.E_Pokemans[1].pokeball:removeSelf()
@@ -233,6 +277,11 @@ function enemy_trainer:removePokeballs()
 
 end
 
+-- enemy_trainer:hidePokeballs()
+--      input: none
+--      output: none
+--      
+--      This function just switches from the winner scene to the menu scene
 function enemy_trainer:hidePokeballs()
 
 	self.E_Pokemans[1].pokeball.isVisible = false;
@@ -251,6 +300,11 @@ function enemy_trainer:hidePokeballs()
 
 end
 
+-- enemy_trainer:generateAttack()
+--      input: none
+--      output: none
+--      
+--      This function just switches from the winner scene to the menu scene
 function enemy_trainer:generateAttack(pokemonIndex)
 	atkChoice = math.random(1, 4)
 	
@@ -279,6 +333,11 @@ function enemy_trainer:generateAttack(pokemonIndex)
 	print("Enemy Attack generated: "..self.cAttack.AttackName..", "..self.cAttack.AttackDamage..", "..self.cAttack.AttackType)
 end
 
+-- enemy_trainer:destroyTrainer()
+--      input: none
+--      output: none
+--      
+--      This function just switches from the winner scene to the menu scene
 function enemy_trainer:destroyTrainer()
 
 	if  self.E_Pokemans[1].pokeball ~= nil then
@@ -316,6 +375,11 @@ function enemy_trainer:destroyTrainer()
 	end
 end
 
+-- enemy_trainer:audioStop()
+--      input: none
+--      output: none
+--      
+--      This function just switches from the winner scene to the menu scene
 function enemy_trainer:audioStop()
 	
 	audio.stop()

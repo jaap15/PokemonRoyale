@@ -3,6 +3,8 @@
 -- help.lua
 --
 -- Authors: Daniel Burris, Jairo Arreola, John Mullen, and Zachary Johnson
+--
+-- The help scene instructs the user on how to play the game.
 -----------------------------------------------------------------------------------------
 
 local composer = require("composer")
@@ -25,6 +27,11 @@ local function returnButtonEvent(event)
     end
 end
 
+-- nextButtonEvent()
+--      input: none
+--      output: none
+--      
+--      This function just switches from the help scene to the help2 scene
 local function nextButtonEvent(event)
     if ("ended" == event.phase) then
         composer.gotoScene("help2")
@@ -49,10 +56,6 @@ function scene:create( event )
     -- Displaying game instructions
     local instructionText1 = display.newText("Welcome to Pokemon Royale!\n\nPress Next to learn more\nabout the rules of engagement!", display.contentCenterX, display.contentCenterY-150)
 
-    -- Game Background
-
-    -- Display X image over the voltorb
-
     -- Creating a button widget, this button returns us to the menu
     local returnButton = widget.newButton({    
         id = "returnButton",
@@ -64,6 +67,7 @@ function scene:create( event )
         onEvent = returnButtonEvent 
     } )
 
+    -- Creating a button widget, this button moves us to help2
     local nextButton = widget.newButton({    
         id = "nextButton",
         label = "Next",    
@@ -77,7 +81,6 @@ function scene:create( event )
     -- Positioning all objects on the scene
     returnButton.x = display.contentCenterX
     returnButton.y = display.contentCenterY+(display.contentCenterY/1.5)
-
     nextButton.x = display.contentCenterX
     nextButton.y = display.contentCenterY+200
 

@@ -1,3 +1,11 @@
+-----------------------------------------------------------------------------------------
+--
+-- Pokemon.lua
+--
+-- Authors: Daniel Burris, Jairo Arreola, John Mullen, and Zachary Johnson
+--
+-- Trainer object. Keeps track of all the player's pokemon and inventory. 
+-----------------------------------------------------------------------------------------
 require("sqlController");
 
 local Pokemon = {tag="Pokemon", HP=100, xPos=0, yPos=0};
@@ -12,13 +20,23 @@ local superEffectiveSound = audio.loadStream("sounds/superEffective.wav")
 local notVeryEffectiveSound = audio.loadStream("sounds/NotVeryEffective.wav")
 local normalEffectiveSound = audio.loadStream("sounds/normalEffective.wav")
 
-function Pokemon:new (o)    --constructor
+-- Pokemon:new()
+--      input: none
+--      output: none
+--      
+--      This function just switches from the winner scene to the menu scene
+function Pokemon:new (o)
   o = o or {}; 
   setmetatable(o, self);
   self.__index = self;
   return o;
 end
 
+-- Pokemon:create()
+--      input: none
+--      output: none
+--      
+--      This function just switches from the winner scene to the menu scene
 function Pokemon:create(chosePokemon)
 
   local pokemonInfo;
@@ -94,6 +112,11 @@ function Pokemon:create(chosePokemon)
   self.pokemon.battleView.isVisible = false;
 end
 
+-- Pokemon:setSelectionView()
+--      input: none
+--      output: none
+--      
+--      This function just switches from the winner scene to the menu scene
 function Pokemon:setSelectionView()
   self.pokemon.battleView.isVisible = false;
   self.pokemon.selectView.isVisible = true;
@@ -101,6 +124,11 @@ function Pokemon:setSelectionView()
   self.pokemon.damageBar.isVisible = true
 end
 
+-- Pokemon:setBattleView()
+--      input: none
+--      output: none
+--      
+--      This function just switches from the winner scene to the menu scene
 function Pokemon:setBattleView()
   self.pokemon.selectView.isVisible = false;
   self.pokemon.battleView.isVisible = true;
@@ -108,6 +136,11 @@ function Pokemon:setBattleView()
   self.pokemon.damageBar.isVisible = true
 end
 
+-- Pokemon:HidePokemon()
+--      input: none
+--      output: none
+--      
+--      This function just switches from the winner scene to the menu scene
 function Pokemon:HidePokemon()
   self.pokemon.isVisible = false;
   self.pokemon.healthBar.isVisible = false
@@ -116,14 +149,29 @@ function Pokemon:HidePokemon()
   self.pokemon.battleView.isVisible = false;
 end
 
+-- Pokemon:returnSelectImage()
+--      input: none
+--      output: none
+--      
+--      This function just switches from the winner scene to the menu scene
 function Pokemon:returnSelectImage() 
   return self.pokemon.selectViewTN
 end
 
+-- Pokemon:returnHealthStatus()
+--      input: none
+--      output: none
+--      
+--      This function just switches from the winner scene to the menu scene
 function Pokemon:returnHealthStatus() 
   return self.pokemon.healthBarTN, self.pokemon.damageBarTN
 end
 
+-- Pokemon:setPos()
+--      input: none
+--      output: none
+--      
+--      This function just switches from the winner scene to the menu scene
 function Pokemon:setPos(xP,yP)
 
   self.xPos = xP;
@@ -137,6 +185,11 @@ function Pokemon:setPos(xP,yP)
 
 end
 
+-- Pokemon:attackEffectMultiplier()
+--      input: none
+--      output: none
+--      
+--      This function just switches from the winner scene to the menu scene
 function Pokemon:attackEffectMultiplier(attackedType)
   local multiplier = 1;
   local t1 = self.pokemon.type1;  --for shorter if statement condition
@@ -443,6 +496,11 @@ function Pokemon:attackEffectMultiplier(attackedType)
 
 end
 
+-- Pokemon:getEffective()
+--      input: none
+--      output: none
+--      
+--      This function just switches from the winner scene to the menu scene
 function Pokemon:getEffective(damageTakenType)
   local multiplier = self:attackEffectMultiplier(damageTakenType);
 
@@ -458,6 +516,11 @@ function Pokemon:getEffective(damageTakenType)
 
 end
 
+-- Pokemon:takeDamage()
+--      input: none
+--      output: none
+--      
+--      This function just switches from the winner scene to the menu scene
 function Pokemon:takeDamage(damageTaken, damageTakenType)
   local multiplier = self:attackEffectMultiplier(damageTakenType);
   damageTaken = damageTaken * multiplier;
@@ -480,6 +543,11 @@ function Pokemon:takeDamage(damageTaken, damageTakenType)
   self:updateDamageBar()
 end
 
+-- Pokemon:useItem()
+--      input: none
+--      output: none
+--      
+--      This function just switches from the winner scene to the menu scene
 function Pokemon:useItem(healthValue)
   if (self.pokemon.status ~= "fainted") then
     self.pokemon.currentHP = self.pokemon.currentHP + healthValue
@@ -490,6 +558,11 @@ function Pokemon:useItem(healthValue)
   self:updateDamageBar()
 end
 
+-- Pokemon:drawHealthBar()
+--      input: none
+--      output: none
+--      
+--      This function just switches from the winner scene to the menu scene
 function Pokemon:drawHealthBar(index)
   if (index == "player") then
     self.pokemon.healthBar.x = display.contentWidth - 200
@@ -508,6 +581,11 @@ function Pokemon:drawHealthBar(index)
   end
 end
 
+-- Pokemon:updateDamageBar()
+--      input: none
+--      output: none
+--      
+--      This function just switches from the winner scene to the menu scene
 function Pokemon:updateDamageBar()
   self.pokemon.damageBar.x = ((self.pokemon.currentHP*(((healthBarLength*100)/self.pokemon.maxHP)/100)) / 2) + self.pokemon.healthBar.x
   self.pokemon.damageBar.width = (self.pokemon.maxHP - self.pokemon.currentHP) * (((healthBarLength*100)/self.pokemon.maxHP)/100)

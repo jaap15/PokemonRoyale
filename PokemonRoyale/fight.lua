@@ -1,8 +1,10 @@
 -----------------------------------------------------------------------------------------
 --
--- game.lua
+-- fight.lua
 --
 -- Authors: Daniel Burris, Jairo Arreola, John Mullen, and Zachary Johnson
+--
+-- 
 -----------------------------------------------------------------------------------------
 
 local composer = require("composer")
@@ -50,17 +52,25 @@ local function updatePokemonInfoBox()
     infoBoxText.pHpText.text = string.format("%03d/%03d", trainer.Pokemans[currentPokemon].pokemon.currentHP, trainer.Pokemans[currentPokemon].pokemon.maxHP)
  end
 
+-- drawBackground()
+--      input: none
+--      output: none
+--      
+--      Drawing the top half of the screen.
 function drawBackground()
     
+    -- Drawing and animating the trainers
     trainer:throwAnimation()
     enemyList[currentEnemy]:beginBattle()
 
+    -- Drawing enemy's pokemon box
     enemyInfoBox = display.newImage("images/fightScene/enemyInfoBox.png")
     enemyInfoBox.width = display.contentWidth/2
     enemyInfoBox.height = display.contentHeight /10
     enemyInfoBox.x = (display.contentWidth + 200) - display.contentWidth
     enemyInfoBox.y = (display.contentHeight  + 100) - display.contentHeight
 
+    -- Drawing player's pokemon box text
     infoBoxText.eName = display.newText(" ", 0, 0, native.systemFont, 28)
     infoBoxText.eName:setTextColor(0, 0, 0)
     infoBoxText.eName.x = (display.contentWidth + 200) - display.contentWidth
@@ -68,26 +78,31 @@ function drawBackground()
 
     sceneGroup:insert( animation )
 
+    -- Drawing player's pokemon box
     playerInfoBox = display.newImage("images/fightScene/playerInfoBox.png")
     playerInfoBox.width = display.contentWidth/2
     playerInfoBox.height = display.contentHeight/10  
     playerInfoBox.x = display.contentWidth - 200
     playerInfoBox.y = display.contentHeight/2 - 100
 
+    -- Drawing player's pokemon box text
     infoBoxText.pName = display.newText(" ", 0, 0, native.systemFont, 28)
     infoBoxText.pName:setTextColor(0, 0, 0)
     infoBoxText.pName.x = display.contentWidth - 200
     infoBoxText.pName.y = display.contentHeight/2 - 125
 
+    -- Drawing player's pokemon box additional text
     infoBoxText.pHpText = display.newText(" ", 0, 0, native.systemFont, 28)
     infoBoxText.pHpText:setTextColor(0, 0, 0)
     infoBoxText.pHpText.x = display.contentWidth - 200
     infoBoxText.pHpText.y = display.contentHeight/2 - 75
 
+    -- Drawing health bars for all enemy pokemon
     for i = 1, #trainer.Pokemans do
         enemyList[currentEnemy].E_Pokemans[i]:drawHealthBar("enemy")
     end
 
+    -- Drawing health bars for all player's pokemon
     local y1Offset = 0
     local y2Offset = 0
     if newGame then
@@ -110,10 +125,21 @@ function drawBackground()
         newGame = false;
     end
 
+    -- drawEnemyPokemon()
+    --      input: none
+    --      output: none
+    --      
+    --      Drawing enemy pokemon.
     local function drawEnemyPokemon()
         enemyList[currentEnemy].E_Pokemans[enemyList[currentEnemy].currentPokemon]:setSelectionView();
     end
     local enemySummon = summonPkmnAnimation(542,350)
+
+    -- summonEnemy()
+    --      input: none
+    --      output: none
+    --      
+    --      Animating the enemy pokemon summon.    
     local function summonEnemy()
         enemySummon.isVisible = true
         enemySummon:play()
@@ -125,12 +151,23 @@ function drawBackground()
     timer.performWithDelay(2500, summonEnemy)
     timer.performWithDelay(3000, drawEnemyPokemon)
     
+    -- summonEnemy()
+    --      input: none
+    --      output: none
+    --      
+    --      Drawing player pokemon.      
     local function drawPlayerPokemon()
         trainer.Pokemans[currentPokemon]:setBattleView()
         trainer.Pokemans[currentPokemon]:setPos(190,530)
         updatePokemonInfoBox()
     end
     local playerSummon = summonPkmnAnimation(190,530)
+
+    -- summonEnemy()
+    --      input: none
+    --      output: none
+    --      
+    --      Animating the player pokemon summon.          
     local function summonPlayer()
         playerSummon.isVisible = true
         playerSummon:play()
@@ -149,12 +186,21 @@ function drawBackground()
     sceneGroup:insert( infoBoxText )
 end
 
-
+-- startBattle()
+--      input: none
+--      output: none
+--      
+--      Drawing the entire game, its delayed becausse drawBackground has animations to play.
 local function startBattle()
     timer.performWithDelay(2500, openMainMenu)
     timer.performWithDelay(1, drawBackground)
 end
 
+-- moveMade()
+--      input: tInfo
+--      output: choiceType
+--      
+--      Determine the enemy logic
 local function moveMade(tInfo, choiceType)
 
     local nextButton;
@@ -212,7 +258,12 @@ local function moveMade(tInfo, choiceType)
     end
     
     updatePokemonInfoBox()
-
+    
+    -- moveMade()
+    --      input: tInfo
+    --      output: choiceType
+    --      
+    --      Determine the enemy logic
     local function removeLocalObjects()
         print("removing button")
         nextButton:removeSelf()

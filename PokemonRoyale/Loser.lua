@@ -1,8 +1,10 @@
 -----------------------------------------------------------------------------------------
 --
--- help.lua
+-- Loser.lua
 --
 -- Authors: Daniel Burris, Jairo Arreola, John Mullen, and Zachary Johnson
+-- 
+-- This scene appears when the player loses to an enemy trainer. 
 -----------------------------------------------------------------------------------------
 
 local composer = require("composer")
@@ -18,7 +20,7 @@ local widget = require("widget")
 --      input: none
 --      output: none
 --      
---      This function just switches from the help scene to the menu scene
+--      This function just switches from the loser scene to the menu scene
 local function exitButtonEvent(event)
     if ("ended" == event.phase) then
         audio.play(menuClick, {loops = 0})
@@ -42,11 +44,8 @@ function scene:create( event )
     local sceneGroup = self.view
     -- Code here runs when the scene is first created but has not yet appeared on screen
 
-    -- Displaying game instructions
+    -- Displaying text
     local instructionText = display.newText("You Lost!\n\nTry Again!!", display.contentCenterX, display.contentCenterY-150)
-
-    -- Game Background
-
 
     -- Creating a button widget, this button returns us to the menu
     local exitButton = widget.newButton({    
@@ -61,10 +60,9 @@ function scene:create( event )
         onEvent = exitButtonEvent
     } ) 
 
+    -- Positioning all objects
     exitButton.x = display.contentCenterX
     exitButton.y = display.contentCenterY+(display.contentCenterY/1.9)
-
-
 
     -- Adding all objects to the scene group
     sceneGroup:insert(instructionText)
@@ -84,22 +82,19 @@ function scene:show( event )
 
     if ( phase == "will" ) then
         -- Code here runs when the scene is still off screen (but is about to come on screen)
-        print("Inside loser.lua phase will of show")
 
+        -- Destroys global objects
         for i = 1, #enemyList do
-            print("Deleting enemy".. i)
             enemyList[i]:destroyTrainer()
         end
         
         if trainer.Pokemans ~= nil then
-            print("Deleting Player")
             removeObjectList(trainer.Pokemans, true);
         else
-            print("Player already deleted")
-        end
 
-        print("leaving loser.lua phase will of show")
+        end
         
+        -- Removes scenes so if we restart game, it'll work
         composer.removeScene("fight")
         composer.removeScene("game")
         composer.removeScene("menu")
