@@ -147,12 +147,6 @@ function scene:create( event )
     sceneGroup = self.view
     -- Code here runs when the scene is first created but has not yet appeared on screen
 
-    -- holds all of the enemy objects that the player will battle
-    enemyList = {} 
-    currentPokemon = 1;
-    currentEnemy = 1;
-    newGame = true;
-
     -- Creating the start button, sends us from the menu scene to the game scene
     local startButton = widget.newButton({    
             id = "startButton",
@@ -207,6 +201,11 @@ function scene:show( event )
 
     if ( phase == "will" ) then
         -- Code here runs when the scene is still off screen (but is about to come on screen)
+        -- holds all of the enemy objects that the player will battle
+        enemyList = {} 
+        currentPokemon = 1;
+        currentEnemy = 1;
+        newGame = true;
         composer.removeScene("game")
 
     elseif ( phase == "did" ) then
