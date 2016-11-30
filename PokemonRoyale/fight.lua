@@ -18,6 +18,8 @@ trainer = require("Trainer")
 -- the scene is removed entirely (not recycled) via "composer.removeScene()"
 -- ----------------------------------------------------------------------------------
 
+-- All these global variables correspond to menu buttons, health bars, pokemon, trainers, 
+-- anything that we would need in any function. 
 local menu
 local platformBG
 local cancelBtn
@@ -46,6 +48,11 @@ local potionUse = audio.loadStream("sounds/onPotionUse.mp3")
 local bigPotionUse = audio.loadStream("sounds/superPotion.wav")
 local maxPotionUse = audio.loadStream("sounds/maxPotion.wav")
 
+-- updatePokemonInfoBox()
+--      input: none
+--      output: none
+--      
+--      Updates the pokemon information text boxes
 local function updatePokemonInfoBox()
     infoBoxText.pName.text = string.format("%s Lv:100", trainer.Pokemans[currentPokemon].pokemon.tag)
     infoBoxText.eName.text = string.format("%s Lv:100", enemyList[currentEnemy].E_Pokemans[eCurrentPokemon].pokemon.tag)
@@ -258,12 +265,13 @@ local function moveMade(tInfo, choiceType)
     end
     
     updatePokemonInfoBox()
-    
-    -- moveMade()
-    --      input: tInfo
-    --      output: choiceType
+
+
+    -- removeLocalObjects()
+    --      input: none
+    --      output: none
     --      
-    --      Determine the enemy logic
+    --      Removes local objects, helpful for swapping trainers and restarting game
     local function removeLocalObjects()
         print("removing button")
         nextButton:removeSelf()
@@ -275,6 +283,11 @@ local function moveMade(tInfo, choiceType)
         resultText = nil
     end
 
+    -- afterBattleAnimation()
+    --      input: none
+    --      output: none
+    --      
+    --      Sets up the game after the battle animations
     local function afterBattleAnimation()
 
         if trainerWon then
@@ -292,6 +305,12 @@ local function moveMade(tInfo, choiceType)
         removeObject(infoBoxText)
         enemyList[currentEnemy]:hidePokeballs()
         removeLocalObjects()
+
+        -- waitToHide()
+        --      input: none
+        --      output: none
+        --      
+        --      Hides both player and trainers pokemon, after they have been animated.
         local function waitToHide()
             enemyList[currentEnemy].E_Pokemans[eCurrentPokemon]:HidePokemon()
             trainer.Pokemans[currentPokemon]:HidePokemon()
@@ -301,10 +320,14 @@ local function moveMade(tInfo, choiceType)
 
         timer.performWithDelay(1250, waitToHide)
 
+        -- nextButton3Event()
+        --      input: none
+        --      output: none
+        --      
+        --      Guides us through the text that appears when we are in a battle scene
         local function nextButton3Event(event)
             if ("ended" == event.phase) then
-                print("clicked next3")
-                audio.play(menuClick, {loops = 0})
+                audio.play(menuClick, {loops = 0}) -- button click sounds
                 trainer.player.isVisible = false;
                 enemyList[currentEnemy].trainer.isVisible = false;
                 nextButton3:removeSelf()
@@ -348,16 +371,26 @@ local function moveMade(tInfo, choiceType)
 
     end
 
+    -- nextButtonEvent()
+    --      input: none
+    --      output: none
+    --      
+    --      Guides us through the text that appears when we are in a battle scene
     local function nextButtonEvent(event)
         if ("ended" == event.phase) then
-            print("clicked next1")
 
-            audio.play(menuClick, {loops = 0})
+            audio.play(menuClick, {loops = 0}) -- button click sounds
             nextButton.isVisible = false;
+
+            -- nextButton2Event()
+            --      input: none
+            --      output: none
+            --      
+            --      Guides us through the text that appears when we are in a battle scene
             local function nextButton2Event(event)
                 if ("ended" == event.phase) then
                     print("clicked next2")
-                    audio.play(menuClick, {loops = 0})
+                    audio.play(menuClick, {loops = 0}) -- button click sounds
 
                     if eFainted then
                         eCurrentPokemon = eCurrentPokemon + 1;
@@ -367,6 +400,12 @@ local function moveMade(tInfo, choiceType)
                         else
                             enemyList[currentEnemy]:PokemonFainted(eCurrentPokemon-1)
                             transition.to(enemyList[currentEnemy].E_Pokemans[eCurrentPokemon-1].pokemon.selectView, {time = 1250, x = enemyList[currentEnemy].E_Pokemans[eCurrentPokemon-1].pokemon.selectView.x+750})
+
+                            -- spawnNewPkmn()
+                            --      input: none
+                            --      output: none
+                            --      
+                            --      Called if we need to spawn new pokemon or enemy pokemon
                             local function spawnNewPkmn()
                                 enemyList[currentEnemy].E_Pokemans[eCurrentPokemon-1]:HidePokemon()
                                 updatePokemonInfoBox()
@@ -374,10 +413,22 @@ local function moveMade(tInfo, choiceType)
                                 enemyList[currentEnemy].E_Pokemans[eCurrentPokemon]:setPos(542,350)
                             end
                             local playerSummon = summonPkmnAnimation(542,350)
+
+                            -- summonPlayer()
+                            --      input: none
+                            --      output: none
+                            --      
+                            --      Called when we are summoning the trainer
                             local function summonPlayer()
                                 playerSummon.isVisible = true
                                 playerSummon:play()
                                 audio.play(summonSound, {loops = 0})
+
+                                -- hideAnimation()
+                                --      input: none
+                                --      output: none
+                                --      
+                                --      Gets rid of the animation
                                 local function hideAnimation()
                                     playerSummon.isVisible = false
                                 end
@@ -487,28 +538,40 @@ local function moveMade(tInfo, choiceType)
 
 end
 
+-- NextEnemy()
+--      input: none
+--      output: none
+--      
+--     Called when we have beaten the trainer and are moving on to the next
 function NextEnemy()
-    print("next enemy")
     currentEnemy = currentEnemy + 1
 
     if currentEnemy > #enemyList then
-        print("next enemy if statement")
         composer.gotoScene("Winner")
     else
-        print("next enemy else statement")
         composer.gotoScene("NextEnemy")
     end
 end
 
+-- playerLoses()
+--      input: none
+--      output: none
+--      
+--      Called when we have lost and takes us to the Loser scene
 function playerLoses()
     print("player lost")
     composer.gotoScene("Loser")
 end
 
--- Fight Menu Functions
+
+-- attack1()
+--      input: none
+--      output: none
+--      
+--      Associated with attack1Btn. Uses the selected pokemons 1st attack.
 function attack1(event)
     if ( "ended" == event.phase ) then
-        audio.play(menuClick, {loops = 0})
+        audio.play(menuClick, {loops = 0}) -- button click sounds
 
         local tInfo = {}
         local choiceType = "attack"
@@ -523,9 +586,14 @@ function attack1(event)
     end
 end
 
+-- attack2()
+--      input: none
+--      output: none
+--      
+--      Associated with attack2Btn. Uses the selected pokemons 2nd attack.
 function attack2(event)
     if ( "ended" == event.phase ) then
-        audio.play(menuClick, {loops = 0})
+        audio.play(menuClick, {loops = 0}) -- button click sounds
 
         local tInfo = {}
         local choiceType = "attack"
@@ -540,9 +608,14 @@ function attack2(event)
     end
 end
 
+-- attack3()
+--      input: none
+--      output: none
+--      
+--      Associated with attack3Btn. Uses the selected pokemons 3rd attack.
 function attack3(event)
     if ( "ended" == event.phase ) then
-        audio.play(menuClick, {loops = 0})
+        audio.play(menuClick, {loops = 0}) -- button click sounds
 
         local tInfo = {}
         local choiceType = "attack"
@@ -557,9 +630,14 @@ function attack3(event)
     end
 end
 
+-- attack4()
+--      input: none
+--      output: none
+--      
+--      Associated with attack4Btn. Uses the selected pokemons 4th attack.
 function attack4(event)
     if ( "ended" == event.phase ) then
-        audio.play(menuClick, {loops = 0})
+        audio.play(menuClick, {loops = 0}) -- button click sounds
 
         local tInfo = {}
         local choiceType = "attack"
@@ -574,9 +652,14 @@ function attack4(event)
     end
 end
 
+-- select1()
+--      input: none
+--      output: none
+--      
+--      Associated with select1Btn. Swaps us to the 1st Pokemon if we're not already on the 1st pokemon.
 function select1(event)
     if ( "ended" == event.phase ) then
-        audio.play(menuClick, {loops = 0})
+        audio.play(menuClick, {loops = 0}) -- button click sounds
         if (currentPokemon == 1 or trainer.Pokemans[1].pokemon.status == "fainted") then
 
         else 
@@ -585,9 +668,14 @@ function select1(event)
     end
 end
 
+-- select2()
+--      input: none
+--      output: none
+--      
+--      Associated with select2Btn. Swaps us to the 2nd Pokemon if we're not already on the 2nd pokemon.
 function select2(event)
     if ( "ended" == event.phase ) then
-        audio.play(menuClick, {loops = 0})
+        audio.play(menuClick, {loops = 0}) -- button click sounds
         if (currentPokemon == 2 or trainer.Pokemans[2].pokemon.status == "fainted") then
 
         else         
@@ -596,9 +684,14 @@ function select2(event)
    end
 end
 
+-- select3()
+--      input: none
+--      output: none
+--      
+--      Associated with select3Btn. Swaps us to the 3rd Pokemon if we're not already on the 3rd pokemon.
 function select3(event)
     if ( "ended" == event.phase ) then
-        audio.play(menuClick, {loops = 0})
+        audio.play(menuClick, {loops = 0}) -- button click sounds
         if (currentPokemon == 3 or trainer.Pokemans[3].pokemon.status == "fainted") then
 
         else 
@@ -607,9 +700,14 @@ function select3(event)
     end
 end
 
+-- select4()
+--      input: none
+--      output: none
+--      
+--      Associated with select4Btn. Swaps us to the 4th Pokemon if we're not already on the 4th pokemon.
 function select4(event)
     if ( "ended" == event.phase ) then
-        audio.play(menuClick, {loops = 0})
+        audio.play(menuClick, {loops = 0}) -- button click sounds
         if (currentPokemon == 4 or trainer.Pokemans[4].pokemon.status == "fainted") then
 
         else 
@@ -618,9 +716,14 @@ function select4(event)
     end
 end
 
+-- select5()
+--      input: none
+--      output: none
+--      
+--      Associated with select5Btn. Swaps us to the 5th Pokemon if we're not already on the 5th pokemon.
 function select5(event)
     if ( "ended" == event.phase ) then
-        audio.play(menuClick, {loops = 0})
+        audio.play(menuClick, {loops = 0}) -- button click sounds
         if (currentPokemon == 5 or trainer.Pokemans[5].pokemon.status == "fainted") then
 
         else 
@@ -629,9 +732,14 @@ function select5(event)
     end
 end
 
+-- select6()
+--      input: none
+--      output: none
+--      
+--      Associated with select6Btn. Swaps us to the 6th Pokemon if we're not already on the 6th pokemon.
 function select6(event)
     if ( "ended" == event.phase ) then
-        audio.play(menuClick, {loops = 0})
+        audio.play(menuClick, {loops = 0}) -- button click sounds
         if (currentPokemon == 6 or trainer.Pokemans[6].pokemon.status == "fainted") then
 
         else 
@@ -640,6 +748,11 @@ function select6(event)
     end
 end
 
+-- pokemonSelect1Confirm()
+--      input: none
+--      output: none
+--      
+--      Associated with select1Btn. Swaps us to the 1st Pokemon if we're not already on the 1st pokemon.
 function pokemonSelect1Confirm(event, pkmnIndex)
     if ( event.action == "clicked" ) then
         local i = event.index  
@@ -671,6 +784,11 @@ function pokemonSelect1Confirm(event, pkmnIndex)
     end
 end
 
+-- pokemonSelect2Confirm()
+--      input: none
+--      output: none
+--      
+--      Associated with select2Btn. Swaps us to the 2nd Pokemon if we're not already on the 2nd pokemon.
 function pokemonSelect2Confirm(event, pkmnIndex)
     if ( event.action == "clicked" ) then
         local i = event.index  
@@ -702,6 +820,11 @@ function pokemonSelect2Confirm(event, pkmnIndex)
     end
 end
 
+-- pokemonSelect3Confirm()
+--      input: none
+--      output: none
+--      
+--      Associated with select3Btn. Swaps us to the 3rd Pokemon if we're not already on the 3rd pokemon.
 function pokemonSelect3Confirm(event, pkmnIndex)
     if ( event.action == "clicked" ) then
         local i = event.index  
@@ -733,6 +856,11 @@ function pokemonSelect3Confirm(event, pkmnIndex)
     end
 end
 
+-- pokemonSelect4Confirm()
+--      input: none
+--      output: none
+--      
+--      Associated with select4Btn. Swaps us to the 4th Pokemon if we're not already on the 4th pokemon.
 function pokemonSelect4Confirm(event, pkmnIndex)
     if ( event.action == "clicked" ) then
         local i = event.index  
@@ -764,6 +892,11 @@ function pokemonSelect4Confirm(event, pkmnIndex)
     end
 end
 
+-- pokemonSelect5Confirm()
+--      input: none
+--      output: none
+--      
+--      Associated with select5Btn. Swaps us to the 5th Pokemon if we're not already on the 5th pokemon.
 function pokemonSelect5Confirm(event, pkmnIndex)
     if ( event.action == "clicked" ) then
         local i = event.index  
@@ -795,6 +928,11 @@ function pokemonSelect5Confirm(event, pkmnIndex)
     end
 end
 
+-- pokemonSelect6Confirm()
+--      input: none
+--      output: none
+--      
+--      Associated with select6Btn. Swaps us to the 6th Pokemon if we're not already on the 6th pokemon.
 function pokemonSelect6Confirm(event, pkmnIndex)
     if ( event.action == "clicked" ) then
         local i = event.index  
@@ -826,44 +964,65 @@ function pokemonSelect6Confirm(event, pkmnIndex)
     end
 end
 
--- Item Menu Functions
+-- item1()
+--      input: none
+--      output: none
+--      
+--      Associated with item1. Uses health potion on selected pokemon.
 function item1(event)
-        if ( "ended" == event.phase ) then
-        audio.play(menuClick, {loops = 0})
+    if ( "ended" == event.phase ) then
+        audio.play(menuClick, {loops = 0}) -- button click sounds
         openPokemonMenuFromItemSelect()
         item = "healthPotion"
-        print("item 1")
     end
 end
 
+-- item2()
+--      input: none
+--      output: none
+--      
+--      Associated with item2. Uses big health potion on selected pokemon.
 function item2(event)
-        if ( "ended" == event.phase ) then
-        audio.play(menuClick, {loops = 0})
+    if ( "ended" == event.phase ) then
+        audio.play(menuClick, {loops = 0}) -- button click sounds
         openPokemonMenuFromItemSelect()
         item = "BigHealthPotion"
     end
 end
 
+-- item3()
+--      input: none
+--      output: none
+--      
+--      Associated with item3. Uses full health potion on selected pokemon.
 function item3(event)
-        if ( "ended" == event.phase ) then
-        audio.play(menuClick, {loops = 0})
+    if ( "ended" == event.phase ) then
+        audio.play(menuClick, {loops = 0}) -- button click sounds
         openPokemonMenuFromItemSelect()
         item = "fullPotion"
     end
 end
 
+-- removeObject()
+--      input: objectName
+--      output: none
+--      
+--      Simple function, removes whatever we pass into it. 
 function removeObject(objectName)
- 
     if(objectName ~= nil) then
      objectName:removeSelf();
      objectName = nil;
     end
- 
 end
 
+-- exitButtonEvent()
+--      input: objectName
+--      output: none
+--      
+--      Associated with quitBtn. Removes all fight scene objects and exits the game.
 function exitButtonEvent(event)
     if ("ended" == event.phase) then
-        audio.play(menuClick, {loops = 0})
+        audio.play(menuClick, {loops = 0}) -- button click sounds
         removeObject(infoBoxText.pName)
         removeObject(infoBoxText.eName)
         removeObject(infoBoxText.pHpText)
@@ -875,6 +1034,11 @@ function exitButtonEvent(event)
     end
 end
 
+-- returnAfterAttack()
+--      input: none
+--      output: none
+--      
+--      Goes back to the main fight scene menu from the attack menu
 function returnAfterAttack()
     fightMenuBG.isVisible = false
     for cnt = 0, #fightMenuBtn do
@@ -888,9 +1052,7 @@ function returnAfterAttack()
         mainMenuBtn[cnt].isVisible = true
     end
 
-    print(trainer.Pokemans[currentPokemon].pokemon.tag .. " has " .. trainer.Pokemans[currentPokemon].pokemon.status)
     if (trainer.Pokemans[currentPokemon].pokemon.status == "fainted") then
-        print("FAINTED")
         local function swapToPokemonSelect(event)
             local i = event.index 
             if ( i == 1 ) then  
@@ -901,12 +1063,17 @@ function returnAfterAttack()
     end      
 end
 
+-- summonPkmnAnimation()
+--      input: none
+--      output: none
+--      
+--      Called when we swap pokemon, plays the summon pokemon animation
 function summonPkmnAnimation(x,y)
     local sheetName = require("images.fightScene.animations.pkmnSummon")
     local spriteSheetData = sheetName:getSheet()
-    --Creating the image sheet
+    -- Creating the image sheet
     local battleSheet = graphics.newImageSheet( "images/fightScene/animations/pkmnSummon.png", spriteSheetData)
-    --Getting the sequence data from the sprite sheet file
+    -- Getting the sequence data from the sprite sheet file
     local sequenceData = sheetName:getSequence()
 
     animation = display.newSprite( battleSheet, sequenceData)
@@ -918,6 +1085,11 @@ function summonPkmnAnimation(x,y)
     return animation
 end
 
+-- returnAfterSwap()
+--      input: none
+--      output: none
+--      
+--      Goes back to the main fight scene menu from the swap menu
 function returnAfterSwap()
     pkmnMenuBG.isVisible = false
     for cnt = 0, #pkmnMenuBtn do
@@ -938,9 +1110,14 @@ function returnAfterSwap()
     end    
 end
 
+-- returnToMainMenu()
+--      input: none
+--      output: none
+--      
+--      Goes back to the main fight scene menu from the cancel button
 function returnToMainMenu(event)
     if ( "ended" == event.phase ) then
-        audio.play(menuClick, {loops = 0})
+        audio.play(menuClick, {loops = 0}) -- button click sounds
         if (fightMenuBG ~= nil) then
             fightMenuBG.isVisible = false
             for cnt = 0, #fightMenuBtn do
@@ -978,6 +1155,11 @@ function returnToMainMenu(event)
     end
 end
 
+-- openMainMenu()
+--      input: none
+--      output: none
+--      
+--      Creates the main fight scene menu
 function openMainMenu ()
     mainMenuBG = display.newImage("images/fightScene/menu/main/mainMenuBG.png")
     mainMenuBG.width = display.contentWidth
@@ -1052,10 +1234,15 @@ function openMainMenu ()
     sceneGroup:insert( mainMenuBtn[3] )
 end
 
+-- openMainMenu()
+--      input: none
+--      output: none
+--      
+--      Creates the menu we see after clicking the fight button
 function openFightMenu (event)
 
         if ( "ended" == event.phase ) then
-        audio.play(menuClick, {loops = 0})
+        audio.play(menuClick, {loops = 0}) -- button click sounds
         fightMenuBG = display.newImage("images/fightScene/menu/fight/fightMenuBG.png")
         fightMenuBG.width = display.contentWidth
         fightMenuBG.height = display.contentHeight/2
@@ -1128,9 +1315,14 @@ function openFightMenu (event)
     end
 end
 
+-- openPokemonMenu()
+--      input: none
+--      output: none
+--      
+--      Creates the menu we see after clicking the Pkmn button
 function openPokemonMenu(event)
         if ( "ended" == event.phase ) then
-        audio.play(menuClick, {loops = 0})
+        audio.play(menuClick, {loops = 0}) -- button click sounds
         pkmnMenuBG = display.newImage("images/fightScene/menu/pkmn/pkmnMenuBG.png")
         pkmnMenuBG.width = display.contentWidth
         pkmnMenuBG.height = display.contentHeight/2 
@@ -1258,8 +1450,13 @@ function openPokemonMenu(event)
     end
 end
 
+-- openPokemonMenuFromAlertBox()
+--      input: none
+--      output: none
+--      
+--      Creates the menu we see after clicking the Pkmn button when swapping pkmn because one fainted
 function openPokemonMenuFromAlertBox()
-    audio.play(menuClick, {loops = 0})
+    audio.play(menuClick, {loops = 0}) -- button click sounds
     pkmnMenuBG = display.newImage("images/fightScene/menu/pkmn/pkmnMenuBG.png")
     pkmnMenuBG.width = display.contentWidth
     pkmnMenuBG.height = display.contentHeight/2 
@@ -1386,6 +1583,11 @@ function openPokemonMenuFromAlertBox()
     end 
 end
 
+-- useItem()
+--      input: none
+--      output: none
+--      
+--      Uses the items, health potion, big health potion, or full health potion.
 function useItem(event)
     if ( "ended" == event.phase ) then
         audio.play(potionUse)
@@ -1427,8 +1629,13 @@ function useItem(event)
     end
 end
 
+-- openPokemonMenuFromItemSelect()
+--      input: none
+--      output: none
+--      
+--      Creates the menu we see after clicking the Pkmn button when using an item
 function openPokemonMenuFromItemSelect()
-    audio.play(menuClick, {loops = 0})
+    audio.play(menuClick, {loops = 0}) -- button click sounds
     pkmnMenuBG = display.newImage("images/fightScene/menu/pkmn/pkmnMenuBG.png")
     pkmnMenuBG.width = display.contentWidth
     pkmnMenuBG.height = display.contentHeight/2 
@@ -1557,9 +1764,14 @@ function openPokemonMenuFromItemSelect()
     end 
 end
 
+-- openItemsMenu()
+--      input: none
+--      output: none
+--      
+--      Creates the menu we see after clicking the item button
 function openItemsMenu (event)
         if ( "ended" == event.phase ) then
-        audio.play(menuClick, {loops = 0})
+        audio.play(menuClick, {loops = 0}) -- button click sounds
         itemsMenuBG = display.newImage("images/fightScene/menu/item/itemMenuBG.png")
         itemsMenuBG.width = display.contentWidth
         itemsMenuBG.height = display.contentHeight/2
@@ -1624,6 +1836,11 @@ function openItemsMenu (event)
     end
 end
 
+-- openingAnimations()
+--      input: none
+--      output: none
+--      
+--      Loads and plays the battleIntro animations
 function openingAnimations()
     local sheetName = require("images.fightScene.animations.battleIntro")
     local spriteSheetData = sheetName:getSheet()

@@ -4,18 +4,24 @@
 --
 -- Authors: Daniel Burris, Jairo Arreola, John Mullen, and Zachary Johnson
 --
--- Trainer object. Keeps track of all the player's pokemon and inventory. 
+-- Pokemon Class. Has methods for pokemon attack, take damage, use item, etc.
 -----------------------------------------------------------------------------------------
+
+-- SQLController class. All our pokemon values and trainer pokemon are saved into SQL-Lite
+-- files so we created an SQLController to grab all the information.
 require("sqlController");
 
+-- Pokemon class initialization
 local Pokemon = {tag="Pokemon", HP=100, xPos=0, yPos=0};
 local image
 local healthBarLength = 220
 
+-- Attack mofidiers based on attack type
 local superEffective = 1.5;
 local notVeryEffective = 0.5;
 local noEffect = 0;
 
+-- Attack sounds
 local superEffectiveSound = audio.loadStream("sounds/superEffective.wav")
 local notVeryEffectiveSound = audio.loadStream("sounds/NotVeryEffective.wav")
 local normalEffectiveSound = audio.loadStream("sounds/normalEffective.wav")
@@ -24,7 +30,7 @@ local normalEffectiveSound = audio.loadStream("sounds/normalEffective.wav")
 --      input: none
 --      output: none
 --      
---      This function just switches from the winner scene to the menu scene
+--      Constructor method, creates a new pokemon object.
 function Pokemon:new (o)
   o = o or {}; 
   setmetatable(o, self);
@@ -36,7 +42,7 @@ end
 --      input: none
 --      output: none
 --      
---      This function just switches from the winner scene to the menu scene
+--      Create method. Pokemon class has lots of types.
 function Pokemon:create(chosePokemon)
 
   local pokemonInfo;
@@ -116,7 +122,7 @@ end
 --      input: none
 --      output: none
 --      
---      This function just switches from the winner scene to the menu scene
+--      Displays image of pokemon facing towards us
 function Pokemon:setSelectionView()
   self.pokemon.battleView.isVisible = false;
   self.pokemon.selectView.isVisible = true;
@@ -128,7 +134,7 @@ end
 --      input: none
 --      output: none
 --      
---      This function just switches from the winner scene to the menu scene
+--      Displays image of pokemon facing away from us
 function Pokemon:setBattleView()
   self.pokemon.selectView.isVisible = false;
   self.pokemon.battleView.isVisible = true;
@@ -140,7 +146,7 @@ end
 --      input: none
 --      output: none
 --      
---      This function just switches from the winner scene to the menu scene
+--      Hides pokemon images
 function Pokemon:HidePokemon()
   self.pokemon.isVisible = false;
   self.pokemon.healthBar.isVisible = false
@@ -151,18 +157,18 @@ end
 
 -- Pokemon:returnSelectImage()
 --      input: none
---      output: none
+--      output: self.pokemon.selectViewTN
 --      
---      This function just switches from the winner scene to the menu scene
+--      Returns select image
 function Pokemon:returnSelectImage() 
   return self.pokemon.selectViewTN
 end
 
 -- Pokemon:returnHealthStatus()
 --      input: none
---      output: none
+--      output: self.pokemon.healthBarTN, self.pokemon.damageBarTN
 --      
---      This function just switches from the winner scene to the menu scene
+--      Returns health bar and damage bar
 function Pokemon:returnHealthStatus() 
   return self.pokemon.healthBarTN, self.pokemon.damageBarTN
 end
@@ -171,7 +177,7 @@ end
 --      input: none
 --      output: none
 --      
---      This function just switches from the winner scene to the menu scene
+--      Sets the position of the pokemon object and pokemone images
 function Pokemon:setPos(xP,yP)
 
   self.xPos = xP;
@@ -189,7 +195,8 @@ end
 --      input: none
 --      output: none
 --      
---      This function just switches from the winner scene to the menu scene
+--      This function calculates whether an attack is super effective or not very effective. 
+--      Super effective attacks do 1.5x damage, not very effective attacks do 0.5x damage
 function Pokemon:attackEffectMultiplier(attackedType)
   local multiplier = 1;
   local t1 = self.pokemon.type1;  --for shorter if statement condition
@@ -500,7 +507,7 @@ end
 --      input: none
 --      output: none
 --      
---      This function just switches from the winner scene to the menu scene
+--      Returns if the attack was normal, super, or not very
 function Pokemon:getEffective(damageTakenType)
   local multiplier = self:attackEffectMultiplier(damageTakenType);
 
@@ -520,7 +527,7 @@ end
 --      input: none
 --      output: none
 --      
---      This function just switches from the winner scene to the menu scene
+--      Function to allow the pokemon to take damage.
 function Pokemon:takeDamage(damageTaken, damageTakenType)
   local multiplier = self:attackEffectMultiplier(damageTakenType);
   damageTaken = damageTaken * multiplier;
@@ -547,7 +554,7 @@ end
 --      input: none
 --      output: none
 --      
---      This function just switches from the winner scene to the menu scene
+--      Function to allow the pokemon to use items
 function Pokemon:useItem(healthValue)
   if (self.pokemon.status ~= "fainted") then
     self.pokemon.currentHP = self.pokemon.currentHP + healthValue
@@ -562,7 +569,7 @@ end
 --      input: none
 --      output: none
 --      
---      This function just switches from the winner scene to the menu scene
+--      Draws the health bar of the pokemon, and then the damage bar on top of him.
 function Pokemon:drawHealthBar(index)
   if (index == "player") then
     self.pokemon.healthBar.x = display.contentWidth - 200
@@ -585,7 +592,7 @@ end
 --      input: none
 --      output: none
 --      
---      This function just switches from the winner scene to the menu scene
+--      Updates damage bar when the pokemon takes damage
 function Pokemon:updateDamageBar()
   self.pokemon.damageBar.x = ((self.pokemon.currentHP*(((healthBarLength*100)/self.pokemon.maxHP)/100)) / 2) + self.pokemon.healthBar.x
   self.pokemon.damageBar.width = (self.pokemon.maxHP - self.pokemon.currentHP) * (((healthBarLength*100)/self.pokemon.maxHP)/100)
