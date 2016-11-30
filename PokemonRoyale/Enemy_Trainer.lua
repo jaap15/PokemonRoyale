@@ -41,7 +41,6 @@ function enemy_trainer:create(trainerChoice)
 	local bgLocation = trainerInfo.stageLocation ..".png"
 	local musLocation = trainerInfo.musicLocation ..".mp3"
 	
-	print(trainerInfo.imagesLocation)
 	self.trainer = display.newImage(location, self.xpos, self.ypos)
 	self.trainer:scale(3,3)
 	self.trainer.pp = self
@@ -123,7 +122,6 @@ function enemy_trainer:populatePokemon(trainerInfo)
 	
 	self.E_Pokemans[1] = pokemon:new({xPos = 542, yPos = 350})
 	self.E_Pokemans[1]:create(trainerInfo.Pokemon1)
-	print(trainerInfo.Pokemon1)
 	self.E_Pokemans[1].pokeball = display.newImage("images/Pokeball.png")
 	self.E_Pokemans[1].pokeball.width = 48
     self.E_Pokemans[1].pokeball.height = 48
@@ -143,7 +141,6 @@ function enemy_trainer:populatePokemon(trainerInfo)
 
 	self.E_Pokemans[2] = pokemon:new({xPos = 542, yPos = 350})
 	self.E_Pokemans[2]:create(trainerInfo.Pokemon2)
-	print(trainerInfo.Pokemon2)
 	self.E_Pokemans[2].pokeball = display.newImage("images/Pokeball.png")
 	self.E_Pokemans[2].pokeball.width = 48
     self.E_Pokemans[2].pokeball.height = 48
@@ -164,7 +161,6 @@ function enemy_trainer:populatePokemon(trainerInfo)
 	
 	self.E_Pokemans[3] = pokemon:new({xPos = 542, yPos = 350})
 	self.E_Pokemans[3]:create(trainerInfo.Pokemon3)
-	print(trainerInfo.Pokemon3)
 	self.E_Pokemans[3].pokeball = display.newImage("images/Pokeball.png")
 	self.E_Pokemans[3].pokeball.width = 48
     self.E_Pokemans[3].pokeball.height = 48
@@ -185,7 +181,6 @@ function enemy_trainer:populatePokemon(trainerInfo)
 	
 	self.E_Pokemans[4] = pokemon:new({xPos = 542, yPos = 350})
 	self.E_Pokemans[4]:create(trainerInfo.Pokemon4)
-	print(trainerInfo.Pokemon4)
 	self.E_Pokemans[4].pokeball = display.newImage("images/Pokeball.png")
 	self.E_Pokemans[4].pokeball.width = 48
     self.E_Pokemans[4].pokeball.height = 48
@@ -205,7 +200,6 @@ function enemy_trainer:populatePokemon(trainerInfo)
 	
 	self.E_Pokemans[5] = pokemon:new({xPos = 542, yPos = 350})
 	self.E_Pokemans[5]:create(trainerInfo.Pokemon5)
-	print(trainerInfo.Pokemon5)
 	self.E_Pokemans[5].pokeball = display.newImage("images/Pokeball.png")
 	self.E_Pokemans[5].pokeball.width = 48
     self.E_Pokemans[5].pokeball.height = 48
@@ -225,7 +219,6 @@ function enemy_trainer:populatePokemon(trainerInfo)
 	
 	self.E_Pokemans[6] = pokemon:new({xPos = 542, yPos = 350})
 	self.E_Pokemans[6]:create(trainerInfo.Pokemon6)
-	print(trainerInfo.Pokemon6)
 	self.E_Pokemans[6].pokeball = display.newImage("images/Pokeball.png")
 	self.E_Pokemans[6].pokeball.width = 48
     self.E_Pokemans[6].pokeball.height = 48
@@ -329,8 +322,6 @@ function enemy_trainer:generateAttack(pokemonIndex)
 		self.cAttack.AttackType = self.E_Pokemans[pokemonIndex].pokemon.attack4Type
 	
 	end
-
-	print("Enemy Attack generated: "..self.cAttack.AttackName..", "..self.cAttack.AttackDamage..", "..self.cAttack.AttackType)
 end
 
 -- enemy_trainer:destroyTrainer()
@@ -369,7 +360,6 @@ function enemy_trainer:destroyTrainer()
 		self.arena:removeSelf();
 		self.arena = nil;
 	end
-	print("trying to remove self")
 	if self ~= nil then
 		self = nil;
 	end

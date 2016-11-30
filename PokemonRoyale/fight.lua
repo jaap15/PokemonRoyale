@@ -1027,9 +1027,15 @@ function exitButtonEvent(event)
         removeObject(infoBoxText.eName)
         removeObject(infoBoxText.pHpText)
         removeObject(infoBoxText)
-        enemyList[currentEnemy]:hidePokeballs()
-        removeObjectList(trainer.Pokemans, true);
-        removeObjectList(enemyList[currentEnemy].E_Pokemans, true);
+        -- Destroys global objects
+        for i = 1, #enemyList do
+            enemyList[i]:destroyTrainer()
+        end
+        
+        if trainer.Pokemans ~= nil then
+            removeObjectList(trainer.Pokemans, true);
+        else
+        end
 		enemyList[currentEnemy]:audioStop()
         composer.gotoScene("menu")
     end
